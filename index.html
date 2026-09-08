@@ -212,7 +212,7 @@
      
     .terminal-log {
       width: 100%;
-      height: 84px;
+      height: 120px;  
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 14px;
@@ -667,7 +667,7 @@
   function log(msg) {
     const el = document.getElementById('sysLog');
     if (!el) return;
-    el.innerHTML += `<br>> ${msg}`;
+    el.innerHTML += `<br>${msg}`;
     el.scrollTop = el.scrollHeight;
   }
 
@@ -722,13 +722,13 @@
   }
 
   async function enableHardware() {
-    log("正在請求攝影機與麥克風權限...");
+    log("> 正在請求攝影機與麥克風權限...");
     const ok = await acquireStream();
     if (ok) {
       document.getElementById('cameraPrompt').style.display = 'none';
       document.getElementById('controlsIsland').style.display = 'flex';
       wakeControls();
-      log("攝影設備已就緒，可點擊紅色按鈕開始錄製。");
+      log("> 攝影設備已就緒，可點擊紅色按鈕開始錄製。");
     }
   }
 
@@ -766,7 +766,7 @@
         try {
           micStream = await navigator.mediaDevices.getUserMedia({ audio: audioConstraints });
         } catch (e) {
-          log("未獲取麥克風，僅錄製系統音訊。");
+          log("> 未獲取麥克風，僅錄製系統音訊。");
         }
 
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -788,7 +788,7 @@
 
         screenStream.getVideoTracks()[0].onended = async () => {
           if (currentSourceType === "screen") {
-            log("螢幕共用停止，自動切回鏡頭模式繼續錄影...");
+            log("> 螢幕共用停止，自動切回鏡頭模式繼續錄影...");
             await switchMediaSource();
           }
         };
@@ -809,10 +809,10 @@
       if (vTrack) vTrack.enabled = isVideoEnabled;
 
       updateSourceIcon();
-      log(`硬體載入完成：[${isMobile ? '手機 ' + mobileFacingMode : currentSourceType}]`);
+      log(`> 硬體載入完成：[${isMobile ? '手機 ' + mobileFacingMode : currentSourceType}]`);
       return true;
     } catch (err) {
-      log("硬體存取失敗：" + err.message);
+      log("> 硬體存取失敗：" + err.message);
       return false;
     }
   }
@@ -828,7 +828,7 @@
     document.getElementById('btnVideoTrack').classList.toggle('active', !isVideoEnabled);
     lucide.createIcons();
 
-    log(`視訊畫面已${isVideoEnabled ? '開啟' : '關閉（純音訊模式）'}`);
+    log(`> 視訊畫面已${isVideoEnabled ? '開啟' : '關閉（純音訊模式）'}`);
     wakeControls();
   }
 
@@ -844,16 +844,17 @@
     }
 
     if (wasRecording && mediaRecorder && mediaRecorder.state === "recording") {
+      log(`[系統] 偵測到硬體切換，當前區段即刻切片並發送雲端處理...`);
       clearTimeout(chunkTimer);
       
       await stopMediaRecorderAsync();
     }
 
-    log(`切換來源至 [${isMobile ? mobileFacingMode : currentSourceType}]...`);
+    log(`> 切換來源至 [${isMobile ? mobileFacingMode : currentSourceType}]...`);
     const success = await acquireStream();
 
     if (!success) {
-      log("[警告] 切換取消，自動恢復原設備...");
+      log("> [警告] 切換取消，自動恢復原設備...");
       currentSourceType = prevSourceType;
       mobileFacingMode = prevFacingMode;
       await acquireStream();
@@ -861,7 +862,7 @@
 
     if (wasRecording && !isPaused && currentStream) {
       startChunkRecording();
-      log("[成功] 來源切換完成，已無縫接軌繼續錄影！");
+      log("> [成功] 來源切換完成，已無縫接軌繼續錄影！");
     }
     wakeControls();
   }
@@ -878,7 +879,7 @@
       }
     }
 
-    log("正在向雲端建立專屬日誌資料夾與試算表列...");
+    log("> 正在向雲端建立專屬日誌資料夾與試算表列...");
 
     try {
       const res = await api({ action: "initLog" });
@@ -896,9 +897,11 @@
       startTimer();
       startChunkRecording();
       wakeControls();
-      log("三軌並行引擎啟動：每 60 秒切片無縫上傳，並即時寫入試算表！");
+      log("=========================================");
+      log("🟢 雙軌並行即時引擎啟動！系統將一邊錄製，一邊在背景將每分鐘的切片建檔至雲端硬碟，並同步寫入試算表！");
+      log("=========================================");
     } catch (e) {
-      log("初始化錯誤：" + e.message);
+      log("> 初始化錯誤：" + e.message);
       document.getElementById('btnStart').disabled = false;
     }
   }
@@ -921,24 +924,30 @@
         recordedChunks = [];
       }
       if (isRecording && !isPaused && mediaRecorder && mediaRecorder.state === "inactive") {
-        startChunkRecording();
+        startChunkRecording(); 
       }
     };
 
     mediaRecorder.start();
+    
+    
     chunkTimer = setTimeout(() => {
-      if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
+      if (mediaRecorder && mediaRecorder.state === "recording") {
+        log(`[系統] 第 ${chunkIndex} 段影音已達 60 秒，自動切片並背景傳輸至雲端處理...`);
+        mediaRecorder.stop();
+      }
     }, 60000);
   }
 
   function processChunk(blob, mime, index) {
-    log(`區段 ${index} 切片完成，背景傳輸至雲端中...`);
+    log(`> [排隊中] 區段 ${index} 切片封裝完成，準備一邊錄製一邊上傳雲端硬碟...`);
     const task = new Promise(resolve => {
       const reader = new FileReader();
       reader.readAsDataURL(blob);
       reader.onloadend = async () => {
         
         const base64 = reader.result.split(',')[1];
+        log(`> [處理中] 區段 ${index} 正在背景進行 Gemini AI 逐字稿分析與試算表寫入...`);
         try {
           await api({
             action: "processChunkRealtime",
@@ -948,10 +957,9 @@
             rowIndex: logSession.rowIndex,
             chunkIndex: index
           });
-
-          log(`[完成] 區段 ${index} 已即時寫入試算表儲存格與雲端硬碟！`);
+          log(`> [✅ 完成] 區段 ${index} 已即時寫入試算表儲存格與雲端硬碟！`);
         } catch (e) {
-          log(`[失敗] 區段 ${index} 處理失敗: ${e.message}`);
+          log(`> [❌ 失敗] 區段 ${index} 背景處理失敗: ${e.message}`);
         }
         resolve();
       };
@@ -966,17 +974,20 @@
     const pauseIcon = document.getElementById('iconPause');
     if (!isPaused) {
       isPaused = true;
-      if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
+      if (mediaRecorder && mediaRecorder.state === "recording") {
+        log(`[系統] 偵測到暫停指令，當前區段即刻切片並發送雲端處理...`);
+        mediaRecorder.stop();
+      }
       clearTimeout(chunkTimer);
       clearInterval(timerInterval);
       if (pauseIcon) pauseIcon.setAttribute('data-lucide', 'play');
-      log("錄製已暫停。");
+      log("> 錄製已暫停。");
     } else {
       isPaused = false;
       startTimer();
       startChunkRecording();
       if (pauseIcon) pauseIcon.setAttribute('data-lucide', 'pause');
-      log("錄製已恢復。");
+      log("> 錄製已恢復。");
     }
     lucide.createIcons();
     wakeControls();
@@ -1003,6 +1014,11 @@
     clearTimeout(chunkTimer);
     clearInterval(timerInterval);
 
+    if (mediaRecorder && mediaRecorder.state === "recording") {
+      log(`[系統] 偵測到結束指令，最後一段殘餘切片 (未滿 60 秒) 即刻發送雲端處理...`);
+    }
+
+    
     await stopMediaRecorderAsync();
 
     if (currentStream) {
@@ -1016,7 +1032,7 @@
       audioContext.close();
       audioContext = null;
     }
-    log("[安全] 攝影機已徹底關閉，指示燈熄滅。正在等待背景最後切片寫入試算表...");
+    log("> [安全] 攝影機已徹底關閉，指示燈熄滅。系統正在強制等待背景所有的即時寫入任務完成...");
 
     document.getElementById('cameraPrompt').style.display = 'flex';
     document.getElementById('controlsIsland').style.display = 'none';
@@ -1025,11 +1041,12 @@
     document.getElementById('btnStop').disabled = true;
     document.getElementById('btnPause').style.display = 'none';
 
+    
     while (activeUploadTasks.size > 0) {
       await Promise.all(Array.from(activeUploadTasks));
     }
 
-    log("所有影音切片皆已歸檔試算表！正在提煉 AI 全局重點整理...");
+    log("> 所有影音切片皆已精準寫入雲端與試算表！正在提煉 AI 全局重點整理...");
 
     try {
       const res = await api({
@@ -1037,7 +1054,7 @@
         rowIndex: logSession.rowIndex
       });
 
-      log("[成功] 試算表最終歸檔完成！已載入至下方檢視區。");
+      log("> [成功] 試算表最終歸檔完成！已載入至下方檢視區。");
 
       const urls = res.urls || [];
       document.getElementById('archiveLinks').innerHTML = urls
@@ -1054,7 +1071,7 @@
       document.getElementById('btnStart').disabled = false;
       lucide.createIcons();
     } catch (e) {
-      log("歸檔失敗：" + e.message);
+      log("> 歸檔失敗：" + e.message);
     }
   }
 
