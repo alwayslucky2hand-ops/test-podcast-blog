@@ -42,7 +42,7 @@
 
     .app-shell {
       width: 100%;
-      max-width: 920px;
+      max-width: 900px;
       display: flex;
       flex-direction: column;
       gap: 22px;
@@ -100,8 +100,9 @@
       justify-content: center;
     }
 
-    video, iframe { width: 100%; height: 100%; object-fit: cover; display: block; border: none; }
+    video { width: 100%; height: 100%; object-fit: cover; display: block; background: #000; }
 
+     
     .camera-prompt {
       position: absolute;
       display: flex;
@@ -116,9 +117,16 @@
       border: 1px solid var(--glass-border);
       border-radius: 18px;
       box-shadow: var(--shadow-md);
+      transition: transform 0.2s, background 0.2s;
       z-index: 15;
     }
 
+    .camera-prompt:hover {
+      transform: scale(1.02);
+      background: #ffffff;
+    }
+
+     
     .status-capsule {
       position: absolute;
       top: 16px;
@@ -129,6 +137,8 @@
       padding: 6px 14px;
       background: var(--glass);
       backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
       border-radius: 999px;
       font-size: 13px;
       font-weight: 600;
@@ -147,24 +157,34 @@
 
     @keyframes pulse {
       0% { transform: scale(0.9); opacity: 0.7; }
-      50% { transform: scale(1.3); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 8px var(--danger); }
       100% { transform: scale(0.9); opacity: 0.7; }
     }
 
+     
     .controls-island {
       position: absolute;
       bottom: 20px;
       left: 50%;
-      transform: translateX(-50%);
+      transform: translateX(-50%) translateY(0);
       display: flex;
       align-items: center;
       gap: 10px;
       padding: 8px 16px;
       background: var(--glass);
       backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-border);
       border-radius: 999px;
       box-shadow: var(--shadow-md);
       z-index: 20;
+      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .controls-island.autohide {
+      opacity: 0;
+      transform: translateX(-50%) translateY(12px);
+      pointer-events: none;
     }
 
     .ctrl-btn {
@@ -178,15 +198,18 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
+      outline: none;
       transition: background 0.15s, transform 0.15s;
     }
 
     .ctrl-btn:hover { background: rgba(0, 0, 0, 0.05); transform: scale(1.05); }
     .ctrl-btn:active { transform: scale(0.95); }
     .ctrl-btn.active { background: rgba(0, 0, 0, 0.08); }
-    .ctrl-btn.record-btn, .ctrl-btn.stop-btn { color: var(--danger); }
+    .ctrl-btn.record-btn { color: var(--danger); }
+    .ctrl-btn.stop-btn { color: var(--danger); }
     .ctrl-btn.pause-btn { color: var(--warning); }
 
+     
     .terminal-log {
       width: 100%;
       height: 84px;
@@ -194,13 +217,15 @@
       border: 1px solid var(--border);
       border-radius: 14px;
       padding: 12px 16px;
-      font-family: ui-monospace, Menlo, monospace;
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
       font-size: 12.5px;
       line-height: 1.6;
       color: #333336;
       overflow-y: auto;
+      box-shadow: var(--shadow-sm);
     }
 
+     
     .archive-view {
       display: none;
       background: var(--card-bg);
@@ -208,6 +233,7 @@
       border: 1px solid var(--border);
       padding: 20px;
       box-shadow: var(--shadow-sm);
+      animation: fadeIn 0.25s ease;
     }
 
      
@@ -243,13 +269,16 @@
       font-weight: 600;
       background: rgba(52, 199, 89, 0.12);
       color: #1b873f;
+      border: 1px solid rgba(52, 199, 89, 0.25);
     }
 
     .badge.recording {
       background: rgba(255, 149, 0, 0.12);
       color: #b26700;
+      border: 1px solid rgba(255, 149, 0, 0.25);
     }
 
+     
     .file-chip {
       display: inline-flex;
       align-items: center;
@@ -262,37 +291,15 @@
       font-weight: 500;
       color: var(--accent);
       text-decoration: none;
-      cursor: pointer;
       transition: all 0.15s ease;
     }
 
     .file-chip:hover {
       background: var(--accent-soft);
+      border-color: rgba(0, 113, 227, 0.3);
     }
 
-    .file-chip.active {
-      background: var(--accent);
-      color: #ffffff;
-      border-color: var(--accent);
-    }
-
-    .action-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 7px 14px;
-      background: var(--accent);
-      color: #ffffff;
-      border: none;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.15s ease;
-    }
-
-    .action-btn:hover { opacity: 0.9; }
-
+     
     .action-btn-sm {
       display: inline-flex;
       align-items: center;
@@ -305,10 +312,12 @@
       font-weight: 500;
       color: var(--text-muted);
       cursor: pointer;
+      transition: all 0.15s ease;
     }
 
     .action-btn-sm:hover {
       color: var(--text);
+      border-color: #c7c7cc;
       background: var(--card-subtle);
     }
 
@@ -318,6 +327,11 @@
       border-radius: 12px;
       overflow: hidden;
       background: var(--card-bg);
+      transition: border-color 0.2s ease;
+    }
+
+    details.history-accordion[open] {
+      border-color: #c7c7cc;
     }
 
     details.history-accordion summary {
@@ -332,9 +346,17 @@
       background: #fafafc;
       user-select: none;
       list-style: none;
+      outline: none;
+      transition: background 0.15s ease;
     }
 
-    details.history-accordion summary::-webkit-details-marker { display: none; }
+    details.history-accordion summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details.history-accordion summary:hover {
+      background: #f2f2f7;
+    }
 
     .accordion-toggle-icon {
       display: inline-flex;
@@ -343,7 +365,9 @@
       transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    details[open] .accordion-toggle-icon { transform: rotate(180deg); }
+    details[open] .accordion-toggle-icon {
+      transform: rotate(180deg);
+    }
 
     .accordion-body {
       padding: 16px 18px;
@@ -358,20 +382,31 @@
       color: #2c2c2e;
     }
 
-    .markdown-body h1, .markdown-body h2, .markdown-body h3 {
+    .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 {
       color: #1d1d1f;
       margin-top: 16px;
       margin-bottom: 8px;
       font-weight: 700;
+      line-height: 1.4;
     }
 
+    .markdown-body h1 { font-size: 17px; }
+    .markdown-body h2 { font-size: 16px; }
+    .markdown-body h3 { font-size: 15px; }
+    .markdown-body h4 { font-size: 14px; }
+
     .markdown-body p { margin-bottom: 12px; }
-    .markdown-body ul, .markdown-body ol { padding-left: 20px; margin-bottom: 12px; }
+    .markdown-body ul, .markdown-body ol { padding-left: 22px; margin-bottom: 12px; }
+    .markdown-body li { margin-bottom: 6px; }
+    .markdown-body strong { color: #000000; font-weight: 600; }
+    .markdown-body hr { border: none; border-top: 1px solid var(--border-subtle); margin: 16px 0; }
     .markdown-body blockquote {
       border-left: 3px solid var(--accent);
       padding: 8px 14px;
       background: rgba(0, 113, 227, 0.04);
+      border-radius: 0 8px 8px 0;
       margin-bottom: 12px;
+      color: #3a3a3c;
     }
 
      
@@ -383,6 +418,8 @@
       overflow: hidden;
     }
 
+    .minute-chunk-card:last-child { margin-bottom: 0; }
+
     .minute-chunk-header {
       padding: 10px 14px;
       background: #f2f2f7;
@@ -390,6 +427,15 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .minute-chunk-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .minute-chunk-content {
@@ -415,7 +461,11 @@
       align-items: center;
       gap: 6px;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
+
+    .desc-section .sub-section-title { color: #5856d6; }
+    .voice-section .sub-section-title { color: #0071e3; }
 
     .voice-body {
       font-size: 13.5px;
@@ -425,80 +475,17 @@
     }
 
      
-    .workshop-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 22px;
-      box-shadow: var(--shadow-md);
-    }
-
-    .stage-box {
-      border: 1px solid var(--border);
-      background: #fafafc;
-      border-radius: 14px;
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      position: relative;
-    }
-
-    .stage-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .stage-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .sync-status {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .sync-status.saved { color: var(--success); }
-    .sync-status.syncing { color: var(--warning); }
-
-    .workshop-textarea {
-      width: 100%;
-      min-height: 180px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px 16px;
-      font-family: inherit;
-      font-size: 14px;
-      line-height: 1.8;
-      color: var(--text);
-      background: #ffffff;
-      resize: vertical;
-    }
-
-    .workshop-textarea:focus { outline: 2px solid var(--accent); }
-
     .toast-box {
       position: fixed;
       bottom: 24px;
       left: 50%;
       transform: translateX(-50%) translateY(50px);
       opacity: 0;
-      background: rgba(29, 29, 31, 0.92);
+      background: rgba(29, 29, 31, 0.9);
       color: #ffffff;
-      padding: 9px 20px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 8px 18px;
       border-radius: 999px;
       font-size: 13px;
       font-weight: 500;
@@ -506,12 +493,15 @@
       align-items: center;
       gap: 8px;
       box-shadow: var(--shadow-md);
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
       z-index: 1000;
       pointer-events: none;
     }
 
-    .toast-box.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .toast-box.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(4px); }
@@ -529,50 +519,74 @@
       <i data-lucide="video" style="width: 16px; height: 16px;"></i> 影音即時錄製
     </button>
     <button class="tab-btn" onclick="switchTab('tab-history', this)">
-      <i data-lucide="history" style="width: 16px; height: 16px;"></i> 歷史日誌總帳
-    </button>
-    <button class="tab-btn" id="tabBtnWorkshop" style="display: none;" onclick="switchTab('tab-workshop', this)">
-      <i data-lucide="sparkles" style="width: 16px; height: 16px; color: var(--accent);"></i> AI 爆款文章寫作坊
+      <i data-lucide="history" style="width: 16px; height: 16px;"></i> 歷史日誌調閱
     </button>
   </div>
 
   
   <div id="tab-live" class="tab-content active">
-    <div class="viewport-container" id="videoWrapper">
+    <div class="viewport-container" id="videoWrapper" onmousemove="wakeControls()" ontouchstart="wakeControls()">
+      
+      
       <div id="cameraPrompt" class="camera-prompt" onclick="enableHardware()">
-        <i data-lucide="camera" style="width: 32px; height: 32px;"></i>
+        <i data-lucide="camera" style="width: 32px; height: 32px; color: var(--text);"></i>
         <div style="font-weight: 600; font-size: 15px;">點擊開啟攝影機與麥克風</div>
       </div>
+
       <div id="statusBadge" class="status-capsule" style="display: none;">
         <div class="pulse-dot"></div>
         <span id="recordTimer">00:00</span>
       </div>
+
       <video id="mediaPlayer" autoplay muted playsinline></video>
+
       <div id="controlsIsland" class="controls-island" style="display: none;">
-        <button class="ctrl-btn" id="btnSource" onclick="switchMediaSource()"><i data-lucide="switch-camera" id="iconSource"></i></button>
-        <button class="ctrl-btn" id="btnVideoTrack" onclick="toggleVideoTrack()"><i data-lucide="video" id="iconVideo"></i></button>
-        <button class="ctrl-btn record-btn" id="btnStart" onclick="startRecording()"><i data-lucide="circle-dot"></i></button>
-        <button class="ctrl-btn pause-btn" id="btnPause" onclick="togglePause()" style="display: none;"><i data-lucide="pause" id="iconPause"></i></button>
-        <button class="ctrl-btn stop-btn" id="btnStop" onclick="stopRecording()" style="display: none;"><i data-lucide="square"></i></button>
+        
+        <button class="ctrl-btn" id="btnSource" onclick="switchMediaSource()" title="切換鏡頭 / 螢幕來源">
+          <i data-lucide="switch-camera" id="iconSource"></i>
+        </button>
+
+        
+        <button class="ctrl-btn" id="btnVideoTrack" onclick="toggleVideoTrack()" title="開啟/關閉畫面">
+          <i data-lucide="video" id="iconVideo"></i>
+        </button>
+
+        
+        <button class="ctrl-btn record-btn" id="btnStart" onclick="startRecording()" title="開始錄影">
+          <i data-lucide="circle-dot"></i>
+        </button>
+
+        
+        <button class="ctrl-btn pause-btn" id="btnPause" onclick="togglePause()" style="display: none;" title="暫停錄製">
+          <i data-lucide="pause" id="iconPause"></i>
+        </button>
+
+        
+        <button class="ctrl-btn stop-btn" id="btnStop" onclick="stopRecording()" style="display: none;" title="結束錄製">
+          <i data-lucide="square"></i>
+        </button>
       </div>
     </div>
+
     <div class="terminal-log" id="sysLog">系統已就緒。相機處於休眠狀態，點選上方黑框按鈕以啟用設備。</div>
 
     
     <div id="archiveView" class="archive-view">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px;">
-        <div style="font-weight: 700; font-size: 15px; color: var(--success); display: flex; align-items: center; gap: 8px;">
-          <i data-lucide="check-circle" style="width: 18px; height: 18px;"></i> 影音日誌已成功歸檔至 Google 試算表
+        <div style="font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px;">
+          <i data-lucide="check-circle" style="width: 18px; height: 18px; color: var(--success);"></i>
+          影音日誌已成功歸檔至 Google 試算表
         </div>
         <div id="archiveLinks" style="display: flex; gap: 8px; flex-wrap: wrap;"></div>
       </div>
 
+      
       <div style="display: flex; flex-direction: column; gap: 12px;">
         <details class="history-accordion" open>
           <summary>
             <span style="display: flex; align-items: center; gap: 8px;">
-              <i data-lucide="clapperboard" style="width: 15px; height: 15px; color: var(--accent);"></i>
-              AI 全局短影音 Reels 爆款提案與社群文案
+              <i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>
+              AI 全局重點整理
             </span>
             <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
           </summary>
@@ -581,6 +595,7 @@
           </div>
         </details>
 
+        
         <details class="history-accordion">
           <summary>
             <span style="display: flex; align-items: center; gap: 8px;">
@@ -602,112 +617,15 @@
     <div style="display: flex; justify-content: space-between; align-items: center;">
       <div>
         <h3 style="font-size: 18px; font-weight: 700;">歷史影音日誌總帳</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">點擊「✨ 一鍵產出部落格文章」即可進入專屬的四階段 AI 協作工作坊。</p>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">所有錄影記錄均預設收合，點擊卡片區塊即可按需展開閱讀重點與逐字稿。</p>
       </div>
-      <button onclick="loadHistoryLogs()" class="action-btn" style="background: var(--card-bg); color: var(--text); border: 1px solid var(--border);">
+      <button onclick="loadHistoryLogs()" class="ctrl-btn" style="width: auto; height: auto; padding: 7px 14px; border-radius: 8px; background: var(--card-bg); border: 1px solid var(--border); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; box-shadow: var(--shadow-sm);">
         <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> 重新整理
       </button>
     </div>
+
     <div id="historyContainer" style="display: flex; flex-direction: column; gap: 14px;">
       <div style="text-align: center; color: var(--text-muted); padding: 40px 0;">載入歷史日誌中...</div>
-    </div>
-  </div>
-
-  
-  <div id="tab-workshop" class="tab-content">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <div>
-        <h2 style="font-size: 19px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-          <i data-lucide="pen-tool" style="width: 18px; height: 18px; color: var(--accent);"></i>
-          商周/遠見級爆款部落格文章協作工作坊
-        </h2>
-        <div id="activeLogSubtitle" style="font-size: 12.5px; color: var(--text-muted); font-family: ui-monospace, monospace; margin-top: 2px;">當前日誌：-</div>
-      </div>
-      <button onclick="switchTab('tab-history', document.querySelectorAll('.tab-btn')[1])" class="action-btn" style="background: var(--card-subtle); color: var(--text); border: 1px solid var(--border);">
-        <i data-lucide="arrow-left" style="width: 14px; height: 14px;"></i> 返回日誌列表
-      </button>
-    </div>
-
-    <div class="workshop-card">
-      
-      
-      <div class="stage-box" style="background: #ffffff;">
-        <div class="stage-header">
-          <div class="stage-title">
-            <i data-lucide="play-circle" style="width: 16px; height: 16px; color: var(--accent);"></i>
-            第一階段：影音連續播放串流
-          </div>
-          <div class="sync-status saved" id="syncStage1"><i data-lucide="check" style="width: 12px; height: 12px;"></i> 已同步至試算表 G 欄</div>
-        </div>
-        <div class="viewport-container" style="max-height: 400px; aspect-ratio: 16/9; background: #000;">
-          <iframe id="streamFrame" src="" allow="autoplay"></iframe>
-        </div>
-        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;" id="streamChipList"></div>
-      </div>
-
-      
-      <div class="stage-box">
-        <div class="stage-header">
-          <div class="stage-title">
-            <i data-lucide="lightbulb" style="width: 16px; height: 16px; color: #f59e0b;"></i>
-            第二階段：陳修平流量密碼 20 個爆款提案
-          </div>
-          <div class="sync-status" id="syncStage2"><i data-lucide="cloud" style="width: 12px; height: 12px;"></i> 即時同步至 H 欄</div>
-        </div>
-        <p style="font-size: 13px; color: var(--text-muted);">AI 根據逐字稿萃取的 20 組候選提案。你可以直接在下方編輯調整選題：</p>
-        <textarea id="txtStage2" class="workshop-textarea" placeholder="點擊下方按鈕以提煉 20 組提案..." oninput="debounceSync('stage2', this.value)"></textarea>
-        <div style="display: flex; gap: 10px;">
-          <button onclick="triggerStep2Gen()" class="action-btn" id="btnGenStage2">
-            <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> 提煉 20 組爆款提案
-          </button>
-          <button onclick="triggerStep3Gen()" class="action-btn" style="background: #10b981;">
-            <i data-lucide="arrow-down" style="width: 14px; height: 14px;"></i> 確認提案，下一步生成黃金 Hook
-          </button>
-        </div>
-      </div>
-
-      
-      <div class="stage-box">
-        <div class="stage-header">
-          <div class="stage-title">
-            <i data-lucide="flame" style="width: 16px; height: 16px; color: var(--danger);"></i>
-            第三階段：黃金 3 秒 Hook 標題與痛點開頭摘要
-          </div>
-          <div class="sync-status" id="syncStage3"><i data-lucide="cloud" style="width: 12px; height: 12px;"></i> 即時同步至 I 欄</div>
-        </div>
-        <p style="font-size: 13px; color: var(--text-muted);">精準擊中「微型創業、校長兼撞鐘、時間貧窮、身心俱疲」痛點。挑選或自訂最合適的 Hook：</p>
-        <textarea id="txtStage3" class="workshop-textarea" placeholder="完成第二階段後點擊生成..." oninput="debounceSync('stage3', this.value)"></textarea>
-        <div style="display: flex; gap: 10px;">
-          <button onclick="triggerStep3Gen()" class="action-btn" id="btnGenStage3">
-            <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> 重新生成 4 組 Hook
-          </button>
-          <button onclick="triggerStep4Gen()" class="action-btn" style="background: #8b5cf6;">
-            <i data-lucide="file-check" style="width: 14px; height: 14px;"></i> 下一步：生成黃山料呼吸感專業長文
-          </button>
-        </div>
-      </div>
-
-      
-      <div class="stage-box" style="border-color: var(--accent); background: #ffffff;">
-        <div class="stage-header">
-          <div class="stage-title" style="color: var(--accent);">
-            <i data-lucide="crown" style="width: 16px; height: 16px;"></i>
-            第四階段：方格子專業部落格文章（商周/遠見級影響力）
-          </div>
-          <div class="sync-status" id="syncStage4"><i data-lucide="cloud" style="width: 12px; height: 12px;"></i> 即時同步至 J 欄</div>
-        </div>
-        <p style="font-size: 13px; color: var(--text-muted);">融合說話風格、一字不漏提煉論點、極致呼吸感空行排版、SEO 關鍵字、互動 CTA 與 Email 訂閱表單：</p>
-        <textarea id="txtStage4" class="workshop-textarea" style="min-height: 420px; font-size: 14px; line-height: 2;" placeholder="點擊上方按鈕後，AI 即刻為您撰寫完整文章..." oninput="debounceSync('stage4', this.value)"></textarea>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <button onclick="triggerStep4Gen()" class="action-btn" style="background: var(--card-subtle); color: var(--text); border: 1px solid var(--border);">
-            <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> 重新撰寫文章
-          </button>
-          <button onclick="copyWorkshopArticle()" class="action-btn" style="background: var(--success); padding: 9px 20px; font-size: 14px;">
-            <i data-lucide="copy" style="width: 15px; height: 15px;"></i> 一鍵複製完整文章至方格子
-          </button>
-        </div>
-      </div>
-
     </div>
   </div>
 
@@ -716,34 +634,35 @@
 
 <div id="toast" class="toast-box">
   <i data-lucide="check" style="width: 14px; height: 14px;"></i>
-  <span id="toastMsg">已完成</span>
+  <span id="toastMsg">內容已複製至剪貼簿</span>
 </div>
 
 <script>
   const GAS_WEB_URL = "https://script.google.com/macros/s/AKfycbyeqKhWv3TY8bpSdB9ZfWXNkR9yap66PyGxzEJqxpawWn9hZ9chfIuBPJfZHHoP91newQ/exec";
-  let activeItem = null;
-  let syncTimeouts = {};
-  window.historyLogsCache = {};
+  const GAS_URL = GAS_WEB_URL;
 
-  
-  let currentStream = null, mediaRecorder = null, isRecording = false, isPaused = false, isVideoEnabled = true;
-  let currentSourceType = "camera", mobileFacingMode = "user", chunkIndex = 1, chunkTimer = null, timerInterval = null, secondsElapsed = 0;
-  let activeUploadTasks = new Set(), logSession = null, recordedChunks = [];
+  let currentStream = null;
+  let mediaRecorder = null;
+  let audioContext = null;
+  let mixedAudioDest = null;
+
+  let isRecording = false;
+  let isPaused = false;
+  let isVideoEnabled = true;
+  let currentSourceType = "camera";
+  let mobileFacingMode = "user";
+
+  let chunkIndex = 1;
+  let chunkTimer = null;
+  let timerInterval = null;
+  let secondsElapsed = 0;
+  let controlsTimeout = null;
+
+  let activeUploadTasks = new Set();
+  let logSession = null;
+  let recordedChunks = [];
+
   const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-  function updateIcon(buttonId, iconId, newIconName) {
-    const btn = document.getElementById(buttonId);
-    if (btn) {
-      btn.innerHTML = `<i data-lucide="${newIconName}" id="${iconId}"></i>`;
-      safeCreateIcons();
-    }
-  }
-
-  function safeCreateIcons() {
-    if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') {
-      try { lucide.createIcons(); } catch (err) { console.warn("Lucide 圖示渲染重試中...", err); }
-    }
-  }
 
   function log(msg) {
     const el = document.getElementById('sysLog');
@@ -753,281 +672,464 @@
   }
 
   function showToast(msg) {
-    const t = document.getElementById('toast'), m = document.getElementById('toastMsg');
-    if (!t || !m) return;
-    m.innerText = msg;
-    t.classList.add('show');
-    safeCreateIcons();
-    setTimeout(() => t.classList.remove('show'), 2200);
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toastMsg');
+    if (!toast || !toastMsg) return;
+    toastMsg.innerText = msg;
+    toast.classList.add('show');
+    lucide.createIcons();
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2000);
+  }
+
+  function copyTextToClipboard(text, successMsg) {
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => {
+      showToast(successMsg || "已成功複製內容至剪貼簿");
+    }).catch(() => {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      showToast(successMsg || "已成功複製內容至剪貼簿");
+    });
+  }
+
+  function wakeControls() {
+    const island = document.getElementById('controlsIsland');
+    if (!island || island.style.display === 'none') return;
+    island.classList.remove('autohide');
+    clearTimeout(controlsTimeout);
+
+    controlsTimeout = setTimeout(() => {
+      island.classList.add('autohide');
+    }, 3000);
   }
 
   function switchTab(tabId, btn) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    if (btn) btn.classList.add('active');
-    const target = document.getElementById(tabId);
-    if (target) target.classList.add('active');
-    if (tabId === 'tab-history') loadHistoryLogs();
-    safeCreateIcons();
-  }
 
-  function openWorkshopById(logId) {
-    const item = window.historyLogsCache[logId];
-    if (!item) {
-      showToast("找不到對應的日誌資料，請重新整理總帳");
-      return;
+    btn.classList.add('active');
+    document.getElementById(tabId).classList.add('active');
+
+    if (tabId === 'tab-history') {
+      loadHistoryLogs();
     }
-    openWorkshop(item);
   }
 
-  // 工作坊啟動：載入 G~J 欄資料
-  function openWorkshop(item) {
-    activeItem = item;
-    const tabBtn = document.getElementById('tabBtnWorkshop');
-    tabBtn.style.display = 'flex';
-    switchTab('tab-workshop', tabBtn);
+  async function enableHardware() {
+    log("正在請求攝影機與麥克風權限...");
+    const ok = await acquireStream();
+    if (ok) {
+      document.getElementById('cameraPrompt').style.display = 'none';
+      document.getElementById('controlsIsland').style.display = 'flex';
+      wakeControls();
+      log("攝影設備已就緒，可點擊紅色按鈕開始錄製。");
+    }
+  }
 
-    document.getElementById('activeLogSubtitle').innerText = `當前日誌 ID：${item.logId} ｜ 記錄時間：${item.timestamp}`;
-
-    
-    const urls = Array.isArray(item.urls) ? item.urls : [];
-    const chipContainer = document.getElementById('streamChipList');
-    const iframe = document.getElementById('streamFrame');
-
-    if (urls.length > 0) {
-      chipContainer.innerHTML = urls.map((u, i) => `
-        <button class="file-chip ${i === 0 ? 'active' : ''}" onclick="switchStreamVideo('${u}', this)">
-          <i data-lucide="play" style="width:12px; height:12px;"></i> 片段 ${i+1}
-        </button>
-      `).join('');
-      switchStreamVideo(urls[0], chipContainer.children[0]);
+  function updateSourceIcon() {
+    const icon = document.getElementById('iconSource');
+    if (!icon) return;
+    if (isMobile) {
+      icon.setAttribute('data-lucide', 'switch-camera');
     } else {
-      iframe.src = "";
-      chipContainer.innerHTML = `<span style="font-size:12.5px; color:var(--text-muted);">無切片影片</span>`;
+      icon.setAttribute('data-lucide', currentSourceType === "camera" ? "monitor-up" : "camera");
+    }
+    lucide.createIcons();
+  }
+
+  async function acquireStream() {
+    if (currentStream) {
+      currentStream.getTracks().forEach(t => t.stop());
+      currentStream = null;
+    }
+    if (audioContext) {
+      audioContext.close();
+      audioContext = null;
     }
 
-    // 第二～四階段：由後端傳回的 stage 欄位初始化文字框
-    document.getElementById('txtStage2').value = item.stage2 || item.summary || "";
-    document.getElementById('txtStage3').value = item.stage3 || "";
-    document.getElementById('txtStage4').value = item.stage4 || "";
+    const audioConstraints = { echoCancellation: true, noiseSuppression: true, autoGainControl: true };
 
-    updateSyncBadge('stage2', item.stage2 ? 'saved' : 'idle');
-    updateSyncBadge('stage3', item.stage3 ? 'saved' : 'idle');
-    updateSyncBadge('stage4', item.stage4 ? 'saved' : 'idle');
-    safeCreateIcons();
-  }
-
-  function switchStreamVideo(url, btn) {
-    document.querySelectorAll('#streamChipList .file-chip').forEach(c => c.classList.remove('active'));
-    if (btn) btn.classList.add('active');
-    const embedUrl = url.replace('/view?usp=drivesdk', '/preview').replace('/view', '/preview');
-    document.getElementById('streamFrame').src = embedUrl;
-  }
-
-  
-  function debounceSync(stage, content) {
-    if (!activeItem) return;
-    updateSyncBadge(stage, 'syncing');
-    clearTimeout(syncTimeouts[stage]);
-
-    syncTimeouts[stage] = setTimeout(async () => {
-      try {
-        await api({
-          action: "saveWorkshopStage",
-          rowIndex: activeItem.rowIndex,
-          stage: stage,
-          content: content
+    try {
+      if (!isMobile && currentSourceType === "screen") {
+        const screenStream = await navigator.mediaDevices.getDisplayMedia({
+          video: { frameRate: { ideal: 30 } },
+          audio: true
         });
-        updateSyncBadge(stage, 'saved');
-      } catch (e) {
-        updateSyncBadge(stage, 'error');
+
+        let micStream = null;
+        try {
+          micStream = await navigator.mediaDevices.getUserMedia({ audio: audioConstraints });
+        } catch (e) {
+          log("未獲取麥克風，僅錄製系統音訊。");
+        }
+
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        mixedAudioDest = audioContext.createMediaStreamDestination();
+
+        if (screenStream.getAudioTracks().length > 0) {
+          const screenAudioSource = audioContext.createMediaStreamSource(screenStream);
+          screenAudioSource.connect(mixedAudioDest);
+        }
+        if (micStream && micStream.getAudioTracks().length > 0) {
+          const micSource = audioContext.createMediaStreamSource(micStream);
+          micSource.connect(mixedAudioDest);
+        }
+
+        currentStream = new MediaStream([
+          screenStream.getVideoTracks()[0],
+          mixedAudioDest.stream.getAudioTracks()[0]
+        ]);
+
+        screenStream.getVideoTracks()[0].onended = () => {
+          if (currentSourceType === "screen") {
+            log("螢幕共用停止，自動切回鏡頭模式繼續錄影...");
+            switchMediaSource();
+          }
+        };
+      } else {
+        const videoConstraints = isMobile
+          ? { facingMode: mobileFacingMode, width: { ideal: 1280 } }
+          : { width: { ideal: 1280 }, height: { ideal: 720 } };
+
+        currentStream = await navigator.mediaDevices.getUserMedia({
+          video: videoConstraints,
+          audio: audioConstraints
+        });
       }
-    }, 800);
+
+      document.getElementById('mediaPlayer').srcObject = currentStream;
+
+      const vTrack = currentStream.getVideoTracks()[0];
+      if (vTrack) vTrack.enabled = isVideoEnabled;
+
+      updateSourceIcon();
+      log(`硬體載入完成：[${isMobile ? '手機 ' + mobileFacingMode : currentSourceType}]`);
+      return true;
+    } catch (err) {
+      log("硬體存取失敗：" + err.message);
+      return false;
+    }
   }
 
-  function updateSyncBadge(stage, status) {
-    const el = document.getElementById('sync' + stage.charAt(0).toUpperCase() + stage.slice(1));
-    if (!el) return;
-    if (status === 'syncing') {
-      el.className = 'sync-status syncing';
-      el.innerHTML = `<i data-lucide="loader" style="width:12px; height:12px;"></i> 同步至試算表中...`;
-    } else if (status === 'saved') {
-      el.className = 'sync-status saved';
-      const colMap = { stage1: 'G', stage2: 'H', stage3: 'I', stage4: 'J' };
-      el.innerHTML = `<i data-lucide="check" style="width:12px; height:12px;"></i> 已即時更新至 ${colMap[stage]} 欄`;
+  function toggleVideoTrack() {
+    isVideoEnabled = !isVideoEnabled;
+    if (currentStream && currentStream.getVideoTracks().length > 0) {
+      currentStream.getVideoTracks()[0].enabled = isVideoEnabled;
+    }
+
+    const icon = document.getElementById('iconVideo');
+    if (icon) icon.setAttribute('data-lucide', isVideoEnabled ? 'video' : 'video-off');
+    document.getElementById('btnVideoTrack').classList.toggle('active', !isVideoEnabled);
+    lucide.createIcons();
+
+    log(`視訊畫面已${isVideoEnabled ? '開啟' : '關閉（純音訊模式）'}`);
+    wakeControls();
+  }
+
+  async function switchMediaSource() {
+    const wasRecording = isRecording;
+    const prevSourceType = currentSourceType;
+    const prevFacingMode = mobileFacingMode;
+
+    if (isMobile) {
+      mobileFacingMode = (mobileFacingMode === "user") ? "environment" : "user";
     } else {
-      el.className = 'sync-status';
-      el.innerHTML = `<i data-lucide="cloud" style="width:12px; height:12px;"></i> 支援雲端即時同步`;
+      currentSourceType = (currentSourceType === "camera") ? "screen" : "camera";
     }
-    safeCreateIcons();
+
+    if (wasRecording && mediaRecorder && mediaRecorder.state === "recording") {
+      clearTimeout(chunkTimer);
+      mediaRecorder.stop();
+    }
+
+    log(`切換來源至 [${isMobile ? mobileFacingMode : currentSourceType}]...`);
+    const success = await acquireStream();
+
+    if (!success) {
+      log("[警告] 切換取消，自動恢復原設備...");
+      currentSourceType = prevSourceType;
+      mobileFacingMode = prevFacingMode;
+      await acquireStream();
+    }
+
+    if (wasRecording && !isPaused && currentStream) {
+      startChunkRecording();
+      log("[成功] 來源切換完成，已無縫接軌繼續錄影！");
+    }
+    wakeControls();
   }
 
-  // 第二階段：提煉 20 組提案
-  async function triggerStep2Gen() {
-    if (!activeItem) return;
-    const btn = document.getElementById('btnGenStage2');
-    btn.disabled = true;
-    showToast("AI 正在提煉 20 組爆款提案...");
+  async function startRecording() {
+    document.getElementById('btnStart').disabled = true;
+    document.getElementById('archiveView').style.display = 'none';
+
+    if (!currentStream || currentStream.getTracks().every(t => t.readyState === 'ended')) {
+      const ok = await acquireStream();
+      if (!ok) {
+        document.getElementById('btnStart').disabled = false;
+        return;
+      }
+    }
+
+    log("正在向雲端建立專屬日誌資料夾與試算表列...");
+
     try {
-      const res = await api({ action: "generateStep2Proposals", rowIndex: activeItem.rowIndex });
-      document.getElementById('txtStage2').value = res.proposals;
-      updateSyncBadge('stage2', 'saved');
-      showToast("20 組提案已生成並同步至 H 欄！");
+      const res = await api({ action: "initLog" });
+      logSession = res;
+      isRecording = true;
+      isPaused = false;
+      chunkIndex = 1;
+      secondsElapsed = 0;
+
+      document.getElementById('btnStart').style.display = 'none';
+      document.getElementById('btnPause').style.display = 'flex';
+      document.getElementById('btnStop').style.display = 'flex';
+      document.getElementById('statusBadge').style.display = 'flex';
+
+      startTimer();
+      startChunkRecording();
+      wakeControls();
+      log("三軌並行引擎啟動：每 60 秒切片無縫上傳，並即時寫入試算表！");
     } catch (e) {
-      showToast("生成失敗: " + e.message);
-    } finally {
-      btn.disabled = false;
+      log("初始化錯誤：" + e.message);
+      document.getElementById('btnStart').disabled = false;
     }
   }
 
-  
-  async function triggerStep3Gen() {
-    if (!activeItem) return;
-    const btn = document.getElementById('btnGenStage3');
-    if (btn) btn.disabled = true;
-    const proposal = document.getElementById('txtStage2').value;
-    showToast("AI 正在提煉黃金 3 秒 Hook 與痛點開頭...");
-    try {
-      const res = await api({ action: "generateStep3Hooks", rowIndex: activeItem.rowIndex, selectedProposal: proposal });
-      document.getElementById('txtStage3').value = res.hooks;
-      updateSyncBadge('stage3', 'saved');
-      showToast("Hook 開頭已產出並同步至 I 欄！");
-    } catch (e) {
-      showToast("生成失敗: " + e.message);
-    } finally {
-      if (btn) btn.disabled = false;
-    }
+  function startChunkRecording() {
+    if (!isRecording || !currentStream || isPaused) return;
+
+    recordedChunks = [];
+    const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
+    mediaRecorder = new MediaRecorder(currentStream, { mimeType: mime });
+
+    mediaRecorder.ondataavailable = e => {
+      if (e.data && e.data.size > 0) recordedChunks.push(e.data);
+    };
+
+    mediaRecorder.onstop = () => {
+      if (recordedChunks.length > 0) {
+        const chunkBlob = new Blob(recordedChunks, { type: mime });
+        processChunk(chunkBlob, mime, chunkIndex++);
+        recordedChunks = [];
+      }
+      if (isRecording && !isPaused && mediaRecorder && mediaRecorder.state === "inactive") {
+        startChunkRecording();
+      }
+    };
+
+    mediaRecorder.start();
+    chunkTimer = setTimeout(() => {
+      if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
+    }, 60000);
   }
 
-  
-  async function triggerStep4Gen() {
-    if (!activeItem) return;
-    const hook = document.getElementById('txtStage3').value;
-    const proposal = document.getElementById('txtStage2').value;
-    showToast("AI 正在以黃山料極致呼吸感撰寫商周級大文章...");
-    try {
-      const res = await api({
-        action: "generateStep4Article",
-        rowIndex: activeItem.rowIndex,
-        selectedHook: hook,
-        selectedProposal: proposal
-      });
-      document.getElementById('txtStage4').value = res.article;
-      updateSyncBadge('stage4', 'saved');
-      showToast("方格子專業部落格長文已完成並同步至 J 欄！");
-    } catch (e) {
-      showToast("文章撰寫失敗: " + e.message);
-    }
+  function processChunk(blob, mime, index) {
+    log(`區段 ${index} 切片完成，背景傳輸至雲端中...`);
+    const task = new Promise(resolve => {
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onloadend = async () => {
+        const base64 = reader.result.split(',');
+        try {
+          await api({
+            action: "processChunkRealtime",
+            base64Data: base64,
+            mimeType: mime,
+            folderId: logSession.folderId,
+            rowIndex: logSession.rowIndex,
+            chunkIndex: index
+          });
+
+          log(`[完成] 區段 ${index} 已即時寫入試算表儲存格與雲端硬碟！`);
+        } catch (e) {
+          log(`[失敗] 區段 ${index} 處理失敗: ${e.message}`);
+        }
+        resolve();
+      };
+    });
+    activeUploadTasks.add(task);
+    task.then(() => activeUploadTasks.delete(task));
   }
 
-  function copyWorkshopArticle() {
-    const text = document.getElementById('txtStage4').value;
-    if (!text || !text.trim()) { showToast("請先生成文章內容"); return; }
-    navigator.clipboard.writeText(text).then(() => {
-      showToast("文章已複製至剪貼簿，可直接貼上方格子！");
-    }).catch(() => {
-      showToast("複製失敗，請手動全選複製");
+  function togglePause() {
+    if (!isRecording) return;
+
+    const pauseIcon = document.getElementById('iconPause');
+    if (!isPaused) {
+      isPaused = true;
+      if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
+      clearTimeout(chunkTimer);
+      clearInterval(timerInterval);
+      if (pauseIcon) pauseIcon.setAttribute('data-lucide', 'play');
+      log("錄製已暫停。");
+    } else {
+      isPaused = false;
+      startTimer();
+      startChunkRecording();
+      if (pauseIcon) pauseIcon.setAttribute('data-lucide', 'pause');
+      log("錄製已恢復。");
+    }
+    lucide.createIcons();
+    wakeControls();
+  }
+
+  function stopMediaRecorderAsync() {
+    return new Promise((resolve) => {
+      if (!mediaRecorder || mediaRecorder.state === "inactive") {
+        resolve();
+        return;
+      }
+      const originalOnStop = mediaRecorder.onstop;
+      mediaRecorder.onstop = (e) => {
+        if (originalOnStop) originalOnStop(e);
+        resolve();
+      };
+      mediaRecorder.stop();
     });
   }
 
-  
-  async function loadHistoryLogs() {
-    const container = document.getElementById('historyContainer');
-    container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader"></i> 載入中...</div>`;
-    safeCreateIcons();
+  async function stopRecording() {
+    isRecording = false;
+    isPaused = false;
+    clearTimeout(chunkTimer);
+    clearInterval(timerInterval);
+
+    await stopMediaRecorderAsync();
+
+    if (currentStream) {
+      currentStream.getTracks().forEach(t => t.stop());
+      currentStream = null;
+    }
+    if (document.getElementById('mediaPlayer')) {
+      document.getElementById('mediaPlayer').srcObject = null;
+    }
+    if (audioContext) {
+      audioContext.close();
+      audioContext = null;
+    }
+    log("[安全] 攝影機已徹底關閉，指示燈熄滅。正在等待背景最後切片寫入試算表...");
+
+    document.getElementById('cameraPrompt').style.display = 'flex';
+    document.getElementById('controlsIsland').style.display = 'none';
+    document.getElementById('statusBadge').style.display = 'none';
+
+    document.getElementById('btnStop').disabled = true;
+    document.getElementById('btnPause').style.display = 'none';
+
+    while (activeUploadTasks.size > 0) {
+      await Promise.all(Array.from(activeUploadTasks));
+    }
+
+    log("所有影音切片皆已歸檔試算表！正在提煉 AI 全局重點整理...");
 
     try {
-      const logs = await api({ action: "getHistoryLogs" });
-      if (!logs || logs.length === 0) {
-        container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:36px; background:#fff; border-radius:14px; border:1px solid var(--border);">目前尚無錄影日誌。</div>`;
-        return;
-      }
+      const res = await api({
+        action: "finalizeLog",
+        rowIndex: logSession.rowIndex
+      });
 
-      window.historyLogsCache = {};
-      container.innerHTML = logs.map(item => {
-        window.historyLogsCache[item.logId] = item;
-        const rawUrls = Array.isArray(item.urls) ? item.urls : [];
-        const urls = rawUrls.filter(u => typeof u === 'string' && (u.startsWith('http://') || u.startsWith('https:
-        const isRec = item.status && item.status.includes('錄製中');
+      log("[成功] 試算表最終歸檔完成！已載入至下方檢視區。");
 
-        return `
-          <div class="history-card">
-            <div class="history-header">
-              <div>
-                <div style="font-weight:700; font-size:15px;">日誌 ID: ${item.logId}</div>
-                <div style="font-size:12.5px; color:var(--text-muted); font-family:ui-monospace, monospace; margin-top:3px;">
-                  <i data-lucide="clock" style="width:12px; height:12px; display:inline;"></i> ${item.timestamp}
-                </div>
-              </div>
-              <span class="badge ${isRec ? 'recording' : ''}">${item.status}</span>
-            </div>
+      const urls = res.urls || [];
+      document.getElementById('archiveLinks').innerHTML = urls
+        .map((u, i) => `<a href="${u}" target="_blank" class="file-chip"><i data-lucide="film" style="width:13px; height:13px;"></i> 片段 ${i+1}</a>`)
+        .join('');
 
-            <div>
-              <div style="font-size:12px; font-weight:600; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase;">
-                雲端切片影片 (${urls.length} 個切片)
-              </div>
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                ${urls.length > 0 ? urls.map((u, i) => `<a href="${u}" target="_blank" class="file-chip"><i data-lucide="film" style="width:12px; height:12px;"></i> 片段 ${i+1}</a>`).join('') : '<span style="font-size:12.5px; color:var(--text-muted);">無切片影片</span>'}
-              </div>
-            </div>
+      document.getElementById('archiveSummary').innerHTML = renderMarkdown(res.summary);
+      document.getElementById('archiveContent').innerHTML = formatTranscriptContent(res.content, urls);
+      document.getElementById('archiveView').style.display = 'block';
 
-            <details class="history-accordion">
-              <summary>
-                <span style="display:flex; align-items:center; gap:8px;">
-                  <i data-lucide="clapperboard" style="width:15px; height:15px; color:var(--accent);"></i>
-                  AI 全局短影音 Reels 提案與社群文案
-                </span>
-                <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width:16px; height:16px;"></i></span>
-              </summary>
-              <div class="accordion-body">
-                <div class="markdown-body" style="border-left: 3px solid var(--accent); padding-left: 14px;">
-                  ${marked.parse(item.summary || "（尚無提案）")}
-                </div>
-              </div>
-            </details>
-
-            <details class="history-accordion">
-              <summary>
-                <span style="display:flex; align-items:center; gap:8px;">
-                  <i data-lucide="file-text" style="width:15px; height:15px; color:var(--text-muted);"></i>
-                  詳細畫面描述與逐字稿總帳
-                </span>
-                <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width:16px; height:16px;"></i></span>
-              </summary>
-              <div class="accordion-body">
-                ${formatTranscriptContent(item.content, urls)}
-              </div>
-            </details>
-
-            <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border-subtle); padding-top:12px;">
-              <div style="font-size:12.5px; color:var(--text-muted);">
-                ${item.stage4 ? '<span style="color:var(--success); font-weight:600;">✅ 已建立方格子文章 (J欄)</span>' : '尚未產出部落格長文'}
-              </div>
-              <button onclick="openWorkshopById('${item.logId}')" class="action-btn">
-                <i data-lucide="sparkles" style="width:13px; height:13px;"></i> 一鍵產出商周/遠見級部落格文章
-              </button>
-            </div>
-          </div>
-        `;
-      }).join('');
-      safeCreateIcons();
+      document.getElementById('btnStop').style.display = 'none';
+      document.getElementById('btnStop').disabled = false;
+      document.getElementById('btnStart').style.display = 'flex';
+      document.getElementById('btnStart').disabled = false;
+      lucide.createIcons();
     } catch (e) {
-      container.innerHTML = `<div style="text-align:center; color:var(--danger); padding:20px;">載入失敗: ${e.message}</div>`;
+      log("歸檔失敗：" + e.message);
     }
   }
 
+  function startTimer() {
+    timerInterval = setInterval(() => {
+      secondsElapsed++;
+      const m = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+      const s = String(secondsElapsed % 60).padStart(2, '0');
+      document.getElementById('recordTimer').innerText = `${m}:${s}`;
+    }, 1000);
+  }
+
+  
+  function sanitizeTimestamp(raw) {
+    if (!raw) return "未知時間";
+    const str = String(raw).trim();
+    const isoMatch = str.match(/\d{4}[-/]\d{2}[-/]\d{2}(?:[T ]\d{2}:\d{2}(?::\d{2})?(?:\.\d+Z?)?)?/);
+    if (isoMatch) {
+      const d = new Date(isoMatch[0]);
+      if (!isNaN(d.getTime())) {
+        const pad = n => String(n).padStart(2, '0');
+        const y = d.getFullYear();
+        const m = pad(d.getMonth() + 1);
+        const day = pad(d.getDate());
+        const hh = pad(d.getHours());
+        const mm = pad(d.getMinutes());
+        const ss = pad(d.getSeconds());
+        return `${y}/${m}/${day} ${hh}:${mm}:${ss}`;
+      }
+      return isoMatch[0].replace('T', ' ');
+    }
+    return str.length > 25 ? str.substring(0, 22) : str;
+  }
+
+  
+  function renderMarkdown(md) {
+    if (!md) return '<p class="text-muted">（無內容）</p>';
+    if (typeof marked !== 'undefined') {
+      try {
+        return marked.parse(md);
+      } catch (e) {
+        return `<pre style="white-space:pre-wrap;">${escapeHtml(md)}</pre>`;
+      }
+    }
+    return `<pre style="white-space:pre-wrap;">${escapeHtml(md)}</pre>`;
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  
   function formatTranscriptContent(rawText, urls) {
-    if (!rawText || !rawText.trim()) return '<div style="color:var(--text-muted); font-size:13px;">（無逐字稿）</div>';
+    if (!rawText || !rawText.trim()) {
+      return '<div style="color:var(--text-muted); font-size:13.5px; padding:12px 0;">（尚無逐字稿紀錄）</div>';
+    }
+
     const urlList = Array.isArray(urls) ? urls : [];
-    const hasPattern = /【第\s*\d+\s*(?:分鐘|段影音|段)】/.test(rawText);
-    if (!hasPattern) return `<div class="markdown-body">${marked.parse(rawText)}</div>`;
+    const hasChunkPattern = /【第\s*\d+\s*(?:分鐘|段影音|段)】/.test(rawText);
+
+    if (!hasChunkPattern) {
+      return `<div class="markdown-body">${renderMarkdown(rawText)}</div>`;
+    }
 
     const parts = rawText.split(/(【第\s*\d+\s*(?:分鐘|段影音|段)】)/);
-    let html = '', currentTitle = '';
+    let html = '';
+    let currentTitle = '';
 
     for (let i = 0; i < parts.length; i++) {
       const part = parts[i].trim();
       if (!part) continue;
+
       if (/^【第\s*\d+\s*(?:分鐘|段影音|段)】$/.test(part)) {
         currentTitle = part;
       } else {
@@ -1035,51 +1137,172 @@
         const chunkNum = numMatch ? parseInt(numMatch[0], 10) : (Math.floor(i / 2) + 1);
         const videoUrl = urlList[chunkNum - 1] || '';
 
-        let screenDesc = '', voiceText = '';
+        let screenDesc = '';
+        let voiceText = '';
+
         const screenMatch = part.match(/\[畫面描述\]([\s\S]*?)(?=\[語音逐字稿\]|$)/i);
         const voiceMatch = part.match(/\[語音逐字稿\]([\s\S]*?)$/i);
 
         if (screenMatch && screenMatch[1]) {
           screenDesc = screenMatch[1].replace(/(\r?\n\s*[-—]{3,}\s*)?(\r?\n\s*#{1,6}\s*)?$/, '').trim();
         }
-        if (voiceMatch && voiceMatch[1]) voiceText = voiceMatch[1].trim();
-        if (!screenDesc && !voiceText) screenDesc = part;
+        if (voiceMatch && voiceMatch[1]) {
+          voiceText = voiceMatch[1].trim();
+        }
+
+        if (!screenDesc && !voiceText) {
+          screenDesc = part;
+        }
 
         html += `
           <div class="minute-chunk-card">
             <div class="minute-chunk-header">
-              <div style="font-size:13px; font-weight:700; display:flex; align-items:center; gap:6px;">
-                <i data-lucide="clock" style="width:13px; height:13px; color:var(--accent);"></i>
+              <div class="minute-chunk-title">
+                <i data-lucide="clock" style="width: 14px; height: 14px; color: var(--accent);"></i>
                 <span>${currentTitle || ('【第 ' + chunkNum + ' 分鐘】')}</span>
               </div>
-              ${videoUrl ? `<a href="${videoUrl}" target="_blank" class="file-chip"><i data-lucide="film" style="width:12px; height:12px;"></i> 開啟切片</a>` : ''}
+              ${videoUrl ? `<a href="${videoUrl}" target="_blank" class="file-chip"><i data-lucide="film" style="width: 12px; height: 12px;"></i> 開啟切片影片</a>` : ''}
             </div>
             <div class="minute-chunk-content">
-              ${screenDesc ? `<div class="sub-section"><div class="sub-section-title"><i data-lucide="eye" style="width:12px; height:12px;"></i> 畫面操作描述</div><div class="markdown-body">${marked.parse(screenDesc)}</div></div>` : ''}
-              ${voiceText ? `<div class="sub-section"><div class="sub-section-title"><i data-lucide="mic" style="width:12px; height:12px;"></i> 語音逐字稿</div><div class="voice-body">${escapeHtml(voiceText)}</div></div>` : ''}
+              ${screenDesc ? `
+                <div class="sub-section desc-section">
+                  <div class="sub-section-title">
+                    <i data-lucide="eye" style="width: 13px; height: 13px;"></i> 畫面操作描述
+                  </div>
+                  <div class="markdown-body">${renderMarkdown(screenDesc)}</div>
+                </div>
+              ` : ''}
+              ${voiceText ? `
+                <div class="sub-section voice-section">
+                  <div class="sub-section-title">
+                    <i data-lucide="mic" style="width: 13px; height: 13px;"></i> 語音逐字稿
+                  </div>
+                  <div class="voice-body">${escapeHtml(voiceText)}</div>
+                </div>
+              ` : ''}
             </div>
           </div>
         `;
         currentTitle = '';
       }
     }
-    return html || `<div class="markdown-body">${marked.parse(rawText)}</div>`;
+
+    return html || `<div class="markdown-body">${renderMarkdown(rawText)}</div>`;
   }
 
-  function escapeHtml(str) {
-    return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  // 歷史日誌調閱
+  async function loadHistoryLogs() {
+    const container = document.getElementById('historyContainer');
+    container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> 載入中...</div>`;
+    lucide.createIcons();
+
+    try {
+      const logs = await api({ action: "getHistoryLogs" });
+      if (!logs || logs.length === 0) {
+        container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 0; background:var(--card-bg); border:1px solid var(--border); border-radius:16px;">目前尚無歷史錄影紀錄。</div>`;
+        return;
+      }
+
+      container.innerHTML = logs.map(item => {
+        const cleanTime = sanitizeTimestamp(item.timestamp);
+        const isRec = item.status && item.status.includes('錄製中');
+        const urls = Array.isArray(item.urls) ? item.urls : [];
+        const safeSummaryRaw = item.summary || "";
+        const safeContentRaw = item.content || "";
+
+        return `
+          <div class="history-card" data-row-id="${item._rowId || item.rowIndex || ''}">
+            <!-- 卡片頂部資訊列 -->
+            <div class="history-header">
+              <div>
+                <div style="font-weight: 700; font-size: 15px; color: var(--text);">日誌 ID: ${item.logId}</div>
+                <div style="font-size: 12.5px; color: var(--text-muted); font-family: ui-monospace, monospace; margin-top: 4px; display: flex; align-items: center; gap: 5px;">
+                  <i data-lucide="clock" style="width: 13px; height: 13px;"></i> ${cleanTime}
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="badge ${isRec ? 'recording' : ''}">${item.status}</span>
+              </div>
+            </div>
+
+            <!-- 雲端切片按鈕列 -->
+            <div>
+              <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+                雲端切片備份 (${urls.length} 個切片)
+              </div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                ${urls.length > 0 
+                  ? urls.map((u, i) => `<a href="${u}" target="_blank" class="file-chip"><i data-lucide="film" style="width: 13px; height: 13px;"></i> 片段 ${i+1}</a>`).join('')
+                  : '<span style="font-size:12.5px; color:var(--text-muted);">無切片影片</span>'}
+              </div>
+            </div>
+
+            <!-- 按需展開手風琴 1：AI 全局重點整理 -->
+            <details class="history-accordion">
+              <summary>
+                <span style="display: flex; align-items: center; gap: 8px;">
+                  <i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>
+                  AI 全局重點整理
+                </span>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <button type="button" class="action-btn-sm" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute('data-text'), '已複製 AI 全局重點整理')" data-text="${escapeHtml(safeSummaryRaw)}">
+                    <i data-lucide="copy" style="width: 12px; height: 12px;"></i> 複製重點
+                  </button>
+                  <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
+                </div>
+              </summary>
+              <div class="accordion-body">
+                <div class="markdown-body" style="border-left: 3px solid var(--accent); padding-left: 14px;">
+                  ${renderMarkdown(safeSummaryRaw)}
+                </div>
+              </div>
+            </details>
+
+            <!-- 按需展開手風琴 2：詳細畫面描述與逐字稿 -->
+            <details class="history-accordion">
+              <summary>
+                <span style="display: flex; align-items: center; gap: 8px;">
+                  <i data-lucide="file-text" style="width: 15px; height: 15px; color: var(--text-muted);"></i>
+                  詳細畫面描述與逐字稿總帳
+                </span>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <button type="button" class="action-btn-sm" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute('data-text'), '已複製畫面描述與逐字稿總帳')" data-text="${escapeHtml(safeContentRaw)}">
+                    <i data-lucide="copy" style="width: 12px; height: 12px;"></i> 複製逐字稿
+                  </button>
+                  <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
+                </div>
+              </summary>
+              <div class="accordion-body">
+                ${formatTranscriptContent(safeContentRaw, urls)}
+              </div>
+            </details>
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    } catch (e) {
+      container.innerHTML = `<div style="text-align:center; color:var(--danger); padding:30px 0; background:var(--card-bg); border:1px solid var(--border); border-radius:16px;">載入失敗：${e.message}</div>`;
+    }
   }
 
+  // 雙棲 API 呼叫核心（修正空值防護）
   async function api(payload) {
     if (typeof google !== 'undefined' && google.script && google.script.run) {
       return new Promise((resolve, reject) => {
         google.script.run
           .withSuccessHandler(res => {
-            if (!res) { reject(new Error("後端未回傳資料，請確認 GAS 是否已部署最新版本")); return; }
-            if (res.status === 'success') resolve(res.data);
-            else reject(new Error(res.message || "GAS 執行失敗"));
+            if (!res) {
+              reject(new Error("後端未回傳有效資料（請確認 GAS 是否已部署最新版本）"));
+              return;
+            }
+            if (res.status === 'success') {
+              resolve(res.data);
+            } else {
+              reject(new Error(res.message || "GAS 執行遭遇未定義錯誤"));
+            }
           })
-          .withFailureHandler(reject)
+          .withFailureHandler(err => reject(err))
           .handleClientRequest(payload);
       });
     } else {
@@ -1090,144 +1313,11 @@
     }
   }
 
-  async function enableHardware() {
-    try {
-      const constraints = { 
-        video: { 
-          width: { ideal: 1280 },
-          facingMode: "user" 
-        }, 
-        audio: true 
-      };
-      currentStream = await navigator.mediaDevices.getUserMedia(constraints);
-      document.getElementById('mediaPlayer').srcObject = currentStream;
-      document.getElementById('cameraPrompt').style.display = 'none';
-      document.getElementById('controlsIsland').style.display = 'flex';
-      log("攝影設備已就緒。");
-      safeCreateIcons();
-    } catch (e) {
-      log("無法啟用相機: " + e.message);
-    }
-  }
-
-  function toggleVideoTrack() {
-    if (currentStream && currentStream.getVideoTracks().length > 0) {
-      isVideoEnabled = !isVideoEnabled;
-      currentStream.getVideoTracks()[0].enabled = isVideoEnabled;
-      updateIcon('btnVideoTrack', 'iconVideo', isVideoEnabled ? 'video' : 'video-off');
-    }
-  }
-
-  function switchMediaSource() { log("切換媒體來源"); }
-  function togglePause() { log("暫停/恢復錄製"); }
-
-  async function startRecording() {
-    document.getElementById('btnStart').disabled = true;
-    document.getElementById('archiveView').style.display = 'none';
-    log("正在向雲端建立專屬日誌資料夾...");
-    try {
-      const res = await api({ action: "initLog" });
-      logSession = res;
-      isRecording = true;
-      chunkIndex = 1;
-      secondsElapsed = 0;
-      document.getElementById('btnStart').style.display = 'none';
-      document.getElementById('btnStop').style.display = 'flex';
-      document.getElementById('statusBadge').style.display = 'flex';
-      timerInterval = setInterval(() => {
-        secondsElapsed++;
-        const m = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
-        const s = String(secondsElapsed % 60).padStart(2, '0');
-        document.getElementById('recordTimer').innerText = `${m}:${s}`;
-      }, 1000);
-      startChunkRecording();
-      safeCreateIcons();
-    } catch (e) {
-      log("初始化錯誤: " + e.message);
-      document.getElementById('btnStart').disabled = false;
-    }
-  }
-
-  function startChunkRecording() {
-    if (!isRecording || !currentStream) return;
-    recordedChunks = [];
-    
-    let mime = '';
-    const mimeTypes = ['video/webm;codecs=vp9', 'video/webm', 'video/mp4', '']; 
-    for (const t of mimeTypes) {
-      if (t === '' || MediaRecorder.isTypeSupported(t)) {
-        mime = t;
-        break;
-      }
-    }
-
-    const options = mime ? { mimeType: mime } : undefined;
-    mediaRecorder = new MediaRecorder(currentStream, options);
-    
-    mediaRecorder.ondataavailable = e => { if (e.data && e.data.size > 0) recordedChunks.push(e.data); };
-    mediaRecorder.onstop = () => {
-      if (recordedChunks.length > 0) {
-        const chunkBlob = new Blob(recordedChunks, { type: mime || 'video/mp4' });
-        processChunk(chunkBlob, mime || 'video/mp4', chunkIndex++);
-        recordedChunks = [];
-      }
-      if (isRecording && mediaRecorder && mediaRecorder.state === "inactive") startChunkRecording();
-    };
-    mediaRecorder.start();
-    chunkTimer = setTimeout(() => {
-      if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
-    }, 60000);
-  }
-
-  function processChunk(blob, mime, index) {
-    log(`區段 ${index} 切片完成，背景傳輸中...`);
-    const reader = new FileReader();
-    reader.readAsDataURL(blob);
-    reader.onloadend = async () => {
-      const base64 = reader.result.split(',')[1];
-      try {
-        await api({
-          action: "processChunkRealtime",
-          base64Data: base64,
-          mimeType: mime,
-          folderId: logSession.folderId,
-          rowIndex: logSession.rowIndex,
-          chunkIndex: index
-        });
-        log(`區段 ${index} 已寫入雲端硬碟與試算表！`);
-      } catch (e) { log(`區段 ${index} 處理失敗: ` + e.message); }
-    };
-  }
-
-  async function stopRecording() {
-    isRecording = false;
-    clearTimeout(chunkTimer);
-    clearInterval(timerInterval);
-    if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
-    if (currentStream) currentStream.getTracks().forEach(t => t.stop());
-    document.getElementById('mediaPlayer').srcObject = null;
-    document.getElementById('cameraPrompt').style.display = 'flex';
-    document.getElementById('controlsIsland').style.display = 'none';
-    document.getElementById('statusBadge').style.display = 'none';
-    document.getElementById('btnStop').style.display = 'none';
-    document.getElementById('btnStart').style.display = 'flex';
-    document.getElementById('btnStart').disabled = false;
-    log("錄影結束，提煉 Reels 短影音提案並歸檔 D 欄中...");
-
-    try {
-      const res = await api({ action: "finalizeLog", rowIndex: logSession.rowIndex });
-      document.getElementById('archiveSummary').innerHTML = marked.parse(res.summary || "");
-      document.getElementById('archiveContent').innerHTML = formatTranscriptContent(res.content, res.urls);
-      document.getElementById('archiveView').style.display = 'block';
-      log("歸檔完成！可在歷史日誌總帳中點選寫作按鈕進入四階段工作坊。");
-      safeCreateIcons();
-    } catch (e) { log("歸檔失敗: " + e.message); }
-  }
-
   window.addEventListener('DOMContentLoaded', () => {
-    safeCreateIcons();
+    lucide.createIcons();
   });
 </script>
 
 </body>
 </html>
+
