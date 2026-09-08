@@ -420,6 +420,14 @@
       margin-top: 16px;
     }
 
+    .preview-main-title {
+      font-size: 26px; 
+      font-weight: 800; 
+      color: var(--text); 
+      margin-bottom: 16px; 
+      line-height: 1.4;
+    }
+
     .blog-meta-header {
       display: flex;
       flex-wrap: wrap;
@@ -521,7 +529,6 @@
       color: var(--text);
       font-weight: 800;
     }
-     
     .markdown-body h3 { 
       font-size: 20px; 
       color: var(--accent); 
@@ -559,7 +566,6 @@
       font-style: normal;
     }
 
-     
     .markdown-body hr {
       border: 0;
       height: 1px;
@@ -1703,17 +1709,17 @@
             <details class="history-accordion">
               <summary>
                 <span style="display: flex; align-items: center; gap: 8px;">
-                  <i data-lucide="play-circle" style="width: 15px; height: 15px; color: var(--accent);"></i>
+                  <i data-lucide="play-circle" style="width: 16px; height: 16px; color: var(--accent);"></i>
                   播放全片
                 </span>
                 <button class="action-btn-sm action-btn-primary" onclick="event.stopPropagation(); window.startSeamlessPlay('${item.logId}')">
-                  <i data-lucide="play" style="width: 13px; height: 13px;"></i> 啟動
+                  <i data-lucide="play" style="width: 14px; height: 14px;"></i> 啟動
                 </button>
               </summary>
               <div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border);">
                 <video id="player-${item.logId}" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block;"></video>
                 <div id="player-status-${item.logId}" style="padding: 12px 16px; background: #0f172a; color: #f8fafc; font-size: 14px; text-align: center;">
-                  點擊右上方「啟動」按鈕
+                  等待載入中... (請點擊右上方「啟動」按鈕)
                 </div>
               </div>
             </details>
@@ -1722,7 +1728,7 @@
             <details class="history-accordion">
               <summary>
                 <span style="display: flex; align-items: center; gap: 8px;">
-                  <i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>
+                  <i data-lucide="sparkles" style="width: 16px; height: 16px; color: var(--accent);"></i>
                   短影音提案
                 </span>
                 <div class="flex-wrap-gap">
@@ -1752,7 +1758,7 @@
             <details class="history-accordion">
               <summary>
                 <span style="display: flex; align-items: center; gap: 8px;">
-                  <i data-lucide="file-text" style="width: 15px; height: 15px; color: var(--text-muted);"></i>
+                  <i data-lucide="file-text" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
                   詳細逐字稿
                 </span>
                 <div class="flex-wrap-gap">
@@ -1800,6 +1806,24 @@
     document.getElementById('finalArticleHook').value = logItem.articleHook || '';
     document.getElementById('finalArticleBody').value = logItem.articleBody || '';
     document.getElementById('finalArticleEnding').value = logItem.articleEnding || '';
+
+    // [無縫背景預載]：讓預覽時可以「秒播」第一段影片
+    const urls = window.logPlaylists[logItem.logId];
+    if (urls && urls.length > 0) {
+      if (!window.blobBuffers[logItem.logId]) window.blobBuffers[logItem.logId] = [];
+      if (!window.blobBuffers[logItem.logId][0]) {
+        api({ action: 'getVideoChunk', url: urls[0] }).then(res => {
+          fetch(`data:${res.mimeType};base64,${res.base64}`)
+          .then(r => r.blob())
+          .then(blob => {
+            window.blobBuffers[logItem.logId][0] = URL.createObjectURL(blob);
+            // 如果預覽畫面已經被渲染出來，順便更新狀態文字
+            const previewStatus = document.getElementById('preview-player-status');
+            if (previewStatus) previewStatus.innerText = "✅ 影片已就緒，可秒開播放";
+          }).catch(e => console.log('Blob轉換失敗', e));
+        }).catch(e => console.log('預載失敗', e));
+      }
+    }
 
     // 初始化時，如果已有完整 Markdown 內容，就幫他預覽渲染
     if (logItem.articleFull) {
@@ -1960,9 +1984,38 @@
     const today = new Date();
     const dateStr = today.getFullYear() + '/' + String(today.getMonth() + 1).padStart(2, '0') + '/' + String(today.getDate()).padStart(2, '0');
     
+    const logId = window.currentSelectedLog.logId;
+    const urls = window.logPlaylists[logId];
+
+    // 從 Markdown 動態抽離 H1 大標題，避免在內文中重複顯示
+    const titleMatch = fullMd.match(/^#\s+(.+)\n/);
+    const displayTitle = titleMatch ? titleMatch[1] : document.getElementById('finalArticleTitle').value;
+    const bodyMd = fullMd.replace(/^#\s+.+\n/, ''); // 拔除 Markdown 的 H1 標籤
+
+    // 動態組裝影片播放器 HTML
+    let videoHtml = '';
+    if (urls && urls.length > 0) {
+      const isPreloaded = window.blobBuffers[logId] && window.blobBuffers[logId][0];
+      const statusText = isPreloaded ? "✅ 影片已就緒，可秒開播放" : "⚡ 背景預載中，點擊可強制啟動";
+
+      videoHtml = `
+        <div style="background: #000; border-radius: 8px; overflow: hidden; margin-bottom: 32px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+          <video id="preview-player" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block;"></video>
+          <div style="display:flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #0f172a;">
+               <span id="preview-player-status" style="color: #f8fafc; font-size: 13px;">${statusText}</span>
+               <button class="action-btn-sm" onclick="window.initPreviewPlayer('${logId}')" style="background: var(--accent); color: #fff; border: none; padding: 6px 16px;">
+                   <i data-lucide="play" style="width: 14px; height: 14px;"></i> 播放
+               </button>
+          </div>
+        </div>
+      `;
+    }
+    
     // 純前端組裝的部落格視覺外殼
     const previewHtml = `
       <div class="blog-preview-wrapper">
+        <h1 class="preview-main-title">${escapeHtml(displayTitle)}</h1>
+
         <div class="blog-meta-header">
           <div class="blog-author-info">
             <div class="blog-avatar">T</div>
@@ -1978,8 +2031,10 @@
           </div>
         </div>
 
+        ${videoHtml}
+
         <div class="markdown-body">
-          ${renderMarkdown(fullMd)}
+          ${renderMarkdown(bodyMd)}
         </div>
 
         <div class="blog-footer-cta">
@@ -2001,7 +2056,84 @@
 
     document.getElementById('fullArticlePreview').innerHTML = previewHtml;
     lucide.createIcons();
+    
+    // 若影片已預載，自動掛載 src 讓畫面出現影片首圖 (封面)
+    if (urls && urls.length > 0 && window.blobBuffers[logId] && window.blobBuffers[logId][0]) {
+      document.getElementById('preview-player').src = window.blobBuffers[logId][0];
+    }
   }
+
+  // 獨立的預覽區影片播放邏輯 (同 SeamlessPlay)
+  window.initPreviewPlayer = async function(logId) {
+    const urls = window.logPlaylists[logId];
+    if (!urls || urls.length === 0) return;
+
+    const videoEl = document.getElementById('preview-player');
+    const statusEl = document.getElementById('preview-player-status');
+
+    if (videoEl.dataset.playing === 'true') return;
+    videoEl.dataset.playing = 'true';
+
+    if (!window.blobBuffers[logId]) window.blobBuffers[logId] = [];
+    const buffer = window.blobBuffers[logId];
+
+    let currentIndex = 0;
+
+    const loadChunk = async (index) => {
+      if (index >= urls.length) return null;
+      if (buffer[index]) return buffer[index];
+
+      statusEl.innerText = `⏳ 讀取 第 ${index + 1} / ${urls.length} 段...`;
+      try {
+        const res = await api({ action: 'getVideoChunk', url: urls[index] });
+        const fetchRes = await fetch(`data:${res.mimeType};base64,${res.base64}`);
+        const blob = await fetchRes.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        buffer[index] = blobUrl;
+        return blobUrl;
+      } catch (err) {
+        console.error(err);
+        statusEl.innerText = `❌ 第 ${index + 1} 段失敗`;
+        return null;
+      }
+    };
+
+    const playNext = async () => {
+      if (currentIndex >= urls.length) {
+        statusEl.innerText = '✅ 播放完畢';
+        videoEl.dataset.playing = 'false';
+        return;
+      }
+
+      statusEl.innerText = `⚡ 播放中: 第 ${currentIndex + 1} / ${urls.length} 段`;
+
+      let blobUrl = buffer[currentIndex];
+      if (!blobUrl) {
+        blobUrl = await loadChunk(currentIndex);
+      }
+
+      if (blobUrl) {
+        videoEl.src = blobUrl;
+        videoEl.play().catch(e => {
+          statusEl.innerText = `⏸ 準備就緒 (請點擊畫面播放)`;
+        });
+
+        if (currentIndex + 1 < urls.length) {
+          loadChunk(currentIndex + 1).catch(e => console.log('背景預載失敗', e));
+        }
+      } else {
+        currentIndex++;
+        playNext();
+      }
+    };
+
+    videoEl.onended = () => {
+      currentIndex++;
+      playNext();
+    };
+
+    playNext();
+  };
 
   function assembleFullArticle() {
     const title = document.getElementById('finalArticleTitle').value.trim();
