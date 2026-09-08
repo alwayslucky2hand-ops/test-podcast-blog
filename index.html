@@ -796,7 +796,6 @@
         <button class="ctrl-btn" id="btnFullscreen" onclick="toggleFullscreen()" title="全螢幕">
           <i data-lucide="maximize" id="iconFullscreen"></i>
         </button>
-        
         <button class="ctrl-btn" id="btnCloseCamera" onclick="closeCamera()" title="關閉相機">
           <i data-lucide="x"></i>
         </button>
@@ -1143,7 +1142,6 @@
     }
   }
 
-  
   function closeCamera() {
     if (currentStream) {
       currentStream.getTracks().forEach(t => t.stop());
@@ -1670,9 +1668,9 @@
           <div class="history-card" data-row-id="${item.logId}">
             <div class="history-header">
               <div>
-                <div style="font-weight: 700; font-size: 15px; color: var(--text);">ID: ${item.logId}</div>
-                <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px; display: flex; align-items: center; gap: 6px;">
-                  <i data-lucide="clock" style="width: 13px; height: 13px;"></i> ${cleanTime}
+                <div style="font-weight: 700; font-size: 16px; color: var(--text);">ID: ${item.logId}</div>
+                <div style="font-size: 13px; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; gap: 6px;">
+                  <i data-lucide="clock" style="width: 14px; height: 14px;"></i> ${cleanTime}
                 </div>
               </div>
               <div class="flex-wrap-gap">
@@ -1701,17 +1699,17 @@
             <details class="history-accordion">
               <summary>
                 <span style="display: flex; align-items: center; gap: 8px;">
-                  <i data-lucide="play-circle" style="width: 15px; height: 15px; color: var(--accent);"></i>
+                  <i data-lucide="play-circle" style="width: 16px; height: 16px; color: var(--accent);"></i>
                   播放全片
                 </span>
                 <button class="action-btn-sm action-btn-primary" onclick="event.stopPropagation(); window.startSeamlessPlay('${item.logId}')">
-                  <i data-lucide="play" style="width: 13px; height: 13px;"></i> 播放
+                  <i data-lucide="play" style="width: 14px; height: 14px;"></i> 啟動
                 </button>
               </summary>
               <div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border);">
                 <video id="player-${item.logId}" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block;"></video>
-                <div id="player-status-${item.logId}" style="padding: 10px 14px; background: #0f172a; color: #f8fafc; font-size: 13px; text-align: center;">
-                  點擊右上方「播放」按鈕
+                <div id="player-status-${item.logId}" style="padding: 12px 16px; background: #0f172a; color: #f8fafc; font-size: 14px; text-align: center;">
+                  點擊右上方「啟動」按鈕
                 </div>
               </div>
             </details>
@@ -1720,15 +1718,15 @@
             <details class="history-accordion">
               <summary>
                 <span style="display: flex; align-items: center; gap: 8px;">
-                  <i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>
+                  <i data-lucide="sparkles" style="width: 16px; height: 16px; color: var(--accent);"></i>
                   短影音提案
                 </span>
                 <div class="flex-wrap-gap">
                   <button type="button" id="btn-edit-summary-${item.logId}" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); toggleEditMode('${item.logId}', 'summary')" title="編輯">
-                    <i data-lucide="edit-3" style="width: 15px; height: 15px;"></i>
+                    <i data-lucide="edit-3" style="width: 16px; height: 16px;"></i>
                   </button>
                   <button type="button" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute('data-text'))" data-text="${escapeHtml(safeSummaryRaw)}" title="複製">
-                    <i data-lucide="copy" style="width: 15px; height: 15px;"></i>
+                    <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
                   </button>
                   <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
                 </div>
@@ -1750,15 +1748,15 @@
             <details class="history-accordion">
               <summary>
                 <span style="display: flex; align-items: center; gap: 8px;">
-                  <i data-lucide="file-text" style="width: 15px; height: 15px; color: var(--text-muted);"></i>
+                  <i data-lucide="file-text" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
                   詳細逐字稿
                 </span>
                 <div class="flex-wrap-gap">
                   <button type="button" id="btn-edit-content-${item.logId}" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); toggleEditMode('${item.logId}', 'content')" title="編輯">
-                    <i data-lucide="edit-3" style="width: 15px; height: 15px;"></i>
+                    <i data-lucide="edit-3" style="width: 16px; height: 16px;"></i>
                   </button>
                   <button type="button" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute('data-text'))" data-text="${escapeHtml(safeContentRaw)}" title="複製">
-                    <i data-lucide="copy" style="width: 15px; height: 15px;"></i>
+                    <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
                   </button>
                   <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
                 </div>
@@ -2012,7 +2010,7 @@
       return;
     }
 
-    // 將所有步驟組合為乾淨的 Markdown，並存入全域變數
+    // 將所有步驟組合為乾淨的 Markdown，並存入全域變數 (因為防越界指令生效，body 與 ending 不會再自帶標題與開頭)
     const fullMd = `# ${title}\n\n> **閱讀提醒**：這是一篇寫給身兼數職、渴望用 AI 解放時間的微型創業者的陪伴成長指南。\n\n${hook}\n\n---\n\n${body}\n\n---\n\n${ending}`;
     window.currentSelectedFullMd = fullMd;
 
