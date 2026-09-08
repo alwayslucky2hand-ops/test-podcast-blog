@@ -541,16 +541,6 @@
       background: #ffffff;
     }
 
-    .theme-select {
-      padding: 8px 12px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: #ffffff;
-      font-size: 13.5px;
-      color: var(--text);
-      outline: none;
-    }
-
     .title-option-card {
       padding: 12px 14px;
       border: 1px solid var(--border);
@@ -750,13 +740,7 @@
           </div>
         </div>
         <div style="display: flex; gap: 8px; align-items: center;">
-          <select id="articleThemeSelect" class="theme-select">
-            <option value="教知識 (行業揭秘/幹貨/避坑)">教知識 (乾貨輸出/懶人包)</option>
-            <option value="說故事 (成就故事/他人故事)">說故事 (配角思維/轉折契機)</option>
-            <option value="曬過程 (製作/改造/任務挑戰)">曬過程 (Before/After對比)</option>
-            <option value="熬雞湯 (自我成長/處事之道)">熬雞湯 (心靈共鳴金句)</option>
-            <option value="選立場 (犀利批判/反常識)">選立場 (三觀碰撞/反常識)</option>
-          </select>
+          
           <button class="action-btn-sm action-btn-primary" onclick="generateStepTitles()">
             <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> 產生 20 組策略提案
           </button>
@@ -1666,19 +1650,17 @@
     container.innerHTML = `<div style="color: var(--accent); padding: 10px 0;"><i data-lucide="loader" class="spin"></i> 正在深度分析逐字稿，提煉 20 組爆款策略提案...</div>`;
     lucide.createIcons();
 
-    const theme = document.getElementById('articleThemeSelect').value;
-
     try {
       const res = await api({
         action: "generateArticleStep",
         step: 1,
-        theme: theme,
+        // 已移除前端發送的 theme，由後端 AI 自行發散
         content: window.currentSelectedLog.content
       });
 
       const titles = res.titles || [];
       container.innerHTML = titles.map((t, idx) => {
-        // 使用 ||| 分割標題本體與戰略說明，以提供乾淨的選擇
+        
         const parts = t.split('|||');
         const mainTitle = parts[0] ? parts[0].replace(/^[\d\.、\s]+/, '').trim() : t.trim();
         const subTitle = parts[1] ? parts[1].trim() : '';
