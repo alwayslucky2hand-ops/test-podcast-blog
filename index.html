@@ -300,35 +300,6 @@
     }
 
      
-    .playlist-btn {
-      background: rgba(255, 255, 255, 0.1);
-      color: #a1a1a6;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 8px;
-      padding: 7px 14px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-      flex-shrink: 0;  
-    }
-
-    .playlist-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
-      color: #ffffff;
-    }
-
-    .playlist-btn.active {
-      background: var(--accent);
-      color: #ffffff;
-      border-color: var(--accent);
-      box-shadow: 0 0 10px rgba(0, 113, 227, 0.4);
-    }
-
-     
     .action-btn-sm {
       display: inline-flex;
       align-items: center;
@@ -692,6 +663,10 @@
   let recordedChunks = [];
 
   const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  
+  window.logPlaylists = {};
+  window.blobBuffers = {};
 
   function log(msg) {
     const el = document.getElementById('sysLog');
@@ -1230,31 +1205,6 @@
     return html || `<div class="markdown-body">${renderMarkdown(rawText)}</div>`;
   }
 
-  // ==========================================
-  
-  
-  function getDrivePreviewUrl(url) {
-    if (!url) return '';
-    const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-    
-    return match ? `https:
-  }
-
-  
-  
-  
-  window.switchPlaylist = function(logId, index, previewUrl, btnEl) {
-    const iframe = document.getElementById(`iframe-player-${logId}`);
-    if(iframe) iframe.src = previewUrl;
-
-    
-    const container = btnEl.closest('.playlist-container');
-    if (container) {
-      container.querySelectorAll('.playlist-btn').forEach(btn => btn.classList.remove('active'));
-      btnEl.classList.add('active');
-    }
-  };
-
   async function loadHistoryLogs() {
     const container = document.getElementById('historyContainer');
     container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> 載入中...</div>`;
@@ -1267,12 +1217,19 @@
         return;
       }
 
+      
+      window.logPlaylists = {};
+      window.blobBuffers = {};
+
       container.innerHTML = logs.map(item => {
         const cleanTime = sanitizeTimestamp(item.timestamp);
         const isRec = item.status && item.status.includes('錄製中');
         const urls = Array.isArray(item.urls) ? item.urls : [];
         const safeSummaryRaw = item.summary || "";
         const safeContentRaw = item.content || "";
+
+        
+        window.logPlaylists[item.logId] = urls;
 
         return `
           <div class="history-card" data-row-id="${item.logId}">
@@ -1286,7 +1243,6 @@
               </div>
               <div style="display: flex; align-items: center; gap: 8px;">
                 <span class="badge ${isRec ? 'recording' : ''}">${item.status}</span>
-                <!-- 刪除按鈕 -->
                 <button type="button" class="action-btn-sm" style="color: var(--danger); border-color: rgba(255,59,48,0.3); background: rgba(255,59,48,0.05);" onclick="deleteHistoryLog('${item.logId}')">
                   <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i> 刪除
                 </button>
@@ -1306,28 +1262,21 @@
             </div>
 
             ${urls.length > 0 ? `
-            <!-- 【全新升級】手風琴 0：沉浸式影音播放清單 (100% 防禦 NotSupportedError) -->
+            <!-- 【全新革命版】手風琴 0：GAS Base64 預載緩衝引擎 (徹底避開 Google Drive CORS 阻擋) -->
             <details class="history-accordion">
               <summary>
                 <span style="display: flex; align-items: center; gap: 8px;">
                   <i data-lucide="play-circle" style="width: 15px; height: 15px; color: var(--accent);"></i>
-                  沉浸式影音播放清單 (原生加速版)
+                  全片無縫連續播放器 (前端緩衝串流)
                 </span>
-                <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
+                <button class="action-btn-sm" style="background: var(--accent); color: white; border-color: var(--accent);" onclick="event.stopPropagation(); window.startSeamlessPlay('${item.logId}')">
+                  <i data-lucide="play" style="width: 12px; height: 12px;"></i> 啟動串流
+                </button>
               </summary>
               <div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border-subtle);">
-                <!-- 原生 Iframe 播放區 -->
-                <div style="position: relative; width: 100%; aspect-ratio: 16/9; background: #000;">
-                  <iframe id="iframe-player-${item.logId}" src="${getDrivePreviewUrl(urls[0])}" style="width: 100%; height: 100%; border: none;" allow="autoplay; fullscreen"></iframe>
-                </div>
-                <!-- 智慧切換按鈕列 (Netflix 風格) -->
-                <div class="playlist-container" style="padding: 12px 16px; background: #1d1d1f; display: flex; align-items: center; gap: 8px; overflow-x: auto; white-space: nowrap; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
-                  <span style="color: #f5f5f7; font-size: 13px; font-weight: 600; margin-right: 4px;">切換片段:</span>
-                  ${urls.map((u, i) => `
-                    <button class="playlist-btn ${i === 0 ? 'active' : ''}" onclick="window.switchPlaylist('${item.logId}', ${i}, '${getDrivePreviewUrl(u)}', this)">
-                      <i data-lucide="play" style="width: 13px; height: 13px;"></i> 片段 ${i+1}
-                    </button>
-                  `).join('')}
+                <video id="player-${item.logId}" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block;"></video>
+                <div id="player-status-${item.logId}" style="padding: 10px 14px; background: #1d1d1f; color: #f5f5f7; font-size: 13px; font-weight: 500; text-align: center; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
+                  等待載入中... (請點擊右上方「啟動串流」按鈕)
                 </div>
               </div>
             </details>
@@ -1341,7 +1290,6 @@
                   AI 爆款短影音提案
                 </span>
                 <div style="display: flex; align-items: center; gap: 8px;">
-                  <!-- 編輯按鈕 -->
                   <button type="button" id="btn-edit-summary-${item.logId}" class="action-btn-sm" onclick="event.stopPropagation(); toggleEditMode('${item.logId}', 'summary')">
                     <i data-lucide="edit-3" style="width: 12px; height: 12px;"></i> 編輯
                   </button>
@@ -1352,11 +1300,9 @@
                 </div>
               </summary>
               <div class="accordion-body">
-                <!-- 唯讀模式 -->
                 <div id="view-summary-${item.logId}" class="markdown-body" style="border-left: 3px solid var(--accent); padding-left: 14px;">
                   ${renderMarkdown(safeSummaryRaw)}
                 </div>
-                <!-- 編輯模式 (預設隱藏) -->
                 <div id="edit-summary-${item.logId}" style="display: none; flex-direction: column; gap: 10px;">
                   <textarea id="input-summary-${item.logId}" style="width: 100%; min-height: 180px; padding: 12px; border: 1px solid var(--accent); border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; line-height: 1.6;">${escapeHtml(safeSummaryRaw)}</textarea>
                   <div style="display: flex; justify-content: flex-end; gap: 8px;">
@@ -1375,7 +1321,6 @@
                   詳細畫面描述與逐字稿總帳
                 </span>
                 <div style="display: flex; align-items: center; gap: 8px;">
-                  <!-- 編輯按鈕 -->
                   <button type="button" id="btn-edit-content-${item.logId}" class="action-btn-sm" onclick="event.stopPropagation(); toggleEditMode('${item.logId}', 'content')">
                     <i data-lucide="edit-3" style="width: 12px; height: 12px;"></i> 編輯
                   </button>
@@ -1386,11 +1331,9 @@
                 </div>
               </summary>
               <div class="accordion-body">
-                <!-- 唯讀模式 -->
                 <div id="view-content-${item.logId}">
                   ${formatTranscriptContent(safeContentRaw, urls)}
                 </div>
-                <!-- 編輯模式 (預設隱藏) -->
                 <div id="edit-content-${item.logId}" style="display: none; flex-direction: column; gap: 10px;">
                   <textarea id="input-content-${item.logId}" style="width: 100%; min-height: 250px; padding: 12px; border: 1px solid var(--accent); border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; line-height: 1.6;">${escapeHtml(safeContentRaw)}</textarea>
                   <div style="display: flex; justify-content: flex-end; gap: 8px;">
@@ -1489,6 +1432,98 @@
       btnElement.style.opacity = "1";
     }
   }
+
+  // ==========================================
+  // 【革命性核心】GAS Base64 預載隱形緩衝引擎
+  // ==========================================
+  window.startSeamlessPlay = async function(logId) {
+    const urls = window.logPlaylists[logId];
+    if (!urls || urls.length === 0) return;
+
+    const videoEl = document.getElementById(`player-${logId}`);
+    const statusEl = document.getElementById(`player-status-${logId}`);
+
+    // 防止重複點擊啟動
+    if (videoEl.dataset.playing === 'true') return;
+    videoEl.dataset.playing = 'true';
+
+    // 如果手風琴尚未打開，自動將其展開
+    const detailsNode = videoEl.closest('details');
+    if (detailsNode && !detailsNode.open) detailsNode.open = true;
+
+    // 初始化該日誌的獨立緩衝區
+    if (!window.blobBuffers[logId]) window.blobBuffers[logId] = [];
+    const buffer = window.blobBuffers[logId];
+
+    let currentIndex = 0;
+
+    // 負責向 GAS 索取 Base64 影片並轉為本地 Blob (記憶體網址)
+    const loadChunk = async (index) => {
+      if (index >= urls.length) return null;
+      if (buffer[index]) return buffer[index]; // 若已在記憶體中，直接返回
+
+      statusEl.innerText = `⏳ 正在透過後端讀取 第 ${index + 1} / ${urls.length} 段切片...`;
+      try {
+        // 1. 呼叫 GAS 後端把 Google Drive 影片讀出，變成 Base64
+        const res = await api({ action: 'getVideoChunk', url: urls[index] });
+        
+        // 2. 利用瀏覽器原生的 fetch 效能，瞬間將 Base64 轉換為二進位 Blob (避免 JS 迴圈死機)
+        const fetchRes = await fetch(`data:${res.mimeType};base64,${res.base64}`);
+        const blob = await fetchRes.blob();
+        
+        // 3. 建立本地端的虛擬網址 (不受 CORS 限制)
+        const blobUrl = URL.createObjectURL(blob);
+        buffer[index] = blobUrl;
+        return blobUrl;
+      } catch (err) {
+        console.error(err);
+        statusEl.innerText = `❌ 第 ${index + 1} 段載入失敗: ${err.message}`;
+        return null;
+      }
+    };
+
+    // 播放調度器
+    const playNext = async () => {
+      if (currentIndex >= urls.length) {
+        statusEl.innerText = '✅ 全片無縫播放完畢';
+        videoEl.dataset.playing = 'false'; // 允許再次點擊重播
+        return;
+      }
+
+      statusEl.innerText = `⚡ 播放中: 第 ${currentIndex + 1} / ${urls.length} 段 (背景自動預載下一段中...)`;
+
+      // 取得或下載當前影片段
+      let blobUrl = buffer[currentIndex];
+      if (!blobUrl) {
+         blobUrl = await loadChunk(currentIndex);
+      }
+
+      if (blobUrl) {
+        videoEl.src = blobUrl;
+        videoEl.play().catch(e => {
+          statusEl.innerText = `⏸ 準備就緒：第 ${currentIndex + 1} 段 (請手動點擊畫面播放鍵)`;
+        });
+
+        // 【無縫關鍵】在此段播放的同時，利用非同步背景提前下載並轉檔下一段！
+        if (currentIndex + 1 < urls.length) {
+          loadChunk(currentIndex + 1).catch(e => console.log('背景預載下一段失敗', e));
+        }
+      } else {
+        // 容錯防禦：若該段損毀，直接跳過播放下一段
+        currentIndex++;
+        playNext();
+      }
+    };
+
+    // 監聽當前影片結束事件，無縫替換來源並接續播放
+    videoEl.onended = () => {
+      currentIndex++;
+      playNext();
+    };
+
+    // 正式點火啟動
+    playNext();
+  };
 
 </script>
 
