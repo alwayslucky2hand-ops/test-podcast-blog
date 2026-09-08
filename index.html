@@ -212,7 +212,7 @@
      
     .terminal-log {
       width: 100%;
-      height: 120px;  
+      height: 120px; 
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 14px;
@@ -297,6 +297,35 @@
     .file-chip:hover {
       background: var(--accent-soft);
       border-color: rgba(0, 113, 227, 0.3);
+    }
+
+     
+    .playlist-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: #a1a1a6;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      flex-shrink: 0;  
+    }
+
+    .playlist-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+    }
+
+    .playlist-btn.active {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+      box-shadow: 0 0 10px rgba(0, 113, 227, 0.4);
     }
 
      
@@ -664,9 +693,6 @@
 
   const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-  
-  window.logPlaylists = {};
-
   function log(msg) {
     const el = document.getElementById('sysLog');
     if (!el) return;
@@ -849,7 +875,6 @@
     if (wasRecording && mediaRecorder && mediaRecorder.state === "recording") {
       log(`[系統] 偵測到硬體切換，當前區段即刻切片並發送雲端處理...`);
       clearTimeout(chunkTimer);
-      
       await stopMediaRecorderAsync();
     }
 
@@ -933,7 +958,6 @@
 
     mediaRecorder.start();
 
-    
     chunkTimer = setTimeout(() => {
       if (mediaRecorder && mediaRecorder.state === "recording") {
         log(`[系統] 第 ${chunkIndex} 段影音已達 60 秒，自動切片並背景傳輸至雲端處理...`);
@@ -948,7 +972,6 @@
       const reader = new FileReader();
       reader.readAsDataURL(blob);
       reader.onloadend = async () => {
-        
         const base64 = reader.result.split(',')[1];
         log(`> [處理中] 區段 ${index} 正在背景進行 Gemini AI 逐字稿分析與試算表寫入...`);
         try {
@@ -1021,7 +1044,6 @@
       log(`[系統] 偵測到結束指令，最後一段殘餘切片 (未滿 60 秒) 即刻發送雲端處理...`);
     }
 
-    
     await stopMediaRecorderAsync();
 
     if (currentStream) {
@@ -1044,7 +1066,6 @@
     document.getElementById('btnStop').disabled = true;
     document.getElementById('btnPause').style.display = 'none';
 
-    
     while (activeUploadTasks.size > 0) {
       await Promise.all(Array.from(activeUploadTasks));
     }
@@ -1087,7 +1108,6 @@
     }, 1000);
   }
 
-  
   function sanitizeTimestamp(raw) {
     if (!raw) return "未知時間";
     const str = String(raw).trim();
@@ -1109,7 +1129,6 @@
     return str.length > 25 ? str.substring(0, 22) : str;
   }
 
-  
   function renderMarkdown(md) {
     if (!md) return '<p class="text-muted">（無內容）</p>';
     if (typeof marked !== 'undefined') {
@@ -1131,7 +1150,6 @@
       .replace(/'/g, "&#039;");
   }
 
-  
   function formatTranscriptContent(rawText, urls) {
     if (!rawText || !rawText.trim()) {
       return '<div style="color:var(--text-muted); font-size:13.5px; padding:12px 0;">（尚無逐字稿紀錄）</div>';
@@ -1212,7 +1230,31 @@
     return html || `<div class="markdown-body">${renderMarkdown(rawText)}</div>`;
   }
 
-  // 歷史日誌調閱 (包含刪除與編輯結構，以及無縫連續播放器注入)
+  // ==========================================
+  
+  
+  function getDrivePreviewUrl(url) {
+    if (!url) return '';
+    const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    
+    return match ? `https:
+  }
+
+  
+  
+  
+  window.switchPlaylist = function(logId, index, previewUrl, btnEl) {
+    const iframe = document.getElementById(`iframe-player-${logId}`);
+    if(iframe) iframe.src = previewUrl;
+
+    
+    const container = btnEl.closest('.playlist-container');
+    if (container) {
+      container.querySelectorAll('.playlist-btn').forEach(btn => btn.classList.remove('active'));
+      btnEl.classList.add('active');
+    }
+  };
+
   async function loadHistoryLogs() {
     const container = document.getElementById('historyContainer');
     container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> 載入中...</div>`;
@@ -1225,18 +1267,12 @@
         return;
       }
 
-      // 重置全局連續播放器記憶體
-      window.logPlaylists = {};
-
       container.innerHTML = logs.map(item => {
         const cleanTime = sanitizeTimestamp(item.timestamp);
         const isRec = item.status && item.status.includes('錄製中');
         const urls = Array.isArray(item.urls) ? item.urls : [];
         const safeSummaryRaw = item.summary || "";
         const safeContentRaw = item.content || "";
-
-        
-        window.logPlaylists[item.logId] = urls;
 
         return `
           <div class="history-card" data-row-id="${item.logId}">
@@ -1270,19 +1306,28 @@
             </div>
 
             ${urls.length > 0 ? `
-            <!-- 【新增】手風琴 0：無縫全片連續播放器 -->
-            <details class="history-accordion" ontoggle="if(this.open) window.startSeamlessPlay('${item.logId}')">
+            <!-- 【全新升級】手風琴 0：沉浸式影音播放清單 (100% 防禦 NotSupportedError) -->
+            <details class="history-accordion">
               <summary>
                 <span style="display: flex; align-items: center; gap: 8px;">
                   <i data-lucide="play-circle" style="width: 15px; height: 15px; color: var(--accent);"></i>
-                  無縫全片連續播放器
+                  沉浸式影音播放清單 (原生加速版)
                 </span>
                 <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
               </summary>
               <div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border-subtle);">
-                <video id="player-${item.logId}" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block;"></video>
-                <div id="player-status-${item.logId}" style="padding: 10px 14px; background: #1d1d1f; color: #f5f5f7; font-size: 13px; font-weight: 500; text-align: center; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
-                  點擊播放以載入連續影音...
+                <!-- 原生 Iframe 播放區 -->
+                <div style="position: relative; width: 100%; aspect-ratio: 16/9; background: #000;">
+                  <iframe id="iframe-player-${item.logId}" src="${getDrivePreviewUrl(urls[0])}" style="width: 100%; height: 100%; border: none;" allow="autoplay; fullscreen"></iframe>
+                </div>
+                <!-- 智慧切換按鈕列 (Netflix 風格) -->
+                <div class="playlist-container" style="padding: 12px 16px; background: #1d1d1f; display: flex; align-items: center; gap: 8px; overflow-x: auto; white-space: nowrap; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
+                  <span style="color: #f5f5f7; font-size: 13px; font-weight: 600; margin-right: 4px;">切換片段:</span>
+                  ${urls.map((u, i) => `
+                    <button class="playlist-btn ${i === 0 ? 'active' : ''}" onclick="window.switchPlaylist('${item.logId}', ${i}, '${getDrivePreviewUrl(u)}', this)">
+                      <i data-lucide="play" style="width: 13px; height: 13px;"></i> 片段 ${i+1}
+                    </button>
+                  `).join('')}
                 </div>
               </div>
             </details>
@@ -1365,7 +1410,6 @@
     }
   }
 
-  // 雙棲 API 呼叫核心（修正空值防護）
   async function api(payload) {
     if (typeof google !== 'undefined' && google.script && google.script.run) {
       return new Promise((resolve, reject) => {
@@ -1396,37 +1440,28 @@
     lucide.createIcons();
   });
 
-  // ==========================================
-  // 【新增】刪除與編輯控制邏輯
-  // ==========================================
-
-  // 1. 刪除日誌功能
   async function deleteHistoryLog(logId) {
-    // 顯示原生確認視窗，避免誤刪
     if (!confirm("確定要刪除這筆日誌嗎？試算表中的資料將會永久移除。")) return;
     
     try {
       showToast("正在刪除中...");
       await api({ action: "deleteLog", logId: logId });
       showToast("✅ 日誌已成功刪除");
-      // 刪除成功後，自動重新整理歷史清單
       loadHistoryLogs(); 
     } catch (e) {
       alert("刪除失敗：" + e.message);
     }
   }
 
-  // 2. 切換編輯/唯讀模式
   function toggleEditMode(logId, field) {
     const viewEl = document.getElementById(`view-${field}-${logId}`);
     const editEl = document.getElementById(`edit-${field}-${logId}`);
     const editBtn = document.getElementById(`btn-edit-${field}-${logId}`);
 
-    // 判斷目前狀態進行切換
     if (editEl.style.display === "none") {
       viewEl.style.display = "none";
       editEl.style.display = "flex";
-      editBtn.style.display = "none"; // 編輯中先隱藏上方編輯按鈕
+      editBtn.style.display = "none"; 
     } else {
       viewEl.style.display = "block";
       editEl.style.display = "none";
@@ -1434,24 +1469,18 @@
     }
   }
 
-  // 3. 儲存日誌更新並送出 API
   async function saveHistoryLog(logId, field, btnElement) {
     const textarea = document.getElementById(`input-${field}-${logId}`);
     const newText = textarea.value;
     const originalBtnText = btnElement.innerText;
     
-    // 防止重複點擊，改變按鈕狀態
     btnElement.innerText = "儲存中...";
     btnElement.disabled = true;
     btnElement.style.opacity = "0.7";
 
     try {
-      // 發送請求更新至 Google 試算表
       await api({ action: "updateLog", logId: logId, field: field, newText: newText });
-      
       showToast("✅ 更新已成功儲存至試算表！");
-      
-      // 最保險且能確保 markdown 或影片切片重構的方式，就是直接重載列表
       loadHistoryLogs();
     } catch (e) {
       alert("儲存失敗：" + e.message);
@@ -1460,65 +1489,6 @@
       btnElement.style.opacity = "1";
     }
   }
-
-  // ==========================================
-  // 【新增核心機制】無縫全片連續播放引擎
-  // ==========================================
-  window.startSeamlessPlay = function(logId) {
-    const urls = window.logPlaylists[logId];
-    if (!urls || urls.length === 0) return;
-    
-    const videoEl = document.getElementById(`player-${logId}`);
-    const statusEl = document.getElementById(`player-status-${logId}`);
-    
-    // 防抖機制，避免重複展開時導致播放器邏輯混亂重疊
-    if (videoEl.dataset.initialized === 'true') return;
-    videoEl.dataset.initialized = 'true';
-
-    let currentIndex = 0;
-    
-    // 動態正則轉換器：將 Google Drive 預覽網址強制轉為直接串流下載網址 (適用於 HTML5 Video)
-    const getDirectUrl = (url) => {
-      const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-      return match ? `https://drive.google.com/uc?export=download&id=${match[1]}` : url;
-    };
-
-    const playNext = () => {
-      if (currentIndex >= urls.length) {
-        statusEl.innerText = '✅ 全片無縫播放完畢';
-        videoEl.dataset.initialized = 'false'; // 允許再次點擊重播
-        return;
-      }
-      
-      statusEl.innerText = `⚡ 無縫連續播放中: 第 ${currentIndex + 1} / ${urls.length} 段切片`;
-      videoEl.src = getDirectUrl(urls[currentIndex]);
-      
-      // 呼叫播放，攔截瀏覽器自動播放限制的例外拋出
-      videoEl.play().catch(err => {
-        console.warn('播放器需要使用者手動交互:', err);
-        statusEl.innerText = `⏸ 準備就緒：第 ${currentIndex + 1} 段 (請手動點擊畫面播放鍵)`;
-      });
-    };
-
-    // 核心監聽：切片播放結束瞬間，立刻替換 src 並呼叫 playNext()
-    videoEl.onended = () => {
-      currentIndex++;
-      playNext();
-    };
-
-    // 容錯防禦：若該分鐘的切片遭 Drive 短暫阻擋或失效，3秒後自動跳至下一段
-    videoEl.onerror = () => {
-      console.error(`第 ${currentIndex + 1} 段影片串流載入失敗。`);
-      statusEl.innerText = `⚠️ 第 ${currentIndex + 1} 段載入異常，3秒後將自動跳至下一段...`;
-      setTimeout(() => {
-        currentIndex++;
-        playNext();
-      }, 3000);
-    };
-
-    // 初始化啟動第一段
-    playNext();
-  };
 
 </script>
 
