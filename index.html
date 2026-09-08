@@ -1497,6 +1497,8 @@ async function saveHistoryLog(logId, field, btnElement) {
 
 
 
+
+
 function getDriveDirectStreamUrl(url) {
   
   const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
@@ -1555,7 +1557,6 @@ function startSequentialPlayback(logId, btnElement) {
   };
 
   // 4. 綁定影片結束事件 (無縫接軌的關鍵)
-  
   videoPlayer.onended = () => {
     currentIndex++; 
     playNextChunk(); 
@@ -1564,8 +1565,6 @@ function startSequentialPlayback(logId, btnElement) {
   
   playNextChunk();
 }
-
-
 
 
 </script>
