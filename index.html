@@ -365,7 +365,7 @@
       transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    details[open] .accordion-toggle-icon {
+    details[open] > summary .accordion-toggle-icon {
       transform: rotate(180deg);
     }
 
@@ -663,6 +663,9 @@
   let recordedChunks = [];
 
   const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  
+  window.logPlaylists = {};
 
   function log(msg) {
     const el = document.getElementById('sysLog');
@@ -1209,134 +1212,158 @@
     return html || `<div class="markdown-body">${renderMarkdown(rawText)}</div>`;
   }
 
-  // 歷史日誌調閱 (包含刪除與編輯結構)
-async function loadHistoryLogs() {
-  const container = document.getElementById('historyContainer');
-  container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> 載入中...</div>`;
-  lucide.createIcons();
-
-  try {
-    const logs = await api({ action: "getHistoryLogs" });
-    if (!logs || logs.length === 0) {
-      container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 0; background:var(--card-bg); border:1px solid var(--border); border-radius:16px;">目前尚無歷史錄影紀錄。</div>`;
-      return;
-    }
-
-    container.innerHTML = logs.map(item => {
-      const cleanTime = sanitizeTimestamp(item.timestamp);
-      const isRec = item.status && item.status.includes('錄製中');
-      const urls = Array.isArray(item.urls) ? item.urls : [];
-      const safeSummaryRaw = item.summary || "";
-      const safeContentRaw = item.content || "";
-
-      return `
-        <div class="history-card" data-row-id="${item.logId}">
-          <!-- 卡片頂部資訊列 -->
-          <div class="history-header">
-            <div>
-              <div style="font-weight: 700; font-size: 15px; color: var(--text);">日誌 ID: ${item.logId}</div>
-              <div style="font-size: 12.5px; color: var(--text-muted); font-family: ui-monospace, monospace; margin-top: 4px; display: flex; align-items: center; gap: 5px;">
-                <i data-lucide="clock" style="width: 13px; height: 13px;"></i> ${cleanTime}
-              </div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span class="badge ${isRec ? 'recording' : ''}">${item.status}</span>
-              <!-- 【新增】刪除按鈕 -->
-              <button type="button" class="action-btn-sm" style="color: var(--danger); border-color: rgba(255,59,48,0.3); background: rgba(255,59,48,0.05);" onclick="deleteHistoryLog('${item.logId}')">
-                <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i> 刪除
-              </button>
-            </div>
-          </div>
-
-          <!-- 雲端切片按鈕列 -->
-          <div>
-            <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
-              雲端切片備份 (${urls.length} 個切片)
-            </div>
-            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-              ${urls.length > 0 
-                ? urls.map((u, i) => `<a href="${u}" target="_blank" class="file-chip"><i data-lucide="film" style="width: 13px; height: 13px;"></i> 片段 ${i+1}</a>`).join('')
-                : '<span style="font-size:12.5px; color:var(--text-muted);">無切片影片</span>'}
-            </div>
-          </div>
-
-          <!-- 【修改後】請將上面的區塊替換為： -->
-          <!-- 手風琴 1：AI 爆款短影音提案 -->
-          <details class="history-accordion">
-            <summary>
-              <span style="display: flex; align-items: center; gap: 8px;">
-                <i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>
-                AI 爆款短影音提案
-              </span>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <!-- 編輯按鈕 -->
-                <button type="button" id="btn-edit-summary-${item.logId}" class="action-btn-sm" onclick="event.stopPropagation(); toggleEditMode('${item.logId}', 'summary')">
-                  <i data-lucide="edit-3" style="width: 12px; height: 12px;"></i> 編輯
-                </button>
-                <button type="button" class="action-btn-sm" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute('data-text'), '已複製短影音提案')" data-text="${escapeHtml(safeSummaryRaw)}">
-                  <i data-lucide="copy" style="width: 12px; height: 12px;"></i> 複製
-                </button>
-                <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
-              </div>
-            </summary>
-            <div class="accordion-body">
-              <!-- 唯讀模式 -->
-              <div id="view-summary-${item.logId}" class="markdown-body" style="border-left: 3px solid var(--accent); padding-left: 14px;">
-                ${renderMarkdown(safeSummaryRaw)}
-              </div>
-              <!-- 編輯模式 (預設隱藏) -->
-              <div id="edit-summary-${item.logId}" style="display: none; flex-direction: column; gap: 10px;">
-                <textarea id="input-summary-${item.logId}" style="width: 100%; min-height: 180px; padding: 12px; border: 1px solid var(--accent); border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; line-height: 1.6;">${escapeHtml(safeSummaryRaw)}</textarea>
-                <div style="display: flex; justify-content: flex-end; gap: 8px;">
-                  <button class="action-btn-sm" onclick="toggleEditMode('${item.logId}', 'summary')">取消</button>
-                  <button class="action-btn-sm" style="background: var(--accent); color: white; border-color: var(--accent);" onclick="saveHistoryLog('${item.logId}', 'summary', this)">儲存更新</button>
-                </div>
-              </div>
-            </div>
-          </details>
-
-          <!-- 手風琴 2：詳細畫面描述與逐字稿 -->
-          <details class="history-accordion">
-            <summary>
-              <span style="display: flex; align-items: center; gap: 8px;">
-                <i data-lucide="file-text" style="width: 15px; height: 15px; color: var(--text-muted);"></i>
-                詳細畫面描述與逐字稿總帳
-              </span>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <!-- 【新增】編輯按鈕 -->
-                <button type="button" id="btn-edit-content-${item.logId}" class="action-btn-sm" onclick="event.stopPropagation(); toggleEditMode('${item.logId}', 'content')">
-                  <i data-lucide="edit-3" style="width: 12px; height: 12px;"></i> 編輯
-                </button>
-                <button type="button" class="action-btn-sm" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute('data-text'), '已複製逐字稿')" data-text="${escapeHtml(safeContentRaw)}">
-                  <i data-lucide="copy" style="width: 12px; height: 12px;"></i> 複製
-                </button>
-                <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
-              </div>
-            </summary>
-            <div class="accordion-body">
-              <!-- 唯讀模式 -->
-              <div id="view-content-${item.logId}">
-                ${formatTranscriptContent(safeContentRaw, urls)}
-              </div>
-              <!-- 編輯模式 (預設隱藏) -->
-              <div id="edit-content-${item.logId}" style="display: none; flex-direction: column; gap: 10px;">
-                <textarea id="input-content-${item.logId}" style="width: 100%; min-height: 250px; padding: 12px; border: 1px solid var(--accent); border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; line-height: 1.6;">${escapeHtml(safeContentRaw)}</textarea>
-                <div style="display: flex; justify-content: flex-end; gap: 8px;">
-                  <button class="action-btn-sm" onclick="toggleEditMode('${item.logId}', 'content')">取消</button>
-                  <button class="action-btn-sm" style="background: var(--accent); color: white; border-color: var(--accent);" onclick="saveHistoryLog('${item.logId}', 'content', this)">儲存更新</button>
-                </div>
-              </div>
-            </div>
-          </details>
-        </div>
-      `;
-    }).join('');
-
+  // 歷史日誌調閱 (包含刪除與編輯結構，以及無縫連續播放器注入)
+  async function loadHistoryLogs() {
+    const container = document.getElementById('historyContainer');
+    container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> 載入中...</div>`;
     lucide.createIcons();
-  } catch (e) {
-    container.innerHTML = `<div style="text-align:center; color:var(--danger); padding:30px 0; background:var(--card-bg); border:1px solid var(--border); border-radius:16px;">載入失敗：${e.message}</div>`;
+
+    try {
+      const logs = await api({ action: "getHistoryLogs" });
+      if (!logs || logs.length === 0) {
+        container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 0; background:var(--card-bg); border:1px solid var(--border); border-radius:16px;">目前尚無歷史錄影紀錄。</div>`;
+        return;
+      }
+
+      // 重置全局連續播放器記憶體
+      window.logPlaylists = {};
+
+      container.innerHTML = logs.map(item => {
+        const cleanTime = sanitizeTimestamp(item.timestamp);
+        const isRec = item.status && item.status.includes('錄製中');
+        const urls = Array.isArray(item.urls) ? item.urls : [];
+        const safeSummaryRaw = item.summary || "";
+        const safeContentRaw = item.content || "";
+
+        
+        window.logPlaylists[item.logId] = urls;
+
+        return `
+          <div class="history-card" data-row-id="${item.logId}">
+            <!-- 卡片頂部資訊列 -->
+            <div class="history-header">
+              <div>
+                <div style="font-weight: 700; font-size: 15px; color: var(--text);">日誌 ID: ${item.logId}</div>
+                <div style="font-size: 12.5px; color: var(--text-muted); font-family: ui-monospace, monospace; margin-top: 4px; display: flex; align-items: center; gap: 5px;">
+                  <i data-lucide="clock" style="width: 13px; height: 13px;"></i> ${cleanTime}
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="badge ${isRec ? 'recording' : ''}">${item.status}</span>
+                <!-- 刪除按鈕 -->
+                <button type="button" class="action-btn-sm" style="color: var(--danger); border-color: rgba(255,59,48,0.3); background: rgba(255,59,48,0.05);" onclick="deleteHistoryLog('${item.logId}')">
+                  <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i> 刪除
+                </button>
+              </div>
+            </div>
+
+            <!-- 雲端切片按鈕列 -->
+            <div>
+              <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+                雲端切片備份 (${urls.length} 個切片)
+              </div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                ${urls.length > 0 
+                  ? urls.map((u, i) => `<a href="${u}" target="_blank" class="file-chip"><i data-lucide="film" style="width: 13px; height: 13px;"></i> 片段 ${i+1}</a>`).join('')
+                  : '<span style="font-size:12.5px; color:var(--text-muted);">無切片影片</span>'}
+              </div>
+            </div>
+
+            ${urls.length > 0 ? `
+            <!-- 【新增】手風琴 0：無縫全片連續播放器 -->
+            <details class="history-accordion" ontoggle="if(this.open) window.startSeamlessPlay('${item.logId}')">
+              <summary>
+                <span style="display: flex; align-items: center; gap: 8px;">
+                  <i data-lucide="play-circle" style="width: 15px; height: 15px; color: var(--accent);"></i>
+                  無縫全片連續播放器
+                </span>
+                <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
+              </summary>
+              <div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border-subtle);">
+                <video id="player-${item.logId}" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block;"></video>
+                <div id="player-status-${item.logId}" style="padding: 10px 14px; background: #1d1d1f; color: #f5f5f7; font-size: 13px; font-weight: 500; text-align: center; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
+                  點擊播放以載入連續影音...
+                </div>
+              </div>
+            </details>
+            ` : ''}
+
+            <!-- 手風琴 1：AI 爆款短影音提案 -->
+            <details class="history-accordion">
+              <summary>
+                <span style="display: flex; align-items: center; gap: 8px;">
+                  <i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>
+                  AI 爆款短影音提案
+                </span>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <!-- 編輯按鈕 -->
+                  <button type="button" id="btn-edit-summary-${item.logId}" class="action-btn-sm" onclick="event.stopPropagation(); toggleEditMode('${item.logId}', 'summary')">
+                    <i data-lucide="edit-3" style="width: 12px; height: 12px;"></i> 編輯
+                  </button>
+                  <button type="button" class="action-btn-sm" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute('data-text'), '已複製短影音提案')" data-text="${escapeHtml(safeSummaryRaw)}">
+                    <i data-lucide="copy" style="width: 12px; height: 12px;"></i> 複製
+                  </button>
+                  <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
+                </div>
+              </summary>
+              <div class="accordion-body">
+                <!-- 唯讀模式 -->
+                <div id="view-summary-${item.logId}" class="markdown-body" style="border-left: 3px solid var(--accent); padding-left: 14px;">
+                  ${renderMarkdown(safeSummaryRaw)}
+                </div>
+                <!-- 編輯模式 (預設隱藏) -->
+                <div id="edit-summary-${item.logId}" style="display: none; flex-direction: column; gap: 10px;">
+                  <textarea id="input-summary-${item.logId}" style="width: 100%; min-height: 180px; padding: 12px; border: 1px solid var(--accent); border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; line-height: 1.6;">${escapeHtml(safeSummaryRaw)}</textarea>
+                  <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                    <button class="action-btn-sm" onclick="toggleEditMode('${item.logId}', 'summary')">取消</button>
+                    <button class="action-btn-sm" style="background: var(--accent); color: white; border-color: var(--accent);" onclick="saveHistoryLog('${item.logId}', 'summary', this)">儲存更新</button>
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <!-- 手風琴 2：詳細畫面描述與逐字稿 -->
+            <details class="history-accordion">
+              <summary>
+                <span style="display: flex; align-items: center; gap: 8px;">
+                  <i data-lucide="file-text" style="width: 15px; height: 15px; color: var(--text-muted);"></i>
+                  詳細畫面描述與逐字稿總帳
+                </span>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <!-- 編輯按鈕 -->
+                  <button type="button" id="btn-edit-content-${item.logId}" class="action-btn-sm" onclick="event.stopPropagation(); toggleEditMode('${item.logId}', 'content')">
+                    <i data-lucide="edit-3" style="width: 12px; height: 12px;"></i> 編輯
+                  </button>
+                  <button type="button" class="action-btn-sm" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute('data-text'), '已複製逐字稿')" data-text="${escapeHtml(safeContentRaw)}">
+                    <i data-lucide="copy" style="width: 12px; height: 12px;"></i> 複製
+                  </button>
+                  <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
+                </div>
+              </summary>
+              <div class="accordion-body">
+                <!-- 唯讀模式 -->
+                <div id="view-content-${item.logId}">
+                  ${formatTranscriptContent(safeContentRaw, urls)}
+                </div>
+                <!-- 編輯模式 (預設隱藏) -->
+                <div id="edit-content-${item.logId}" style="display: none; flex-direction: column; gap: 10px;">
+                  <textarea id="input-content-${item.logId}" style="width: 100%; min-height: 250px; padding: 12px; border: 1px solid var(--accent); border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; line-height: 1.6;">${escapeHtml(safeContentRaw)}</textarea>
+                  <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                    <button class="action-btn-sm" onclick="toggleEditMode('${item.logId}', 'content')">取消</button>
+                    <button class="action-btn-sm" style="background: var(--accent); color: white; border-color: var(--accent);" onclick="saveHistoryLog('${item.logId}', 'content', this)">儲存更新</button>
+                  </div>
+                </div>
+              </div>
+            </details>
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    } catch (e) {
+      container.innerHTML = `<div style="text-align:center; color:var(--danger); padding:30px 0; background:var(--card-bg); border:1px solid var(--border); border-radius:16px;">載入失敗：${e.message}</div>`;
+    }
   }
-}
 
   // 雙棲 API 呼叫核心（修正空值防護）
   async function api(payload) {
@@ -1370,73 +1397,128 @@ async function loadHistoryLogs() {
   });
 
   // ==========================================
-// 【新增】刪除與編輯控制邏輯
-// ==========================================
+  // 【新增】刪除與編輯控制邏輯
+  // ==========================================
 
-// 1. 刪除日誌功能
-async function deleteHistoryLog(logId) {
-  // 顯示原生確認視窗，避免誤刪
-  if (!confirm("確定要刪除這筆日誌嗎？試算表中的資料將會永久移除。")) return;
-  
-  try {
-    showToast("正在刪除中...");
-    await api({ action: "deleteLog", logId: logId });
-    showToast("✅ 日誌已成功刪除");
-    // 刪除成功後，自動重新整理歷史清單
-    loadHistoryLogs(); 
-  } catch (e) {
-    alert("刪除失敗：" + e.message);
-  }
-}
-
-// 2. 切換編輯/唯讀模式
-function toggleEditMode(logId, field) {
-  const viewEl = document.getElementById(`view-${field}-${logId}`);
-  const editEl = document.getElementById(`edit-${field}-${logId}`);
-  const editBtn = document.getElementById(`btn-edit-${field}-${logId}`);
-
-  // 判斷目前狀態進行切換
-  if (editEl.style.display === "none") {
-    viewEl.style.display = "none";
-    editEl.style.display = "flex";
-    editBtn.style.display = "none"; // 編輯中先隱藏上方編輯按鈕
-  } else {
-    viewEl.style.display = "block";
-    editEl.style.display = "none";
-    editBtn.style.display = "inline-flex";
-  }
-}
-
-// 3. 儲存日誌更新並送出 API
-async function saveHistoryLog(logId, field, btnElement) {
-  const textarea = document.getElementById(`input-${field}-${logId}`);
-  const newText = textarea.value;
-  const originalBtnText = btnElement.innerText;
-  
-  // 防止重複點擊，改變按鈕狀態
-  btnElement.innerText = "儲存中...";
-  btnElement.disabled = true;
-  btnElement.style.opacity = "0.7";
-
-  try {
-    // 發送請求更新至 Google 試算表
-    await api({ action: "updateLog", logId: logId, field: field, newText: newText });
+  // 1. 刪除日誌功能
+  async function deleteHistoryLog(logId) {
+    // 顯示原生確認視窗，避免誤刪
+    if (!confirm("確定要刪除這筆日誌嗎？試算表中的資料將會永久移除。")) return;
     
-    showToast("✅ 更新已成功儲存至試算表！");
-    
-    // 最保險且能確保 markdown 或影片切片重構的方式，就是直接重載列表
-    loadHistoryLogs();
-  } catch (e) {
-    alert("儲存失敗：" + e.message);
-    btnElement.innerText = originalBtnText;
-    btnElement.disabled = false;
-    btnElement.style.opacity = "1";
+    try {
+      showToast("正在刪除中...");
+      await api({ action: "deleteLog", logId: logId });
+      showToast("✅ 日誌已成功刪除");
+      // 刪除成功後，自動重新整理歷史清單
+      loadHistoryLogs(); 
+    } catch (e) {
+      alert("刪除失敗：" + e.message);
+    }
   }
-}
 
+  // 2. 切換編輯/唯讀模式
+  function toggleEditMode(logId, field) {
+    const viewEl = document.getElementById(`view-${field}-${logId}`);
+    const editEl = document.getElementById(`edit-${field}-${logId}`);
+    const editBtn = document.getElementById(`btn-edit-${field}-${logId}`);
 
+    // 判斷目前狀態進行切換
+    if (editEl.style.display === "none") {
+      viewEl.style.display = "none";
+      editEl.style.display = "flex";
+      editBtn.style.display = "none"; // 編輯中先隱藏上方編輯按鈕
+    } else {
+      viewEl.style.display = "block";
+      editEl.style.display = "none";
+      editBtn.style.display = "inline-flex";
+    }
+  }
 
+  // 3. 儲存日誌更新並送出 API
+  async function saveHistoryLog(logId, field, btnElement) {
+    const textarea = document.getElementById(`input-${field}-${logId}`);
+    const newText = textarea.value;
+    const originalBtnText = btnElement.innerText;
+    
+    // 防止重複點擊，改變按鈕狀態
+    btnElement.innerText = "儲存中...";
+    btnElement.disabled = true;
+    btnElement.style.opacity = "0.7";
 
+    try {
+      // 發送請求更新至 Google 試算表
+      await api({ action: "updateLog", logId: logId, field: field, newText: newText });
+      
+      showToast("✅ 更新已成功儲存至試算表！");
+      
+      // 最保險且能確保 markdown 或影片切片重構的方式，就是直接重載列表
+      loadHistoryLogs();
+    } catch (e) {
+      alert("儲存失敗：" + e.message);
+      btnElement.innerText = originalBtnText;
+      btnElement.disabled = false;
+      btnElement.style.opacity = "1";
+    }
+  }
+
+  // ==========================================
+  // 【新增核心機制】無縫全片連續播放引擎
+  // ==========================================
+  window.startSeamlessPlay = function(logId) {
+    const urls = window.logPlaylists[logId];
+    if (!urls || urls.length === 0) return;
+    
+    const videoEl = document.getElementById(`player-${logId}`);
+    const statusEl = document.getElementById(`player-status-${logId}`);
+    
+    // 防抖機制，避免重複展開時導致播放器邏輯混亂重疊
+    if (videoEl.dataset.initialized === 'true') return;
+    videoEl.dataset.initialized = 'true';
+
+    let currentIndex = 0;
+    
+    // 動態正則轉換器：將 Google Drive 預覽網址強制轉為直接串流下載網址 (適用於 HTML5 Video)
+    const getDirectUrl = (url) => {
+      const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      return match ? `https://drive.google.com/uc?export=download&id=${match[1]}` : url;
+    };
+
+    const playNext = () => {
+      if (currentIndex >= urls.length) {
+        statusEl.innerText = '✅ 全片無縫播放完畢';
+        videoEl.dataset.initialized = 'false'; // 允許再次點擊重播
+        return;
+      }
+      
+      statusEl.innerText = `⚡ 無縫連續播放中: 第 ${currentIndex + 1} / ${urls.length} 段切片`;
+      videoEl.src = getDirectUrl(urls[currentIndex]);
+      
+      // 呼叫播放，攔截瀏覽器自動播放限制的例外拋出
+      videoEl.play().catch(err => {
+        console.warn('播放器需要使用者手動交互:', err);
+        statusEl.innerText = `⏸ 準備就緒：第 ${currentIndex + 1} 段 (請手動點擊畫面播放鍵)`;
+      });
+    };
+
+    // 核心監聽：切片播放結束瞬間，立刻替換 src 並呼叫 playNext()
+    videoEl.onended = () => {
+      currentIndex++;
+      playNext();
+    };
+
+    // 容錯防禦：若該分鐘的切片遭 Drive 短暫阻擋或失效，3秒後自動跳至下一段
+    videoEl.onerror = () => {
+      console.error(`第 ${currentIndex + 1} 段影片串流載入失敗。`);
+      statusEl.innerText = `⚠️ 第 ${currentIndex + 1} 段載入異常，3秒後將自動跳至下一段...`;
+      setTimeout(() => {
+        currentIndex++;
+        playNext();
+      }, 3000);
+    };
+
+    // 初始化啟動第一段
+    playNext();
+  };
 
 </script>
 
