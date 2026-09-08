@@ -7,16 +7,22 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     :root {
-      --bg: #0c0c0e;
-      --card-bg: #161618;
-      --text: #ffffff;
-      --text-muted: #86868b;
+      --bg: #fbfbfd;
+      --card-bg: #ffffff;
+      --card-subtle: #f5f5f7;
+      --text: #1d1d1f;
+      --text-muted: #6e6e73;
+      --border: #e5e5ea;
+      --border-subtle: #f2f2f7;
       --accent: #0071e3;
-      --danger: #ff453a;
-      --warning: #ff9f0a;
+      --accent-soft: rgba(0, 113, 227, 0.08);
+      --danger: #ff3b30;
+      --warning: #ff9500;
       --success: #34c759;
-      --glass: rgba(28, 28, 30, 0.75);
-      --glass-border: rgba(255, 255, 255, 0.12);
+      --glass: rgba(255, 255, 255, 0.88);
+      --glass-border: rgba(0, 0, 0, 0.08);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,7 +30,7 @@
       background-color: var(--bg);
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
       min-height: 100vh;
-      padding: 24px 16px;
+      padding: 32px 16px;
       color: var(--text);
       display: flex;
       justify-content: center;
@@ -33,59 +39,59 @@
 
     .app-shell {
       width: 100%;
-      max-width: 880px;
+      max-width: 900px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 22px;
     }
 
-    /* 頂部極簡雙分頁導航 */
+    /* 頂部極簡雙分頁導航 (白底細線) */
     .tab-nav {
       display: flex;
-      background: var(--card-bg);
-      padding: 6px;
-      border-radius: 16px;
-      border: 1px solid var(--glass-border);
-      gap: 8px;
+      background: var(--card-subtle);
+      padding: 5px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      gap: 6px;
     }
 
     .tab-btn {
       flex: 1;
-      padding: 12px 16px;
+      padding: 10px 16px;
       border: none;
       background: transparent;
       color: var(--text-muted);
-      font-size: 14.5px;
+      font-size: 14px;
       font-weight: 600;
-      border-radius: 12px;
+      border-radius: 10px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      transition: all 0.2s ease;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .tab-btn.active {
-      background: var(--glass);
+      background: var(--card-bg);
       color: var(--text);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
     }
 
-    .tab-content { display: none; flex-direction: column; gap: 16px; animation: fadeIn 0.3s ease; }
+    .tab-content { display: none; flex-direction: column; gap: 18px; animation: fadeIn 0.25s ease; }
     .tab-content.active { display: flex; }
 
-    /* 播放器主容器 */
+    /* 播放器主視圖容器 */
     .viewport-container {
       position: relative;
       width: 100%;
       aspect-ratio: 16 / 9;
-      background-color: var(--card-bg);
-      border-radius: 24px;
+      background-color: #000000;
+      border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
-      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -93,7 +99,7 @@
 
     video { width: 100%; height: 100%; object-fit: cover; display: block; background: #000; }
 
-    /* 初次載入相機啟用提示覆蓋層 */
+    /* 初次啟用提示覆蓋層 */
     .camera-prompt {
       position: absolute;
       display: flex;
@@ -106,17 +112,18 @@
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--glass-border);
-      border-radius: 20px;
+      border-radius: 18px;
+      box-shadow: var(--shadow-md);
       transition: transform 0.2s, background 0.2s;
       z-index: 15;
     }
 
     .camera-prompt:hover {
-      transform: scale(1.03);
-      background: rgba(40, 40, 44, 0.85);
+      transform: scale(1.02);
+      background: #ffffff;
     }
 
-    /* 錄製狀態浮動標籤 */
+    /* 錄製狀態膠囊標籤 */
     .status-capsule {
       position: absolute;
       top: 16px;
@@ -132,6 +139,8 @@
       border-radius: 999px;
       font-size: 13px;
       font-weight: 600;
+      color: var(--text);
+      box-shadow: var(--shadow-sm);
       z-index: 10;
     }
 
@@ -145,11 +154,11 @@
 
     @keyframes pulse {
       0% { transform: scale(0.9); opacity: 0.7; }
-      50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 10px var(--danger); }
+      50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 8px var(--danger); }
       100% { transform: scale(0.9); opacity: 0.7; }
     }
 
-    /* 極簡浮動控制島 */
+    /* 極簡浮動控制島 (白底高斯模糊) */
     .controls-island {
       position: absolute;
       bottom: 20px;
@@ -157,15 +166,16 @@
       transform: translateX(-50%) translateY(0);
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       padding: 8px 16px;
       background: var(--glass);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border: 1px solid var(--glass-border);
       border-radius: 999px;
+      box-shadow: var(--shadow-md);
       z-index: 20;
-      transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .controls-island.autohide {
@@ -178,90 +188,182 @@
       background: transparent;
       border: none;
       color: var(--text);
-      width: 44px;
-      height: 44px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       outline: none;
-      transition: background 0.2s, transform 0.15s;
+      transition: background 0.15s, transform 0.15s;
     }
 
-    .ctrl-btn:hover { background: rgba(255, 255, 255, 0.12); transform: scale(1.05); }
+    .ctrl-btn:hover { background: rgba(0, 0, 0, 0.05); transform: scale(1.05); }
     .ctrl-btn:active { transform: scale(0.95); }
-    .ctrl-btn.active { background: rgba(255, 255, 255, 0.2); }
+    .ctrl-btn.active { background: rgba(0, 0, 0, 0.08); }
     .ctrl-btn.record-btn { color: var(--danger); }
     .ctrl-btn.stop-btn { color: var(--danger); }
     .ctrl-btn.pause-btn { color: var(--warning); }
 
+    /* 終端訊息列 (極簡線條淺灰底) */
     .terminal-log {
       width: 100%;
-      height: 90px;
-      background: #111113;
-      border: 1px solid #222;
-      border-radius: 16px;
+      height: 84px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
       padding: 12px 16px;
       font-family: ui-monospace, "SF Mono", Menlo, monospace;
-      font-size: 12px;
+      font-size: 12.5px;
       line-height: 1.6;
-      color: var(--success);
+      color: #333336;
       overflow-y: auto;
+      box-shadow: var(--shadow-sm);
     }
 
     /* 歸檔輸出區 */
     .archive-view {
       display: none;
       background: var(--card-bg);
-      border-radius: 20px;
-      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      border: 1px solid var(--border);
       padding: 20px;
-      animation: fadeIn 0.3s ease;
+      box-shadow: var(--shadow-sm);
+      animation: fadeIn 0.25s ease;
     }
 
+    /* 極簡文字閱讀塊 */
     .archive-text {
       white-space: pre-wrap;
       font-size: 13.5px;
-      line-height: 1.7;
-      color: #cfcfd4;
-      max-height: 320px;
-      overflow-y: auto;
-      padding: 14px;
-      background: #1c1c1e;
+      line-height: 1.75;
+      color: #2c2c2e;
+      padding: 16px;
+      background: #fafafc;
       border-radius: 12px;
+      border: 1px solid var(--border-subtle);
     }
 
-    /* 第二分頁歷史紀錄卡片 */
+    /* 歷史紀錄卡片 (良善閱讀排版) */
     .history-card {
       background: var(--card-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: 18px;
-      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 20px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .history-card:hover {
+      border-color: #d1d1d6;
+      box-shadow: var(--shadow-md);
     }
 
     .history-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid var(--glass-border);
+      border-bottom: 1px solid var(--border-subtle);
       padding-bottom: 12px;
     }
 
     .badge {
       padding: 4px 10px;
-      border-radius: 8px;
+      border-radius: 6px;
       font-size: 12px;
       font-weight: 600;
-      background: rgba(52, 199, 89, 0.15);
-      color: var(--success);
+      background: rgba(52, 199, 89, 0.12);
+      color: #1b873f;
+      border: 1px solid rgba(52, 199, 89, 0.25);
+    }
+
+    .badge.recording {
+      background: rgba(255, 149, 0, 0.12);
+      color: #b26700;
+      border: 1px solid rgba(255, 149, 0, 0.25);
+    }
+
+    /* 切片晶片按鈕 */
+    .file-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 11px;
+      background: var(--card-subtle);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--accent);
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+
+    .file-chip:hover {
+      background: var(--accent-soft);
+      border-color: rgba(0, 113, 227, 0.3);
+    }
+
+    /* 極簡折疊手風琴 (按需展開，良善閱讀) */
+    details.history-accordion {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--card-bg);
+      transition: border-color 0.2s ease;
+    }
+
+    details.history-accordion[open] {
+      border-color: #c7c7cc;
+    }
+
+    details.history-accordion summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      cursor: pointer;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text);
+      background: #fafafc;
+      user-select: none;
+      list-style: none;
+      outline: none;
+      transition: background 0.15s ease;
+    }
+
+    details.history-accordion summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details.history-accordion summary:hover {
+      background: #f2f2f7;
+    }
+
+    .accordion-toggle-icon {
+      display: inline-flex;
+      align-items: center;
+      color: var(--text-muted);
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    details[open] .accordion-toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    .accordion-body {
+      padding: 14px 16px;
+      border-top: 1px solid var(--border-subtle);
+      background: #ffffff;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
+      from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
     }
   </style>
@@ -270,13 +372,13 @@
 
 <div class="app-shell">
   
-  <!-- 雙分頁導航 -->
+  <!-- 頂部極簡雙分頁導航 -->
   <div class="tab-nav">
     <button class="tab-btn active" onclick="switchTab('tab-live', this)">
-      <i data-lucide="video"></i> 影音即時錄製
+      <i data-lucide="video" style="width: 16px; height: 16px;"></i> 影音即時錄製
     </button>
     <button class="tab-btn" onclick="switchTab('tab-history', this)">
-      <i data-lucide="history"></i> 歷史日誌調閱
+      <i data-lucide="history" style="width: 16px; height: 16px;"></i> 歷史日誌調閱
     </button>
   </div>
 
@@ -284,9 +386,9 @@
   <div id="tab-live" class="tab-content active">
     <div class="viewport-container" id="videoWrapper" onmousemove="wakeControls()" ontouchstart="wakeControls()">
       
-      <!-- 初次不開攝像頭：提示按鈕 -->
+      <!-- 初次啟用提示按鈕 -->
       <div id="cameraPrompt" class="camera-prompt" onclick="enableHardware()">
-        <i data-lucide="camera" style="width: 32px; height: 32px; color: var(--accent);"></i>
+        <i data-lucide="camera" style="width: 32px; height: 32px; color: var(--text);"></i>
         <div style="font-weight: 600; font-size: 15px;">點擊開啟攝影機與麥克風</div>
       </div>
 
@@ -298,12 +400,12 @@
       <video id="mediaPlayer" autoplay muted playsinline></video>
 
       <div id="controlsIsland" class="controls-island" style="display: none;">
-        <!-- 1. 切換來源按鈕 -->
+        <!-- 1. 切換來源 -->
         <button class="ctrl-btn" id="btnSource" onclick="switchMediaSource()" title="切換鏡頭 / 螢幕來源">
           <i data-lucide="switch-camera" id="iconSource"></i>
         </button>
 
-        <!-- 2. 切換影像啟用 -->
+        <!-- 2. 切換畫面/純音訊 -->
         <button class="ctrl-btn" id="btnVideoTrack" onclick="toggleVideoTrack()" title="開啟/關閉畫面">
           <i data-lucide="video" id="iconVideo"></i>
         </button>
@@ -318,55 +420,70 @@
           <i data-lucide="pause" id="iconPause"></i>
         </button>
 
-        <!-- 5. 停止錄影並歸檔 -->
+        <!-- 5. 結束錄製並歸檔 -->
         <button class="ctrl-btn stop-btn" id="btnStop" onclick="stopRecording()" style="display: none;" title="結束錄製">
           <i data-lucide="square"></i>
         </button>
       </div>
     </div>
 
-    <div class="terminal-log" id="sysLog">系統已載入。相機處於關閉狀態，請點選畫面上方按鈕啟用。</div>
+    <div class="terminal-log" id="sysLog">系統已就緒。相機處於休眠狀態，點選上方黑框按鈕以啟用設備。</div>
 
-    <!-- 即時歸檔結果卡片 -->
+    <!-- 即時歸檔結果卡片 (白底線條良善排版) -->
     <div id="archiveView" class="archive-view">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <h4 style="margin: 0; color: var(--success); font-size: 16px; display: flex; align-items: center; gap: 8px;">
-          <i data-lucide="check-circle" style="width: 18px; height: 18px;"></i>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px;">
+        <div style="font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px;">
+          <i data-lucide="check-circle" style="width: 18px; height: 18px; color: var(--success);"></i>
           影音日誌已成功歸檔至 Google 試算表
-        </h4>
-        <div id="archiveLinks" style="font-size: 13px; display: flex; align-items: center; gap: 10px;"></div>
-      </div>
-
-      <div style="margin-bottom: 16px;">
-        <div style="font-weight: 700; font-size: 14px; color: var(--accent); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
-          <i data-lucide="sparkles" style="width: 16px; height: 16px;"></i>
-          AI 全局重點整理
         </div>
-        <div id="archiveSummary" class="archive-text" style="border-left: 4px solid var(--accent); background: #18181b;"></div>
+        <div id="archiveLinks" style="display: flex; gap: 8px;"></div>
       </div>
 
-      <details style="cursor: pointer;">
-        <summary style="font-weight: 600; font-size: 13px; color: var(--text-muted); outline: none; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
-          <i data-lucide="file-text" style="width: 15px; height: 15px;"></i>
-          展開檢視各分鐘畫面描述與逐字稿總帳
-        </summary>
-        <div id="archiveContent" class="archive-text" style="margin-top: 8px;"></div>
-      </details>
+      <!-- 按需展開手風琴：全局重點整理 -->
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <details class="history-accordion">
+          <summary>
+            <span style="display: flex; align-items: center; gap: 8px;">
+              <i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>
+              AI 全局重點整理
+            </span>
+            <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
+          </summary>
+          <div class="accordion-body">
+            <div id="archiveSummary" class="archive-text" style="border-left: 3px solid var(--accent);"></div>
+          </div>
+        </details>
+
+        <!-- 按需展開手風琴：逐字稿總帳 -->
+        <details class="history-accordion">
+          <summary>
+            <span style="display: flex; align-items: center; gap: 8px;">
+              <i data-lucide="file-text" style="width: 15px; height: 15px; color: var(--text-muted);"></i>
+              展開檢視各分鐘畫面描述與逐字稿總帳
+            </span>
+            <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
+          </summary>
+          <div class="accordion-body">
+            <div id="archiveContent" class="archive-text" style="max-height: 320px; overflow-y: auto;"></div>
+          </div>
+        </details>
+      </div>
     </div>
   </div>
 
-  <!-- 分頁 2：歷史紀錄調閱 -->
+  <!-- 分頁 2：歷史紀錄調閱 (良善閱讀版面) -->
   <div id="tab-history" class="tab-content">
     <div style="display: flex; justify-content: space-between; align-items: center;">
-      <h3 style="font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-        <i data-lucide="database" style="width: 18px; height: 18px; color: var(--accent);"></i>
-        歷史影音日誌總帳
-      </h3>
-      <button onclick="loadHistoryLogs()" class="ctrl-btn" style="width: auto; height: auto; padding: 8px 14px; border-radius: 10px; background: var(--card-bg); border: 1px solid var(--glass-border); font-size: 13px; display: flex; align-items: center; gap: 6px;">
+      <div>
+        <h3 style="font-size: 18px; font-weight: 700;">歷史影音日誌總帳</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">所有錄影記錄均預設收合，點擊卡片區塊即可按需展開閱讀重點與逐字稿。</p>
+      </div>
+      <button onclick="loadHistoryLogs()" class="ctrl-btn" style="width: auto; height: auto; padding: 7px 14px; border-radius: 8px; background: var(--card-bg); border: 1px solid var(--border); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; box-shadow: var(--shadow-sm);">
         <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> 重新整理
       </button>
     </div>
-    <div id="historyContainer" style="display: flex; flex-direction: column; gap: 16px;">
+
+    <div id="historyContainer" style="display: flex; flex-direction: column; gap: 14px;">
       <div style="text-align: center; color: var(--text-muted); padding: 40px 0;">載入歷史日誌中...</div>
     </div>
   </div>
@@ -374,7 +491,6 @@
 </div>
 
 <script>
-  // 雙棲常數定義：相容 GAS Web App 部署環境與 Local/GitHub 獨立預覽
   const GAS_WEB_URL = "https://script.google.com/macros/s/AKfycbyeqKhWv3TY8bpSdB9ZfWXNkR9yap66PyGxzEJqxpawWn9hZ9chfIuBPJfZHHoP91newQ/exec";
   const GAS_URL = GAS_WEB_URL;
 
@@ -437,7 +553,7 @@
       document.getElementById('cameraPrompt').style.display = 'none';
       document.getElementById('controlsIsland').style.display = 'flex';
       wakeControls();
-      log("攝影設備已就緒，可點擊紅色圓點開始錄製。");
+      log("攝影設備已就緒，可點擊紅色按鈕開始錄製。");
     }
   }
 
@@ -643,7 +759,7 @@
       const reader = new FileReader();
       reader.readAsDataURL(blob);
       reader.onloadend = async () => {
-        const base64 = reader.result.split(',')[1];
+        const base64 = reader.result.split(',');
         try {
           await api({
             action: "processChunkRealtime",
@@ -745,7 +861,7 @@
       log("[成功] 試算表最終歸檔完成！已載入至下方檢視區。");
 
       document.getElementById('archiveLinks').innerHTML = res.urls
-        .map((u, i) => `<a href="${u}" target="_blank" style="color:var(--accent); text-decoration:none; display:inline-flex; align-items:center; gap:4px;"><i data-lucide="film" style="width:14px; height:14px;"></i> 片段 ${i+1}</a>`)
+        .map((u, i) => `<a href="${u}" target="_blank" class="file-chip"><i data-lucide="film" style="width:13px; height:13px;"></i> 片段 ${i+1}</a>`)
         .join('');
 
       document.getElementById('archiveSummary').innerText = res.summary;
@@ -771,62 +887,108 @@
     }, 1000);
   }
 
+  // 乾淨格式化時間戳記 (徹底清洗截圖中的整串髒資料)
+  function sanitizeTimestamp(raw) {
+    if (!raw) return "未知時間";
+    const str = String(raw).trim();
+    const isoMatch = str.match(/\d{4}[-/]\d{2}[-/]\d{2}(?:[T ]\d{2}:\d{2}(?::\d{2})?(?:\.\d+Z?)?)?/);
+    if (isoMatch) {
+      const d = new Date(isoMatch[0]);
+      if (!isNaN(d.getTime())) {
+        const pad = n => String(n).padStart(2, '0');
+        const y = d.getFullYear();
+        const m = pad(d.getMonth() + 1);
+        const day = pad(d.getDate());
+        const hh = pad(d.getHours());
+        const mm = pad(d.getMinutes());
+        const ss = pad(d.getSeconds());
+        return `${y}/${m}/${day} ${hh}:${mm}:${ss}`;
+      }
+      return isoMatch[0].replace('T', ' ');
+    }
+    // 若無日期特徵但字串過長，截取前 20 字元
+    return str.length > 25 ? str.substring(0, 22) : str;
+  }
+
+  // 歷史日誌調閱：良善閱讀版面重構 (全部預設收合)
   async function loadHistoryLogs() {
     const container = document.getElementById('historyContainer');
-    container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:30px 0;"><i data-lucide="loader" class="spin"></i> 載入中...</div>`;
+    container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> 載入中...</div>`;
     lucide.createIcons();
 
     try {
       const logs = await api({ action: "getHistoryLogs" });
       if (!logs || logs.length === 0) {
-        container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 0;">目前尚無歷史錄影紀錄。</div>`;
+        container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 0; background:var(--card-bg); border:1px solid var(--border); border-radius:16px;">目前尚無歷史錄影紀錄。</div>`;
         return;
       }
 
-      container.innerHTML = logs.map(item => `
-        <div class="history-card" data-row-id="${item._rowId || item.rowIndex || ''}">
-          <div class="history-header">
+      container.innerHTML = logs.map(item => {
+        const cleanTime = sanitizeTimestamp(item.timestamp);
+        const isRec = item.status && item.status.includes('錄製中');
+
+        return `
+          <div class="history-card" data-row-id="${item._rowId || item.rowIndex || ''}">
+            <!-- 卡片頂部資訊列 -->
+            <div class="history-header">
+              <div>
+                <div style="font-weight: 700; font-size: 15px; color: var(--text);">日誌 ID: ${item.logId}</div>
+                <div style="font-size: 12.5px; color: var(--text-muted); font-family: ui-monospace, monospace; margin-top: 4px; display: flex; align-items: center; gap: 5px;">
+                  <i data-lucide="clock" style="width: 13px; height: 13px;"></i> ${cleanTime}
+                </div>
+              </div>
+              <span class="badge ${isRec ? 'recording' : ''}">${item.status}</span>
+            </div>
+
+            <!-- 雲端切片按鈕列 -->
             <div>
-              <div style="font-weight: 700; font-size: 15px;">日誌 ID: ${item.logId}</div>
-              <div style="font-size: 12px; color: var(--text-muted); font-family: monospace; margin-top: 4px;">${item.timestamp}</div>
+              <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
+                雲端切片備份
+              </div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                ${item.urls && item.urls.length > 0 
+                  ? item.urls.map((u, i) => `<a href="${u}" target="_blank" class="file-chip"><i data-lucide="film" style="width: 13px; height: 13px;"></i> 片段 ${i+1}</a>`).join('')
+                  : '<span style="font-size:12.5px; color:var(--text-muted);">無切片影片</span>'}
+              </div>
             </div>
-            <span class="badge">${item.status}</span>
-          </div>
 
-          <div>
-            <div style="font-weight: 600; font-size: 13px; color: var(--accent); margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-              <i data-lucide="folder" style="width: 14px; height: 14px;"></i> 雲端切片檔案
-            </div>
-            <div style="font-size: 13px; display: flex; flex-wrap: wrap; gap: 12px;">
-              ${item.urls.length > 0 
-                ? item.urls.map((u, i) => `<a href="${u}" target="_blank" style="color:var(--accent); text-decoration:none; display:inline-flex; align-items:center; gap:4px;"><i data-lucide="film" style="width:14px; height:14px;"></i> 片段 ${i+1}</a>`).join('')
-                : '<span style="color:var(--text-muted)">無影片連結</span>'}
-            </div>
-          </div>
+            <!-- 按需展開手風琴 1：AI 全局重點整理 (預設收合) -->
+            <details class="history-accordion">
+              <summary>
+                <span style="display: flex; align-items: center; gap: 8px;">
+                  <i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>
+                  AI 全局重點整理
+                </span>
+                <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
+              </summary>
+              <div class="accordion-body">
+                <div class="archive-text" style="border-left: 3px solid var(--accent); background: #ffffff;">${item.summary}</div>
+              </div>
+            </details>
 
-          <div>
-            <div style="font-weight: 600; font-size: 13px; color: var(--accent); margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-              <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> AI 全局重點整理
-            </div>
-            <div class="archive-text" style="padding: 10px; font-size: 13px; background: #111;">${item.summary}</div>
+            <!-- 按需展開手風琴 2：詳細畫面描述與逐字稿 (預設收合) -->
+            <details class="history-accordion">
+              <summary>
+                <span style="display: flex; align-items: center; gap: 8px;">
+                  <i data-lucide="file-text" style="width: 15px; height: 15px; color: var(--text-muted);"></i>
+                  詳細畫面描述與逐字稿總帳
+                </span>
+                <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
+              </summary>
+              <div class="accordion-body">
+                <div class="archive-text" style="max-height: 320px; overflow-y: auto; background: #ffffff;">${item.content}</div>
+              </div>
+            </details>
           </div>
-
-          <details style="cursor: pointer;">
-            <summary style="font-size: 12.5px; color: var(--text-muted); outline: none; display: flex; align-items: center; gap: 6px;">
-              <i data-lucide="file-text" style="width: 14px; height: 14px;"></i> 查看詳細畫面描述與逐字稿
-            </summary>
-            <div class="archive-text" style="margin-top: 8px; font-size: 12.5px;">${item.content}</div>
-          </details>
-        </div>
-      `).join('');
+        `;
+      }).join('');
 
       lucide.createIcons();
     } catch (e) {
-      container.innerHTML = `<div style="text-align:center; color:var(--danger); padding:30px 0;">載入失敗：${e.message}</div>`;
+      container.innerHTML = `<div style="text-align:center; color:var(--danger); padding:30px 0; background:var(--card-bg); border:1px solid var(--border); border-radius:16px;">載入失敗：${e.message}</div>`;
     }
   }
 
-  // 前端雙棲通訊封裝：原生支援 GAS 容器與獨立 Web Fetch
   async function api(payload) {
     if (typeof google !== 'undefined' && google.script && google.script.run) {
       return new Promise((resolve, reject) => {
