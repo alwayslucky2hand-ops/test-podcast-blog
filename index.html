@@ -3,29 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>極簡智能影音錄製與日誌系統</title>
+  <title>GROWTHX 播客部落格</title>
   
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
+     
     :root {
-      --bg: #fbfbfd;
+      --bg: #ffffff;              
       --card-bg: #ffffff;
-      --card-subtle: #f5f5f7;
-      --text: #1d1d1f;
-      --text-muted: #6e6e73;
-      --border: #e5e5ea;
-      --border-subtle: #f2f2f7;
-      --accent: #0071e3;
-      --accent-soft: rgba(0, 113, 227, 0.08);
-      --danger: #ff3b30;
-      --warning: #ff9500;
-      --success: #34c759;
-      --glass: rgba(255, 255, 255, 0.88);
-      --glass-border: rgba(0, 0, 0, 0.08);
-      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06);
+      --card-subtle: #fafafa;
+      --text: #0f172a;            
+      --text-muted: #64748b;
+      --border: #e2e8f0;          
+      --border-subtle: #f1f5f9;
+      --accent: #3175B5;          
+      --accent-soft: rgba(49, 117, 181, 0.08);
+      --accent-green: #8cc63f;    
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --success: #10b981;
+      --glass: rgba(255, 255, 255, 0.98);
+      --glass-border: #e2e8f0;
+      --shadow-sm: none;          
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.03);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -45,44 +47,53 @@
       max-width: 920px;
       display: flex;
       flex-direction: column;
-      gap: 22px;
+      gap: 24px;
     }
 
      
     .tab-nav {
       display: flex;
-      background: var(--card-subtle);
-      padding: 5px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      gap: 6px;
+      background: var(--bg);
+      padding: 0;
+      border-bottom: 1px solid var(--border);
+      gap: 24px;
+      margin-bottom: 8px;
     }
 
     .tab-btn {
-      flex: 1;
-      padding: 10px 14px;
+      flex: none;
+      padding: 12px 4px;
       border: none;
       background: transparent;
       color: var(--text-muted);
-      font-size: 13.5px;
+      font-size: 14px;
       font-weight: 600;
-      border-radius: 10px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 7px;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      gap: 8px;
+      position: relative;
+      transition: color 0.2s;
     }
 
-    .tab-btn.active {
-      background: var(--card-bg);
-      color: var(--text);
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--border);
+    .tab-btn::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transition: transform 0.2s ease;
     }
 
-    .tab-content { display: none; flex-direction: column; gap: 18px; animation: fadeIn 0.25s ease; }
+    .tab-btn:hover { color: var(--accent); }
+    .tab-btn.active { color: var(--accent); }
+    .tab-btn.active::after { transform: scaleX(1); }
+
+    .tab-content { display: none; flex-direction: column; gap: 20px; animation: fadeIn 0.3s ease; }
     .tab-content.active { display: flex; }
 
      
@@ -91,9 +102,8 @@
       width: 100%;
       aspect-ratio: 16 / 9;
       background-color: #000000;
-      border-radius: 20px;
+      border-radius: 8px;
       overflow: hidden;
-      box-shadow: var(--shadow-md);
       border: 1px solid var(--border);
       display: flex;
       align-items: center;
@@ -114,10 +124,10 @@
       pointer-events: none;
       z-index: 5;
       background-image: 
-        linear-gradient(to right, transparent calc(33.33% - 0.5px), rgba(255,255,255,0.3) calc(33.33% - 0.5px), rgba(255,255,255,0.3) calc(33.33% + 0.5px), transparent calc(33.33% + 0.5px)),
-        linear-gradient(to right, transparent calc(66.66% - 0.5px), rgba(255,255,255,0.3) calc(66.66% - 0.5px), rgba(255,255,255,0.3) calc(66.66% + 0.5px), transparent calc(66.66% + 0.5px)),
-        linear-gradient(to bottom, transparent calc(33.33% - 0.5px), rgba(255,255,255,0.3) calc(33.33% - 0.5px), rgba(255,255,255,0.3) calc(33.33% + 0.5px), transparent calc(33.33% + 0.5px)),
-        linear-gradient(to bottom, transparent calc(66.66% - 0.5px), rgba(255,255,255,0.3) calc(66.66% - 0.5px), rgba(255,255,255,0.3) calc(66.66% + 0.5px), transparent calc(66.66% + 0.5px));
+        linear-gradient(to right, transparent calc(33.33% - 0.5px), rgba(255,255,255,0.2) calc(33.33% - 0.5px), rgba(255,255,255,0.2) calc(33.33% + 0.5px), transparent calc(33.33% + 0.5px)),
+        linear-gradient(to right, transparent calc(66.66% - 0.5px), rgba(255,255,255,0.2) calc(66.66% - 0.5px), rgba(255,255,255,0.2) calc(66.66% + 0.5px), transparent calc(66.66% + 0.5px)),
+        linear-gradient(to bottom, transparent calc(33.33% - 0.5px), rgba(255,255,255,0.2) calc(33.33% - 0.5px), rgba(255,255,255,0.2) calc(33.33% + 0.5px), transparent calc(33.33% + 0.5px)),
+        linear-gradient(to bottom, transparent calc(66.66% - 0.5px), rgba(255,255,255,0.2) calc(66.66% - 0.5px), rgba(255,255,255,0.2) calc(66.66% + 0.5px), transparent calc(66.66% + 0.5px));
     }
 
     video { width: 100%; height: 100%; object-fit: cover; display: block; background: #000; }
@@ -131,11 +141,8 @@
       cursor: pointer;
       padding: 24px 32px;
       background: var(--glass);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--glass-border);
-      border-radius: 18px;
-      box-shadow: var(--shadow-md);
+      border-radius: 8px;
       transition: transform 0.2s, background 0.2s;
       z-index: 15;
     }
@@ -154,14 +161,11 @@
       gap: 8px;
       padding: 6px 14px;
       background: var(--glass);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--glass-border);
-      border-radius: 999px;
+      border-radius: 4px;
       font-size: 13px;
       font-weight: 600;
       color: var(--text);
-      box-shadow: var(--shadow-sm);
       z-index: 10;
     }
 
@@ -190,13 +194,10 @@
       gap: 10px;
       padding: 10px 16px;
       background: var(--glass);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
       border: 1px solid var(--glass-border);
-      border-radius: 12px;
-      box-shadow: var(--shadow-md);
+      border-radius: 8px;
       z-index: 20;
-      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: opacity 0.3s ease, transform 0.3s ease;
     }
 
     .controls-island.autohide {
@@ -211,7 +212,7 @@
       color: var(--text);
       width: 42px;
       height: 42px;
-      border-radius: 50%;
+      border-radius: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -220,9 +221,9 @@
       transition: background 0.15s, transform 0.15s;
     }
 
-    .ctrl-btn:hover { background: rgba(0, 0, 0, 0.05); transform: scale(1.05); }
+    .ctrl-btn:hover { background: var(--border-subtle); transform: scale(1.05); }
     .ctrl-btn:active { transform: scale(0.95); }
-    .ctrl-btn.active { background: rgba(0, 0, 0, 0.08); }
+    .ctrl-btn.active { background: var(--border); }
     .ctrl-btn.record-btn { color: var(--danger); }
     .ctrl-btn.stop-btn { color: var(--danger); }
     .ctrl-btn.pause-btn { color: var(--warning); }
@@ -230,43 +231,40 @@
     .terminal-log {
       width: 100%;
       height: 120px;
-      background: var(--card-bg);
+      background: #fafafa;
       border: 1px solid var(--border);
-      border-radius: 14px;
+      border-radius: 8px;
       padding: 12px 16px;
       font-family: ui-monospace, "SF Mono", Menlo, monospace;
       font-size: 12.5px;
       line-height: 1.6;
-      color: #333336;
+      color: #334155;
       overflow-y: auto;
-      box-shadow: var(--shadow-sm);
     }
 
     .archive-view {
       display: none;
       background: var(--card-bg);
-      border-radius: 16px;
+      border-radius: 8px;
       border: 1px solid var(--border);
-      padding: 20px;
-      box-shadow: var(--shadow-sm);
-      animation: fadeIn 0.25s ease;
+      padding: 24px;
+      animation: fadeIn 0.3s ease;
     }
 
+     
     .history-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 20px;
+      border-radius: 8px;
+      padding: 24px;
       display: flex;
       flex-direction: column;
       gap: 16px;
-      box-shadow: var(--shadow-sm);
-      transition: border-color 0.2s, box-shadow 0.2s;
+      transition: border-color 0.2s;
     }
 
     .history-card:hover {
-      border-color: #d1d1d6;
-      box-shadow: var(--shadow-md);
+      border-color: var(--accent);
     }
 
     .history-header {
@@ -274,198 +272,183 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid var(--border-subtle);
-      padding-bottom: 14px;
+      padding-bottom: 16px;
     }
 
     .badge {
       padding: 4px 10px;
-      border-radius: 6px;
+      border-radius: 4px;
       font-size: 12px;
       font-weight: 600;
-      background: rgba(52, 199, 89, 0.12);
-      color: #1b873f;
-      border: 1px solid rgba(52, 199, 89, 0.25);
+      background: transparent;
+      color: var(--accent-green);
+      border: 1px solid var(--accent-green);
     }
 
     .badge.recording {
-      background: rgba(255, 149, 0, 0.12);
-      color: #b26700;
-      border: 1px solid rgba(255, 149, 0, 0.25);
+      color: var(--warning);
+      border-color: var(--warning);
     }
 
+     
     .file-chip {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      padding: 5px 12px;
-      background: var(--card-subtle);
+      padding: 6px 12px;
+      background: transparent;
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 4px;
       font-size: 12.5px;
       font-weight: 500;
-      color: var(--accent);
+      color: var(--text-muted);
       text-decoration: none;
       transition: all 0.15s ease;
     }
 
     .file-chip:hover {
-      background: var(--accent-soft);
-      border-color: rgba(0, 113, 227, 0.3);
+      color: var(--accent);
+      border-color: var(--accent);
     }
 
     .action-btn-sm {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      padding: 5px 12px;
-      background: #ffffff;
+      gap: 6px;
+      padding: 6px 14px;
+      background: transparent;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 12.5px;
+      border-radius: 4px;
+      font-size: 13px;
       font-weight: 600;
-      color: var(--text-muted);
+      color: var(--text);
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.2s ease;
     }
 
     .action-btn-sm:hover {
-      color: var(--text);
-      border-color: #c7c7cc;
-      background: var(--card-subtle);
+      border-color: var(--accent);
+      color: var(--accent);
     }
 
     .action-btn-primary {
-      background: var(--accent) !important;
-      color: #ffffff !important;
-      border-color: var(--accent) !important;
+      color: var(--accent) !important;
+      border: 1px solid var(--accent) !important;
+      background: transparent !important;
     }
 
     .action-btn-primary:hover {
-      background: #0062c4 !important;
+      background: var(--accent) !important;
+      color: #ffffff !important;
     }
 
+     
     details.history-accordion {
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 4px;
       overflow: hidden;
       background: var(--card-bg);
-      transition: border-color 0.2s ease;
-    }
-
-    details.history-accordion[open] {
-      border-color: #c7c7cc;
     }
 
     details.history-accordion summary {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 13px 16px;
+      padding: 14px 18px;
       cursor: pointer;
       font-size: 14px;
       font-weight: 600;
       color: var(--text);
-      background: #fafafc;
+      background: var(--card-subtle);
       user-select: none;
       list-style: none;
       outline: none;
       transition: background 0.15s ease;
     }
 
-    details.history-accordion summary::-webkit-details-marker {
-      display: none;
-    }
-
-    details.history-accordion summary:hover {
-      background: #f2f2f7;
-    }
+    details.history-accordion summary::-webkit-details-marker { display: none; }
+    details.history-accordion summary:hover { background: var(--border-subtle); }
 
     .accordion-toggle-icon {
       display: inline-flex;
       align-items: center;
       color: var(--text-muted);
-      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.2s ease;
     }
 
-    details[open] > summary .accordion-toggle-icon {
-      transform: rotate(180deg);
-    }
+    details[open] > summary .accordion-toggle-icon { transform: rotate(180deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
 
     .accordion-body {
-      padding: 16px 18px;
-      border-top: 1px solid var(--border-subtle);
+      padding: 20px;
       background: #ffffff;
     }
 
      
     .markdown-body {
-      font-size: 14.5px;
-      line-height: 2.1;
-      color: #2c2c2e;
+      font-size: 15px;
+      line-height: 2.2;
+      color: #1e293b;
       letter-spacing: 0.3px;
     }
 
     .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 {
-      color: #1d1d1f;
-      margin-top: 24px;
-      margin-bottom: 12px;
+      color: var(--text);
+      margin-top: 28px;
+      margin-bottom: 14px;
       font-weight: 700;
       line-height: 1.5;
     }
 
-    .markdown-body h1 { font-size: 19px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px; }
-    .markdown-body h2 { font-size: 17px; }
-    .markdown-body h3 { font-size: 15.5px; color: var(--accent); }
-
-    .markdown-body p { margin-bottom: 18px; }
-    .markdown-body ul, .markdown-body ol { padding-left: 20px; margin-bottom: 18px; }
+    .markdown-body h1 { font-size: 20px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    .markdown-body h2 { font-size: 18px; }
+    .markdown-body h3 { font-size: 16px; color: var(--accent); }
+    .markdown-body p { margin-bottom: 20px; }
+    .markdown-body ul, .markdown-body ol { padding-left: 24px; margin-bottom: 20px; }
     .markdown-body li { margin-bottom: 8px; }
     .markdown-body strong { color: #000000; font-weight: 600; }
     .markdown-body blockquote {
-      border-left: 3px solid var(--accent);
-      padding: 12px 18px;
-      background: rgba(0, 113, 227, 0.04);
-      border-radius: 0 10px 10px 0;
-      margin-bottom: 18px;
-      color: #3a3a3c;
+      border-left: 2px solid var(--accent);
+      padding: 12px 20px;
+      background: var(--card-subtle);
+      margin-bottom: 20px;
+      color: #475569;
     }
 
      
     .minute-chunk-card {
       border: 1px solid var(--border);
-      border-radius: 12px;
-      background: #fafafc;
-      margin-bottom: 14px;
+      border-radius: 4px;
+      background: #ffffff;
+      margin-bottom: 16px;
       overflow: hidden;
     }
     .minute-chunk-card:last-child { margin-bottom: 0; }
     .minute-chunk-header {
-      padding: 10px 14px;
-      background: #f2f2f7;
+      padding: 12px 16px;
+      background: var(--card-subtle);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border);
     }
     .minute-chunk-title {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--text);
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
     .minute-chunk-content {
-      padding: 14px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 16px;
     }
     .sub-section {
-      background: #ffffff;
-      border: 1px solid var(--border-subtle);
-      border-radius: 8px;
-      padding: 12px 14px;
+      border-left: 2px solid var(--border);
+      padding-left: 16px;
     }
     .sub-section-title {
       font-size: 12px;
@@ -475,15 +458,14 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-    .desc-section .sub-section-title { color: #5856d6; }
-    .voice-section .sub-section-title { color: #0071e3; }
+    .desc-section .sub-section-title { color: var(--text-muted); }
+    .voice-section .sub-section-title { color: var(--accent); }
     .voice-body {
-      font-size: 13.5px;
-      line-height: 1.85;
-      color: #1d1d1f;
+      font-size: 14.5px;
+      line-height: 2;
+      color: #334155;
       white-space: pre-wrap;
     }
 
@@ -491,28 +473,28 @@
     .workshop-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 22px;
+      border-radius: 8px;
+      padding: 24px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      box-shadow: var(--shadow-sm);
+      gap: 20px;
     }
 
     .workshop-step-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid var(--border-subtle);
-      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
     }
 
     .step-badge {
       width: 28px;
       height: 28px;
-      border-radius: 50%;
-      background: var(--accent);
-      color: #ffffff;
+      border-radius: 4px;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      background: transparent;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -523,14 +505,14 @@
     .workshop-textarea {
       width: 100%;
       min-height: 140px;
-      padding: 14px 16px;
+      padding: 16px;
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 4px;
       font-family: inherit;
-      font-size: 14px;
+      font-size: 15px;
       line-height: 1.8;
       color: var(--text);
-      background: #fafafc;
+      background: transparent;
       resize: vertical;
       transition: border-color 0.2s;
     }
@@ -538,34 +520,31 @@
     .workshop-textarea:focus {
       outline: none;
       border-color: var(--accent);
-      background: #ffffff;
     }
 
     .title-option-card {
-      padding: 12px 14px;
+      padding: 16px;
       border: 1px solid var(--border);
-      border-radius: 10px;
-      background: #ffffff;
+      border-radius: 4px;
+      background: transparent;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 12px;
       font-size: 14px;
-      line-height: 1.5;
-      transition: all 0.15s ease;
-      position: relative;  
+      line-height: 1.6;
+      transition: all 0.2s ease;
+      position: relative;
     }
 
     .title-option-card:hover {
       border-color: var(--accent);
-      background: var(--accent-soft);
     }
 
     .title-option-card.selected {
       border-color: var(--accent);
-      background: rgba(0, 113, 227, 0.08);
-      font-weight: 600;
+      background: var(--accent-soft);
       color: var(--accent);
     }
 
@@ -575,19 +554,17 @@
       left: 50%;
       transform: translateX(-50%) translateY(50px);
       opacity: 0;
-      background: rgba(29, 29, 31, 0.9);
+      background: var(--text);
       color: #ffffff;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      padding: 8px 18px;
-      border-radius: 999px;
-      font-size: 13px;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 14px;
       font-weight: 500;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       box-shadow: var(--shadow-md);
-      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
+      transition: transform 0.3s ease, opacity 0.3s ease;
       z-index: 1000;
       pointer-events: none;
     }
@@ -608,6 +585,10 @@
 <div class="app-shell">
 
   
+  <div style="padding: 10px 4px 0px 4px; display: flex; align-items: center; gap: 12px;">
+    <h2 style="font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: 0.5px;">GROWTHX <span style="font-weight: 400; color: var(--text-muted); font-size: 18px;">播客部落格</span></h2>
+  </div>
+
   <div class="tab-nav">
     <button class="tab-btn active" onclick="switchTab('tab-live', this)">
       <i data-lucide="video" style="width: 16px; height: 16px;"></i> 影音即時錄製
@@ -616,7 +597,7 @@
       <i data-lucide="history" style="width: 16px; height: 16px;"></i> 歷史日誌調閱
     </button>
     <button class="tab-btn" onclick="switchTab('tab-article', this)">
-      <i data-lucide="file-edit" style="width: 16px; height: 16px;"></i> AI 長文工坊
+      <i data-lucide="file-edit" style="width: 16px; height: 16px;"></i> GROWTHX 爆款長文工坊
     </button>
   </div>
 
@@ -662,7 +643,7 @@
     <div class="terminal-log" id="sysLog">系統已就緒。相機處於休眠狀態，點選上方黑框按鈕以啟用設備。</div>
 
     <div id="archiveView" class="archive-view">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 16px;">
         <div style="font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px;">
           <i data-lucide="check-circle" style="width: 18px; height: 18px; color: var(--success);"></i>
           影音日誌已成功歸檔至 Google 試算表
@@ -670,7 +651,7 @@
         <div id="archiveLinks" style="display: flex; gap: 8px; flex-wrap: wrap;"></div>
       </div>
 
-      <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div style="display: flex; flex-direction: column; gap: 16px;">
         <details class="history-accordion" open>
           <summary>
             <span style="display: flex; align-items: center; gap: 8px;">
@@ -680,7 +661,7 @@
             <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
           </summary>
           <div class="accordion-body">
-            <div id="archiveSummary" class="markdown-body" style="border-left: 3px solid var(--accent); padding-left: 14px;"></div>
+            <div id="archiveSummary" class="markdown-body"></div>
           </div>
         </details>
 
@@ -705,14 +686,14 @@
     <div style="display: flex; justify-content: space-between; align-items: center;">
       <div>
         <h3 style="font-size: 18px; font-weight: 700;">歷史影音日誌總帳</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">點選卡片上的「產文案」可立即帶入此日誌逐字稿，啟動商業級長文章工作流。</p>
+        <p style="font-size: 13.5px; color: var(--text-muted); margin-top: 4px;">點選卡片上的「產文案」可立即帶入此日誌逐字稿，啟動商業級長文章工作流。</p>
       </div>
-      <button onclick="loadHistoryLogs()" class="ctrl-btn" style="width: auto; height: auto; padding: 7px 14px; border-radius: 8px; background: var(--card-bg); border: 1px solid var(--border); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; box-shadow: var(--shadow-sm);">
+      <button onclick="loadHistoryLogs()" class="action-btn-sm">
         <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> 重新整理
       </button>
     </div>
 
-    <div id="historyContainer" style="display: flex; flex-direction: column; gap: 14px;">
+    <div id="historyContainer" style="display: flex; flex-direction: column; gap: 16px;">
       <div style="text-align: center; color: var(--text-muted); padding: 40px 0;">載入歷史日誌中...</div>
     </div>
   </div>
@@ -721,10 +702,10 @@
   <div id="tab-article" class="tab-content">
     <div style="display: flex; justify-content: space-between; align-items: center;">
       <div>
-        <h3 style="font-size: 18px; font-weight: 700;">AI 爆款商業長文章工坊</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">對標微型創業痛點，解構重組逐字稿為商業週刊等級深度文章。</p>
+        <h3 style="font-size: 18px; font-weight: 700;">GROWTHX 爆款長文工坊</h3>
+        <p style="font-size: 13.5px; color: var(--text-muted); margin-top: 4px;">對標微型創業痛點，解構重組逐字稿為商業週刊等級深度文章。</p>
       </div>
-      <div id="workshopActiveLogBadge" style="font-size: 13px; font-weight: 600; color: var(--accent); background: var(--accent-soft); padding: 6px 14px; border-radius: 999px; border: 1px solid rgba(0, 113, 227, 0.2);">
+      <div id="workshopActiveLogBadge" style="font-size: 13px; font-weight: 600; color: var(--text-muted); padding: 6px 14px; border: 1px solid var(--border); border-radius: 4px;">
         尚未選取日誌
       </div>
     </div>
@@ -732,33 +713,32 @@
     
     <div class="workshop-card" id="stepCard1">
       <div class="workshop-step-header">
-        <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
           <span class="step-badge">1</span>
           <div>
-            <div style="font-weight: 700; font-size: 15px;">挑選 20 組爆款策略與文章標題</div>
-            <div style="font-size: 12px; color: var(--text-muted);">結合 7 大內容主題、流量密碼與 6 種標題寫法</div>
+            <div style="font-weight: 700; font-size: 16px;">挑選 20 組爆款策略與文章標題</div>
+            <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">自動結合 7 大內容主題、流量密碼與 6 種標題寫法</div>
           </div>
         </div>
         <div style="display: flex; gap: 8px; align-items: center;">
-          
           <button class="action-btn-sm action-btn-primary" onclick="generateStepTitles()">
             <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> 產生 20 組策略提案
           </button>
         </div>
       </div>
 
-      <div id="titleProposalContainer" style="display: flex; flex-direction: column; gap: 8px;">
-        <div style="color: var(--text-muted); font-size: 13.5px; padding: 10px 0;">點選上方「產生 20 組策略提案」按鈕，或手動在下方輸入文章標題。</div>
+      <div id="titleProposalContainer" style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="color: var(--text-muted); font-size: 14px; padding: 10px 0;">點選上方「產生 20 組策略提案」按鈕，或手動在下方輸入文章標題。</div>
       </div>
 
       <div>
-        <label style="font-size: 12.5px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 6px;">確認並自訂文章標題 (結尾需包含：｜特洛伊AI賦能師)</label>
-        <input type="text" id="finalArticleTitle" class="workshop-textarea" style="min-height: 44px; padding: 8px 14px; font-weight: 600;" placeholder="選擇上方標題或自行撰寫...">
+        <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 8px;">確認並自訂文章標題 (結尾需包含：｜GROWTHX 微企AI實戰學院)</label>
+        <input type="text" id="finalArticleTitle" class="workshop-textarea" style="min-height: 48px; padding: 12px 16px; font-weight: 600;" placeholder="選擇上方標題或自行撰寫...">
       </div>
 
       <div style="display: flex; justify-content: flex-end; gap: 8px;">
         <button class="action-btn-sm" onclick="saveCurrentStepData('title')">
-          <i data-lucide="save" style="width: 13px; height: 13px;"></i> 儲存標題
+          <i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存標題
         </button>
       </div>
     </div>
@@ -766,11 +746,11 @@
     
     <div class="workshop-card" id="stepCard2">
       <div class="workshop-step-header">
-        <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
           <span class="step-badge">2</span>
           <div>
-            <div style="font-weight: 700; font-size: 15px;">EEAT 經驗提要與黃金 3 秒痛點 Hook</div>
-            <div style="font-size: 12px; color: var(--text-muted);">直擊微創業者身心耗竭與時間貧窮，並建立 Google E-E-A-T 權威感</div>
+            <div style="font-weight: 700; font-size: 16px;">EEAT 經驗提要與黃金 3 秒痛點 Hook</div>
+            <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">直擊微創業者身心耗竭與時間貧窮，並建立 Google E-E-A-T 權威感</div>
           </div>
         </div>
         <button class="action-btn-sm action-btn-primary" onclick="generateStepHook()">
@@ -784,7 +764,7 @@
 
       <div style="display: flex; justify-content: flex-end; gap: 8px;">
         <button class="action-btn-sm" onclick="saveCurrentStepData('hook')">
-          <i data-lucide="save" style="width: 13px; height: 13px;"></i> 儲存開頭
+          <i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存開頭
         </button>
       </div>
     </div>
@@ -792,11 +772,11 @@
     
     <div class="workshop-card" id="stepCard3">
       <div class="workshop-step-header">
-        <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
           <span class="step-badge">3</span>
           <div>
-            <div style="font-weight: 700; font-size: 15px;">長文章核心深度重構 (商業週刊規格 & 故事畫面感)</div>
-            <div style="font-size: 12px; color: var(--text-muted);">一字不漏保留原始觀點，以小學生都能懂的說人話方式加強 EEAT 與黃山料式排版</div>
+            <div style="font-weight: 700; font-size: 16px;">長文章核心深度重構 (故事畫面感)</div>
+            <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">一字不漏保留原始觀點，以市場化吸睛次標題加強排版與 EEAT</div>
           </div>
         </div>
         <button class="action-btn-sm action-btn-primary" onclick="generateStepBody()">
@@ -810,7 +790,7 @@
 
       <div style="display: flex; justify-content: flex-end; gap: 8px;">
         <button class="action-btn-sm" onclick="saveCurrentStepData('body')">
-          <i data-lucide="save" style="width: 13px; height: 13px;"></i> 儲存內文
+          <i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存內文
         </button>
       </div>
     </div>
@@ -818,11 +798,11 @@
     
     <div class="workshop-card" id="stepCard4">
       <div class="workshop-step-header">
-        <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
           <span class="step-badge">4</span>
           <div>
-            <div style="font-weight: 700; font-size: 15px;">結尾溫暖祝福與高轉化 CTA 訂閱框</div>
-            <div style="font-size: 12px; color: var(--text-muted);">收藏轉發呼籲、電子報訂閱留信箱文案、品牌專屬 Slogan</div>
+            <div style="font-weight: 700; font-size: 16px;">溫暖結尾與 GROWTHX 專屬 CTA</div>
+            <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">正向鼓勵、電子報訂閱留信箱文案、品牌專屬 Slogan 收尾</div>
           </div>
         </div>
         <button class="action-btn-sm action-btn-primary" onclick="generateStepEnding()">
@@ -836,7 +816,7 @@
 
       <div style="display: flex; justify-content: flex-end; gap: 8px;">
         <button class="action-btn-sm" onclick="saveCurrentStepData('ending')">
-          <i data-lucide="save" style="width: 13px; height: 13px;"></i> 儲存結尾
+          <i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存結尾
         </button>
       </div>
     </div>
@@ -844,11 +824,11 @@
     
     <div class="workshop-card" id="stepCard5">
       <div class="workshop-step-header">
-        <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
           <span class="step-badge">5</span>
           <div>
-            <div style="font-weight: 700; font-size: 15px;">整合完整部落格長文章預覽</div>
-            <div style="font-size: 12px; color: var(--text-muted);">具備 SEO 關鍵字、EEAT 與呼吸感閱讀體驗的完整定稿</div>
+            <div style="font-weight: 700; font-size: 16px;">整合完整部落格長文章預覽</div>
+            <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">具備 SEO 關鍵字、EEAT 與呼吸感閱讀體驗的完整定稿</div>
           </div>
         </div>
         <div style="display: flex; gap: 8px;">
@@ -861,20 +841,20 @@
         </div>
       </div>
 
-      <div id="fullArticlePreview" class="markdown-body" style="background: #ffffff; border: 1px solid var(--border); border-radius: 12px; padding: 24px; min-height: 200px;">
+      <div id="fullArticlePreview" class="markdown-body" style="border: 1px solid var(--border); border-radius: 4px; padding: 32px; min-height: 200px;">
         <p style="color: var(--text-muted);">完成上方步驟後，點擊「一鍵整合長文」即可預覽完整排版文章。</p>
       </div>
 
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
-        <div style="font-size: 12.5px; color: var(--text-muted);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+        <div style="font-size: 13px; color: var(--text-muted);">
           * 點擊儲存將完整定稿同步寫入試算表第 11 欄。
         </div>
         <div style="display: flex; gap: 10px;">
           <button class="action-btn-sm" onclick="saveCurrentStepData('full')">
-            <i data-lucide="save" style="width: 13px; height: 13px;"></i> 同步試算表
+            <i data-lucide="save" style="width: 14px; height: 14px;"></i> 同步試算表
           </button>
-          <button class="action-btn-sm" style="background: #000; color: #fff; border-color: #000;" onclick="publishArticleToWeb()">
-            <i data-lucide="globe" style="width: 13px; height: 13px;"></i> 一鍵發布至網路
+          <button class="action-btn-sm" style="color: var(--text); border-color: var(--text);" onclick="publishArticleToWeb()">
+            <i data-lucide="globe" style="width: 14px; height: 14px;"></i> 一鍵發布至網路
           </button>
         </div>
       </div>
@@ -886,7 +866,7 @@
 
 
 <div id="toast" class="toast-box">
-  <i data-lucide="check" style="width: 14px; height: 14px;"></i>
+  <i data-lucide="check" style="width: 16px; height: 16px;"></i>
   <span id="toastMsg">內容已複製至剪貼簿</span>
 </div>
 
@@ -1396,7 +1376,7 @@
 
   function formatTranscriptContent(rawText, urls) {
     if (!rawText || !rawText.trim()) {
-      return '<div style="color:var(--text-muted); font-size:13.5px; padding:12px 0;">（尚無逐字稿紀錄）</div>';
+      return '<div style="color:var(--text-muted); font-size:14px; padding:12px 0;">（尚無逐字稿紀錄）</div>';
     }
 
     const urlList = Array.isArray(urls) ? urls : [];
@@ -1482,7 +1462,7 @@
     try {
       const logs = await api({ action: "getHistoryLogs" });
       if (!logs || logs.length === 0) {
-        container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 0; background:var(--card-bg); border:1px solid var(--border); border-radius:16px;">目前尚無歷史錄影紀錄。</div>`;
+        container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:8px;">目前尚無歷史錄影紀錄。</div>`;
         return;
       }
 
@@ -1502,30 +1482,30 @@
           <div class="history-card" data-row-id="${item.logId}">
             <div class="history-header">
               <div>
-                <div style="font-weight: 700; font-size: 15px; color: var(--text);">日誌 ID: ${item.logId}</div>
-                <div style="font-size: 12.5px; color: var(--text-muted); font-family: ui-monospace, monospace; margin-top: 4px; display: flex; align-items: center; gap: 5px;">
-                  <i data-lucide="clock" style="width: 13px; height: 13px;"></i> ${cleanTime}
+                <div style="font-weight: 700; font-size: 16px; color: var(--text);">日誌 ID: ${item.logId}</div>
+                <div style="font-size: 13px; color: var(--text-muted); font-family: ui-monospace, monospace; margin-top: 6px; display: flex; align-items: center; gap: 6px;">
+                  <i data-lucide="clock" style="width: 14px; height: 14px;"></i> ${cleanTime}
                 </div>
               </div>
               <div style="display: flex; align-items: center; gap: 8px;">
                 <span class="badge ${isRec ? 'recording' : ''}">${item.status}</span>
                 <button type="button" class="action-btn-sm action-btn-primary" onclick="openArticleWorkshop(${JSON.stringify(item).replace(/"/g, '&quot;')})">
-                  <i data-lucide="file-text" style="width: 13px; height: 13px;"></i> 產文案
+                  <i data-lucide="file-text" style="width: 14px; height: 14px;"></i> 產文案
                 </button>
-                <button type="button" class="action-btn-sm" style="color: var(--danger); border-color: rgba(255,59,48,0.3); background: rgba(255,59,48,0.05);" onclick="deleteHistoryLog('${item.logId}')">
-                  <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i> 刪除
+                <button type="button" class="action-btn-sm" style="color: var(--danger); border-color: var(--danger);" onclick="deleteHistoryLog('${item.logId}')">
+                  <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i> 刪除
                 </button>
               </div>
             </div>
 
             <div>
-              <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+              <div style="font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 0.5px;">
                 雲端切片備份 (${urls.length} 個切片)
               </div>
               <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                 ${urls.length > 0 
-                  ? urls.map((u, i) => `<a href="${u}" target="_blank" class="file-chip"><i data-lucide="film" style="width: 13px; height: 13px;"></i> 片段 ${i+1}</a>`).join('')
-                  : '<span style="font-size:12.5px; color:var(--text-muted);">無切片影片</span>'}
+                  ? urls.map((u, i) => `<a href="${u}" target="_blank" class="file-chip"><i data-lucide="film" style="width: 14px; height: 14px;"></i> 片段 ${i+1}</a>`).join('')
+                  : '<span style="font-size:13px; color:var(--text-muted);">無切片影片</span>'}
               </div>
             </div>
 
@@ -1533,16 +1513,16 @@
             <details class="history-accordion">
               <summary>
                 <span style="display: flex; align-items: center; gap: 8px;">
-                  <i data-lucide="play-circle" style="width: 15px; height: 15px; color: var(--accent);"></i>
+                  <i data-lucide="play-circle" style="width: 16px; height: 16px; color: var(--accent);"></i>
                   全片無縫連續播放器 (前端緩衝串流)
                 </span>
-                <button class="action-btn-sm" style="background: var(--accent); color: white; border-color: var(--accent);" onclick="event.stopPropagation(); window.startSeamlessPlay('${item.logId}')">
-                  <i data-lucide="play" style="width: 12px; height: 12px;"></i> 啟動串流
+                <button class="action-btn-sm action-btn-primary" onclick="event.stopPropagation(); window.startSeamlessPlay('${item.logId}')">
+                  <i data-lucide="play" style="width: 14px; height: 14px;"></i> 啟動串流
                 </button>
               </summary>
-              <div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border-subtle);">
+              <div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border);">
                 <video id="player-${item.logId}" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block;"></video>
-                <div id="player-status-${item.logId}" style="padding: 10px 14px; background: #1d1d1f; color: #f5f5f7; font-size: 13px; font-weight: 500; text-align: center; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
+                <div id="player-status-${item.logId}" style="padding: 12px 16px; background: #0f172a; color: #f8fafc; font-size: 14px; text-align: center;">
                   等待載入中... (請點擊右上方「啟動串流」按鈕)
                 </div>
               </div>
@@ -1552,28 +1532,28 @@
             <details class="history-accordion">
               <summary>
                 <span style="display: flex; align-items: center; gap: 8px;">
-                  <i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>
+                  <i data-lucide="sparkles" style="width: 16px; height: 16px; color: var(--accent);"></i>
                   AI 爆款短影音提案
                 </span>
                 <div style="display: flex; align-items: center; gap: 8px;">
                   <button type="button" id="btn-edit-summary-${item.logId}" class="action-btn-sm" onclick="event.stopPropagation(); toggleEditMode('${item.logId}', 'summary')">
-                    <i data-lucide="edit-3" style="width: 12px; height: 12px;"></i> 編輯
+                    <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i> 編輯
                   </button>
                   <button type="button" class="action-btn-sm" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute('data-text'), '已複製短影音提案')" data-text="${escapeHtml(safeSummaryRaw)}">
-                    <i data-lucide="copy" style="width: 12px; height: 12px;"></i> 複製
+                    <i data-lucide="copy" style="width: 14px; height: 14px;"></i> 複製
                   </button>
                   <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
                 </div>
               </summary>
               <div class="accordion-body">
-                <div id="view-summary-${item.logId}" class="markdown-body" style="border-left: 3px solid var(--accent); padding-left: 14px;">
+                <div id="view-summary-${item.logId}" class="markdown-body">
                   ${renderMarkdown(safeSummaryRaw)}
                 </div>
-                <div id="edit-summary-${item.logId}" style="display: none; flex-direction: column; gap: 10px;">
-                  <textarea id="input-summary-${item.logId}" style="width: 100%; min-height: 180px; padding: 12px; border: 1px solid var(--accent); border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; line-height: 1.6;">${escapeHtml(safeSummaryRaw)}</textarea>
+                <div id="edit-summary-${item.logId}" style="display: none; flex-direction: column; gap: 12px;">
+                  <textarea id="input-summary-${item.logId}" class="workshop-textarea" style="min-height: 180px;">${escapeHtml(safeSummaryRaw)}</textarea>
                   <div style="display: flex; justify-content: flex-end; gap: 8px;">
                     <button class="action-btn-sm" onclick="toggleEditMode('${item.logId}', 'summary')">取消</button>
-                    <button class="action-btn-sm" style="background: var(--accent); color: white; border-color: var(--accent);" onclick="saveHistoryLog('${item.logId}', 'summary', this)">儲存更新</button>
+                    <button class="action-btn-sm action-btn-primary" onclick="saveHistoryLog('${item.logId}', 'summary', this)">儲存更新</button>
                   </div>
                 </div>
               </div>
@@ -1582,15 +1562,15 @@
             <details class="history-accordion">
               <summary>
                 <span style="display: flex; align-items: center; gap: 8px;">
-                  <i data-lucide="file-text" style="width: 15px; height: 15px; color: var(--text-muted);"></i>
+                  <i data-lucide="file-text" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
                   詳細畫面描述與逐字稿總帳
                 </span>
                 <div style="display: flex; align-items: center; gap: 8px;">
                   <button type="button" id="btn-edit-content-${item.logId}" class="action-btn-sm" onclick="event.stopPropagation(); toggleEditMode('${item.logId}', 'content')">
-                    <i data-lucide="edit-3" style="width: 12px; height: 12px;"></i> 編輯
+                    <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i> 編輯
                   </button>
                   <button type="button" class="action-btn-sm" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute('data-text'), '已複製逐字稿')" data-text="${escapeHtml(safeContentRaw)}">
-                    <i data-lucide="copy" style="width: 12px; height: 12px;"></i> 複製
+                    <i data-lucide="copy" style="width: 14px; height: 14px;"></i> 複製
                   </button>
                   <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
                 </div>
@@ -1599,11 +1579,11 @@
                 <div id="view-content-${item.logId}">
                   ${formatTranscriptContent(safeContentRaw, urls)}
                 </div>
-                <div id="edit-content-${item.logId}" style="display: none; flex-direction: column; gap: 10px;">
-                  <textarea id="input-content-${item.logId}" style="width: 100%; min-height: 250px; padding: 12px; border: 1px solid var(--accent); border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; line-height: 1.6;">${escapeHtml(safeContentRaw)}</textarea>
+                <div id="edit-content-${item.logId}" style="display: none; flex-direction: column; gap: 12px;">
+                  <textarea id="input-content-${item.logId}" class="workshop-textarea" style="min-height: 250px;">${escapeHtml(safeContentRaw)}</textarea>
                   <div style="display: flex; justify-content: flex-end; gap: 8px;">
                     <button class="action-btn-sm" onclick="toggleEditMode('${item.logId}', 'content')">取消</button>
-                    <button class="action-btn-sm" style="background: var(--accent); color: white; border-color: var(--accent);" onclick="saveHistoryLog('${item.logId}', 'content', this)">儲存更新</button>
+                    <button class="action-btn-sm action-btn-primary" onclick="saveHistoryLog('${item.logId}', 'content', this)">儲存更新</button>
                   </div>
                 </div>
               </div>
@@ -1614,12 +1594,12 @@
 
       lucide.createIcons();
     } catch (e) {
-      container.innerHTML = `<div style="text-align:center; color:var(--danger); padding:30px 0; background:var(--card-bg); border:1px solid var(--border); border-radius:16px;">載入失敗：${e.message}</div>`;
+      container.innerHTML = `<div style="text-align:center; color:var(--danger); padding:30px 0; border:1px solid var(--danger); border-radius:8px;">載入失敗：${e.message}</div>`;
     }
   }
 
   // ==========================================
-  // 分頁 3：AI 長文工坊互動核心模組
+  // 分頁 3：GROWTHX 爆款長文工坊互動核心模組
   // ==========================================
   function openArticleWorkshop(logItem) {
     window.currentSelectedLog = logItem;
@@ -1638,7 +1618,7 @@
     }
 
     switchTab('tab-article');
-    showToast(`已載入日誌 ${logItem.logId} 至 AI 長文工坊`);
+    showToast(`已載入日誌 ${logItem.logId} 至 GROWTHX 長文工坊`);
   }
 
   async function generateStepTitles() {
@@ -1647,29 +1627,28 @@
       return;
     }
     const container = document.getElementById('titleProposalContainer');
-    container.innerHTML = `<div style="color: var(--accent); padding: 10px 0;"><i data-lucide="loader" class="spin"></i> 正在深度分析逐字稿，提煉 20 組爆款策略提案...</div>`;
+    container.innerHTML = `<div style="color: var(--accent); padding: 10px 0; display: flex; align-items: center; gap: 8px;"><i data-lucide="loader" class="spin"></i> 正在深度分析逐字稿，提煉 20 組爆款策略提案...</div>`;
     lucide.createIcons();
 
     try {
       const res = await api({
         action: "generateArticleStep",
         step: 1,
-        // 已移除前端發送的 theme，由後端 AI 自行發散
         content: window.currentSelectedLog.content
       });
 
       const titles = res.titles || [];
       container.innerHTML = titles.map((t, idx) => {
-        
+        // 使用 ||| 分割標題本體與戰略說明，以提供乾淨的選擇
         const parts = t.split('|||');
         const mainTitle = parts[0] ? parts[0].replace(/^[\d\.、\s]+/, '').trim() : t.trim();
         const subTitle = parts[1] ? parts[1].trim() : '';
 
         return `
         <div class="title-option-card" style="flex-direction: column; align-items: flex-start;" onclick="selectTitle('${escapeHtml(mainTitle)}', this)">
-          <div style="font-weight: 700; padding-right: 28px;">【提案 ${idx + 1}】 ${escapeHtml(mainTitle)}</div>
-          ${subTitle ? `<div style="font-size: 12px; color: var(--text-muted); margin-top: 6px; line-height: 1.5;">${escapeHtml(subTitle)}</div>` : ''}
-          <i data-lucide="check" style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; opacity: 0; transition: opacity 0.2s;"></i>
+          <div style="font-weight: 700; padding-right: 32px; color: var(--text);">【提案 ${idx + 1}】 ${escapeHtml(mainTitle)}</div>
+          ${subTitle ? `<div style="font-size: 13px; color: var(--text-muted); margin-top: 6px; line-height: 1.6;">${escapeHtml(subTitle)}</div>` : ''}
+          <i data-lucide="check" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; opacity: 0; transition: opacity 0.2s;"></i>
         </div>
         `;
       }).join('');
@@ -1763,7 +1742,7 @@
   async function generateStepEnding() {
     const title = document.getElementById('finalArticleTitle').value.trim();
     const endingInput = document.getElementById('finalArticleEnding');
-    endingInput.value = "正在撰寫溫暖結尾昇華金句、植入品牌 Slogan 與電子報訂閱 CTA...";
+    endingInput.value = "正在撰寫溫暖結尾昇華金句、植入 GROWTHX 品牌 Slogan 與電子報訂閱 CTA...";
 
     try {
       const res = await api({
