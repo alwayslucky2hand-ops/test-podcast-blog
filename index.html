@@ -568,7 +568,7 @@
       </div>
     </div>
 
-    <div class="terminal-log" id="sysLog">系統已就緒。相機處於休眠狀態，點選上方黑框按鈕以啟用設備。</div>
+    <div class="terminal-log" id="sysLog">系統已就緒。相機處於休眠狀態，點選上方按鈕以啟用設備。</div>
 
     
     <div id="archiveView" class="archive-view">
@@ -585,8 +585,8 @@
         <details class="history-accordion" open>
           <summary>
             <span style="display: flex; align-items: center; gap: 8px;">
-              <i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>
-              AI 全局重點整理
+              <i data-lucide="clapperboard" style="width: 15px; height: 15px; color: var(--accent);"></i>
+              AI 全局短影音 Reels 爆款提案與社群文案
             </span>
             <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
           </summary>
@@ -617,7 +617,7 @@
     <div style="display: flex; justify-content: space-between; align-items: center;">
       <div>
         <h3 style="font-size: 18px; font-weight: 700;">歷史影音日誌總帳</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">所有錄影記錄均預設收合，點擊卡片區塊即可按需展開閱讀重點與逐字稿。</p>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">所有錄影記錄均預設收合，點擊卡片區塊即可按需展開閱讀短影音提案與逐字稿。</p>
       </div>
       <button onclick="loadHistoryLogs()" class="ctrl-btn" style="width: auto; height: auto; padding: 7px 14px; border-radius: 8px; background: var(--card-bg); border: 1px solid var(--border); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; box-shadow: var(--shadow-sm);">
         <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> 重新整理
@@ -685,17 +685,29 @@
 
   function copyTextToClipboard(text, successMsg) {
     if (!text) return;
-    navigator.clipboard.writeText(text).then(() => {
-      showToast(successMsg || "已成功複製內容至剪貼簿");
-    }).catch(() => {
-      const textarea = document.createElement("textarea");
-      textarea.value = text;
-      document.body.appendChild(textarea);
-      textarea.select();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(successMsg || "已成功複製內容至剪貼簿");
+      }).catch(() => fallbackCopy(text, successMsg));
+    } else {
+      fallbackCopy(text, successMsg);
+    }
+  }
+
+  function fallbackCopy(text, successMsg) {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
       document.execCommand("copy");
-      document.body.removeChild(textarea);
       showToast(successMsg || "已成功複製內容至剪貼簿");
-    });
+    } catch (e) {
+      showToast("複製失敗，請手動複製");
+    }
+    document.body.removeChild(textarea);
   }
 
   function wakeControls() {
@@ -936,7 +948,7 @@
       const reader = new FileReader();
       reader.readAsDataURL(blob);
       reader.onloadend = async () => {
-        const base64 = reader.result.split(',');
+        const base64 = reader.result.split(',')[1];
         try {
           await api({
             action: "processChunkRealtime",
@@ -1014,7 +1026,7 @@
       audioContext.close();
       audioContext = null;
     }
-    log("[安全] 攝影機已徹底關閉，指示燈熄滅。正在等待背景最後切片寫入試算表...");
+    log("[安全] 設備已安全關閉。正在等待背景最後切片寫入試算表...");
 
     document.getElementById('cameraPrompt').style.display = 'flex';
     document.getElementById('controlsIsland').style.display = 'none';
@@ -1027,7 +1039,7 @@
       await Promise.all(Array.from(activeUploadTasks));
     }
 
-    log("所有影音切片皆已歸檔試算表！正在提煉 AI 全局重點整理...");
+    log("所有影音切片皆已歸檔！正在根據逐字稿提煉 Reels 短影音爆款提案與社群文案...");
 
     try {
       const res = await api({
@@ -1035,7 +1047,7 @@
         rowIndex: logSession.rowIndex
       });
 
-      log("[成功] 試算表最終歸檔完成！已載入至下方檢視區。");
+      log("[成功] 最終短影音提案已產出並歸檔！載入至下方檢視區。");
 
       const urls = res.urls || [];
       document.getElementById('archiveLinks').innerHTML = urls
@@ -1065,7 +1077,6 @@
     }, 1000);
   }
 
-  
   function sanitizeTimestamp(raw) {
     if (!raw) return "未知時間";
     const str = String(raw).trim();
@@ -1087,7 +1098,6 @@
     return str.length > 25 ? str.substring(0, 22) : str;
   }
 
-  
   function renderMarkdown(md) {
     if (!md) return '<p class="text-muted">（無內容）</p>';
     if (typeof marked !== 'undefined') {
@@ -1109,7 +1119,7 @@
       .replace(/'/g, "&#039;");
   }
 
-
+  
   function formatTranscriptContent(rawText, urls) {
     if (!rawText || !rawText.trim()) {
       return '<div style="color:var(--text-muted); font-size:13.5px; padding:12px 0;">（尚無逐字稿紀錄）</div>';
@@ -1206,7 +1216,8 @@
       container.innerHTML = logs.map(item => {
         const cleanTime = sanitizeTimestamp(item.timestamp);
         const isRec = item.status && item.status.includes('錄製中');
-        const urls = Array.isArray(item.urls) ? item.urls : [];
+        const rawUrls = Array.isArray(item.urls) ? item.urls : [];
+        const urls = rawUrls.filter(u => typeof u === 'string' && (u.startsWith('http://') || u.startsWith('https:
         const safeSummaryRaw = item.summary || "";
         const safeContentRaw = item.content || "";
 
@@ -1237,16 +1248,16 @@
               </div>
             </div>
 
-            <!-- 按需展開手風琴 1：AI 全局重點整理 -->
+            <!-- 按需展開手風琴 1：AI 全局短影音 Reels 提案 -->
             <details class="history-accordion">
               <summary>
                 <span style="display: flex; align-items: center; gap: 8px;">
-                  <i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>
-                  AI 全局重點整理
+                  <i data-lucide="clapperboard" style="width: 15px; height: 15px; color: var(--accent);"></i>
+                  AI 全局短影音 Reels 爆款提案與社群文案
                 </span>
                 <div style="display: flex; align-items: center; gap: 10px;">
-                  <button type="button" class="action-btn-sm" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute('data-text'), '已複製 AI 全局重點整理')" data-text="${escapeHtml(safeSummaryRaw)}">
-                    <i data-lucide="copy" style="width: 12px; height: 12px;"></i> 複製重點
+                  <button type="button" class="action-btn-sm" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute('data-text'), '已複製短影音提案與社群文案')" data-text="${escapeHtml(safeSummaryRaw)}">
+                    <i data-lucide="copy" style="width: 12px; height: 12px;"></i> 複製提案文案
                   </button>
                   <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
                 </div>
@@ -1286,20 +1297,20 @@
     }
   }
 
-  // 雙棲 API 呼叫核心（修正空值防護）
+  // 雙棲 API 呼叫核心（加強空值與例外安全攔截）
   async function api(payload) {
     if (typeof google !== 'undefined' && google.script && google.script.run) {
       return new Promise((resolve, reject) => {
         google.script.run
           .withSuccessHandler(res => {
             if (!res) {
-              reject(new Error("後端未回傳有效資料（請確認 GAS 是否已部署最新版本）"));
+              reject(new Error("後端未回傳有效資料（請確認 GAS 後端是否已發布新版本部署）"));
               return;
             }
             if (res.status === 'success') {
               resolve(res.data);
             } else {
-              reject(new Error(res.message || "GAS 執行遭遇未定義錯誤"));
+              reject(new Error(res.message || "GAS 執行失敗"));
             }
           })
           .withFailureHandler(err => reject(err))
