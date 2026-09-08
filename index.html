@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>極簡智能影音錄製引擎</title>
-  <!-- 載入 Lucide 極簡向量圖標庫 -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     :root {
@@ -39,7 +38,6 @@
       gap: 16px;
     }
 
-    /* 播放器主視窗容器 (防破框核心) */
     .viewport-container {
       position: relative;
       width: 100%;
@@ -60,7 +58,6 @@
       background: #000;
     }
 
-    /* 錄製狀態膠囊 (左上角) */
     .status-capsule {
       position: absolute;
       top: 16px;
@@ -96,7 +93,6 @@
       100% { transform: scale(0.9); opacity: 0.7; }
     }
 
-    /* 極簡浮動控制島 (底部中央) */
     .controls-island {
       position: absolute;
       bottom: 20px;
@@ -123,7 +119,6 @@
       pointer-events: none;
     }
 
-    /* 極簡控制按鈕 */
     .ctrl-btn {
       background: transparent;
       border: none;
@@ -164,7 +159,6 @@
       color: var(--warning);
     }
 
-    /* 終端訊息日誌 */
     .terminal-log {
       width: 100%;
       height: 90px;
@@ -179,7 +173,6 @@
       overflow-y: auto;
     }
 
-    /* 歸檔輸出區 */
     .archive-view {
       display: none;
       background: var(--card-bg);
@@ -190,12 +183,6 @@
       animation: fadeIn 0.3s ease;
     }
 
-    .archive-view h4 {
-      font-size: 15px;
-      margin-bottom: 12px;
-      color: var(--accent);
-    }
-
     .archive-text {
       white-space: pre-wrap;
       font-size: 13.5px;
@@ -203,7 +190,7 @@
       color: #cfcfd4;
       max-height: 300px;
       overflow-y: auto;
-      padding: 12px;
+      padding: 14px;
       background: #1c1c1e;
       border-radius: 12px;
     }
@@ -231,13 +218,12 @@
 
     <!-- 極簡動態控制列島 -->
     <div id="controlsIsland" class="controls-island">
-      
-      <!-- 1. 切換影音來源 (電腦: 鏡頭/螢幕 | 手機: 前後鏡頭) -->
+      <!-- 1. 切換影音來源 (鏡頭/螢幕 或 手機前後鏡頭) -->
       <button class="ctrl-btn" id="btnSource" onclick="switchMediaSource()" title="切換錄製來源">
         <i data-lucide="camera" id="iconSource"></i>
       </button>
 
-      <!-- 2. 切換影像啟用 (有螢幕 / 無螢幕黑屏收音) -->
+      <!-- 2. 切換影像啟用 (有畫面 / 純音訊收音) -->
       <button class="ctrl-btn" id="btnVideoTrack" onclick="toggleVideoTrack()" title="啟用/關閉畫面">
         <i data-lucide="video" id="iconVideo"></i>
       </button>
@@ -256,7 +242,6 @@
       <button class="ctrl-btn stop-btn" id="btnStop" onclick="stopRecording()" style="display: none;" title="結束錄製">
         <i data-lucide="square"></i>
       </button>
-
     </div>
   </div>
 
@@ -265,17 +250,31 @@
 
   <!-- 寫入完成與內容展示 -->
   <div id="archiveView" class="archive-view">
-    <h4>✅ 影音日誌已成功歸檔至 Google 試算表</h4>
-    <div id="archiveLinks" style="margin-bottom: 12px; font-size: 13px;"></div>
-    <div id="archiveContent" class="archive-text"></div>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h4 style="margin: 0; color: #34c759; font-size: 16px;">🎉 影音日誌已成功歸檔至 Google 試算表</h4>
+      <div id="archiveLinks" style="font-size: 13px;"></div>
+    </div>
+
+    <!-- AI 全局重點整理 -->
+    <div style="margin-bottom: 16px;">
+      <div style="font-weight: 700; font-size: 14px; color: var(--accent); margin-bottom: 8px;">🎯 AI 全局重點整理</div>
+      <div id="archiveSummary" class="archive-text" style="border-left: 4px solid var(--accent); background: #18181b;"></div>
+    </div>
+
+    <!-- 每分鐘畫面描述與詳細逐字稿 -->
+    <details style="cursor: pointer;">
+      <summary style="font-weight: 600; font-size: 13px; color: #86868b; outline: none; margin-bottom: 8px;">
+        👁️ 展開檢視各分鐘畫面描述與逐字稿總帳
+      </summary>
+      <div id="archiveContent" class="archive-text" style="margin-top: 8px;"></div>
+    </details>
   </div>
 </div>
 
 <script>
-  // 請填入部署的 GAS 網頁應用程式 URL
+  // 🌟 請填入你的 GAS 部署 URL
   const GAS_URL = "https://script.google.com/macros/s/AKfycbyeqKhWv3TY8bpSdB9ZfWXNkR9yap66PyGxzEJqxpawWn9hZ9chfIuBPJfZHHoP91newQ/exec";
 
-  // ================= 狀態變數管理 =================
   let currentStream = null;
   let mediaRecorder = null;
   let audioContext = null;
@@ -284,8 +283,8 @@
   let isRecording = false;
   let isPaused = false;
   let isVideoEnabled = true;
-  let currentSourceType = "camera"; // "camera" | "screen"
-  let mobileFacingMode = "user";    // "user" | "environment"
+  let currentSourceType = "camera";
+  let mobileFacingMode = "user";
 
   let chunkIndex = 1;
   let chunkTimer = null;
@@ -293,8 +292,6 @@
   let secondsElapsed = 0;
   let controlsTimeout = null;
 
-  let sessionUrls = [];
-  let sessionTranscripts = [];
   let activeUploadTasks = new Set();
   let logSession = null;
 
@@ -306,19 +303,16 @@
     el.scrollTop = el.scrollHeight;
   }
 
-  // ================= 3秒自動隱藏控制列核心 =================
   function wakeControls() {
     const island = document.getElementById('controlsIsland');
     island.classList.remove('autohide');
     clearTimeout(controlsTimeout);
 
-    // 僅在錄影中或操作時啟動 3 秒倒數收合
     controlsTimeout = setTimeout(() => {
       island.classList.add('autohide');
     }, 3000);
   }
 
-  // ================= 影音串流獲取引擎 =================
   async function acquireStream() {
     if (currentStream) {
       currentStream.getTracks().forEach(t => t.stop());
@@ -332,13 +326,11 @@
 
     try {
       if (!isMobile && currentSourceType === "screen") {
-        // 電腦端：螢幕畫面 + 系統聲音
         const screenStream = await navigator.mediaDevices.getDisplayMedia({
           video: { frameRate: { ideal: 30 } },
           audio: true
         });
 
-        // 同時獲取麥克風音軌並混音
         let micStream = null;
         try {
           micStream = await navigator.mediaDevices.getUserMedia({ audio: audioConstraints });
@@ -363,14 +355,12 @@
           mixedAudioDest.stream.getAudioTracks()[0]
         ]);
 
-        // 監聽使用者點擊瀏覽器自帶的「停止共用」
         screenStream.getVideoTracks()[0].onended = () => {
           switchMediaSource();
         };
 
         document.getElementById('iconSource').setAttribute('data-lucide', 'monitor');
       } else {
-        // 電腦視訊 或 手機相機
         const videoConstraints = isMobile
           ? { facingMode: mobileFacingMode, width: { ideal: 1280 } }
           : { width: { ideal: 1280 }, height: { ideal: 720 } };
@@ -385,7 +375,6 @@
 
       document.getElementById('mediaPlayer').srcObject = currentStream;
 
-      // 同步影像開關狀態
       const vTrack = currentStream.getVideoTracks()[0];
       if (vTrack) vTrack.enabled = isVideoEnabled;
 
@@ -396,7 +385,6 @@
     }
   }
 
-  // ================= 1. 切換有/無螢幕錄影 =================
   function toggleVideoTrack() {
     isVideoEnabled = !isVideoEnabled;
     if (currentStream && currentStream.getVideoTracks().length > 0) {
@@ -412,7 +400,6 @@
     wakeControls();
   }
 
-  // ================= 2. 切換錄影來源 =================
   async function switchMediaSource() {
     if (isMobile) {
       mobileFacingMode = (mobileFacingMode === "user") ? "environment" : "user";
@@ -434,22 +421,18 @@
     wakeControls();
   }
 
-  // ================= 3. 錄製控制邏輯 =================
   async function startRecording() {
     document.getElementById('btnStart').disabled = true;
     document.getElementById('archiveView').style.display = 'none';
-    log("正在向雲端建立專屬日誌資料夾與試算表索引...");
+    log("正在向雲端建立專屬日誌資料夾與試算表列...");
 
     try {
       logSession = await api({ action: "initLog" });
       isRecording = true;
       isPaused = false;
       chunkIndex = 1;
-      sessionUrls = [];
-      sessionTranscripts = [];
       secondsElapsed = 0;
 
-      // 更新按鈕排版狀態
       document.getElementById('btnStart').style.display = 'none';
       document.getElementById('btnPause').style.display = 'flex';
       document.getElementById('btnStop').style.display = 'flex';
@@ -458,7 +441,7 @@
       startTimer();
       startChunkRecording();
       wakeControls();
-      log("錄製引擎啟動，每 60 秒切片無縫上傳辨識。");
+      log("三軌並行引擎啟動：每 60 秒切片無縫上傳，並即時寫入試算表！");
     } catch (e) {
       log("初始化錯誤：" + e.message);
       document.getElementById('btnStart').disabled = false;
@@ -488,34 +471,27 @@
     }, 60000);
   }
 
+  // 🌟 軌道二＋軌道三：切片封裝後立即送往後端寫入 Drive 與試算表
   function processChunk(blob, mime, index) {
-    log(`區段 ${index} 封裝完成，背景上傳至 Drive 並呼叫 AI...`);
+    log(`區段 ${index} 切片完成，背景傳輸中...`);
     const task = new Promise(resolve => {
       const reader = new FileReader();
       reader.readAsDataURL(blob);
       reader.onloadend = async () => {
         const base64 = reader.result.split(',')[1];
         try {
-          const driveUrl = await api({
-            action: "saveChunk",
+          const res = await api({
+            action: "processChunkRealtime",
             base64Data: base64,
             mimeType: mime,
             folderId: logSession.folderId,
+            rowIndex: logSession.rowIndex,
             chunkIndex: index
           });
-          sessionUrls.push(driveUrl);
 
-          const aiText = await api({
-            action: "recognizeAI",
-            base64Data: base64,
-            mimeType: mime,
-            chunkIndex: index
-          });
-          sessionTranscripts.push({ index: index, text: aiText });
-
-          log(`✅ 區段 ${index} 辨識完成！`);
+          log(`✅ 區段 ${index} 已即時寫入試算表儲存格與雲端硬碟！`);
         } catch (e) {
-          log(`❌ 區段 ${index} 失敗: ${e.message}`);
+          log(`❌ 區段 ${index} 處理失敗: ${e.message}`);
         }
         resolve();
       };
@@ -558,32 +534,34 @@
     document.getElementById('btnPause').style.display = 'none';
     document.getElementById('statusBadge').style.display = 'none';
 
-    log("正在等待背景佇列上傳完成...");
+    log("錄製已結束，等待背景進行中的切片完成寫入試算表...");
     while (activeUploadTasks.size > 0) {
       await Promise.all(Array.from(activeUploadTasks));
     }
 
-    log("所有影音切片處理完畢，寫入試算表總帳中...");
+    log("所有切片皆已寫入試算表！正在產出 AI 全局重點整理...");
 
     try {
-      sessionTranscripts.sort((a, b) => a.index - b.index);
       const res = await api({
         action: "finalizeLog",
-        rowIndex: logSession.rowIndex,
-        urls: sessionUrls,
-        transcripts: sessionTranscripts
+        rowIndex: logSession.rowIndex
       });
 
-      log("🎉 試算表寫入成功！");
+      log("🎉 試算表最終歸檔完成！已載入至下方檢視區。");
 
-      // 呈現於下方結果板
+      // 渲染切片影片連結
       document.getElementById('archiveLinks').innerHTML = res.urls
-        .map((u, i) => `<a href="${u}" target="_blank" style="color:var(--accent); text-decoration:none; display:inline-block; margin-right:12px;">📁 雲端切片 ${i+1}</a>`)
+        .map((u, i) => `<a href="${u}" target="_blank" style="color:var(--accent); text-decoration:none; margin-left:8px;">📁 片段 ${i+1}</a>`)
         .join('');
+
+      // 渲染 AI 全局重點整理
+      document.getElementById('archiveSummary').innerText = res.summary;
+
+      // 渲染每分鐘畫面描述與逐字稿
       document.getElementById('archiveContent').innerText = res.content;
       document.getElementById('archiveView').style.display = 'block';
 
-      // 重置介面控制項
+      // 重置操作按鈕
       document.getElementById('btnStop').style.display = 'none';
       document.getElementById('btnStop').disabled = false;
       document.getElementById('btnStart').style.display = 'flex';
@@ -594,7 +572,6 @@
     wakeControls();
   }
 
-  // ================= 計時器與輔助函式 =================
   function startTimer() {
     timerInterval = setInterval(() => {
       secondsElapsed++;
@@ -611,7 +588,6 @@
     throw new Error(json.message);
   }
 
-  // 頁面初次載入啟動授權
   window.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
     acquireStream();
