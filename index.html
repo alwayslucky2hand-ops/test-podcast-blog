@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 智能錄製引擎</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f5f5f7; color: #1d1d1f; }
+    .card { background: white; padding: 24px; border-radius: 16px; max-width: 600px; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    video { width: 100%; border-radius: 12px; background: #000; margin-bottom: 16px; }
+    button { background: #0066cc; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-right: 8px; }
+    button:disabled { background: #ccc; cursor: not-allowed; }
+    button.stop { background: #ff3b30; }
+    #logBox { background: #1d1d1f; color: #4ade80; padding: 12px; border-radius: 8px; font-family: monospace; height: 150px; overflow-y: auto; font-size: 13px; margin-top: 16px; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h2>視訊與自動辨識引擎</h2>
+  
+  <video id="mediaPlayer" autoplay muted playsinline></video>
+  
+  <div>
+    <button id="btnInit" onclick="acquireStream()">1. 啟用攝影機</button>
+    <button id="btnStart" onclick="startPost()" disabled>2. 開始錄製與辨識</button>
+    <button id="btnStop" class="stop" onclick="stopMeeting()" style="display:none;">3. 停止並總結</button>
+  </div>
+
+  <div id="logBox">系統準備就緒...<br></div>
+</div>
+
+<script>
+  // 請填入你剛剛部署 GAS 取得的 URL
+  const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyeqKhWv3TY8bpSdB9ZfWXNkR9yap66PyGxzEJqxpawWn9hZ9chfIuBPJfZHHoP91newQ/exec";
+  
+  // 模擬使用者資料
+  const currentUser = { email: "user@example.com", role: "學員" };
+
+  let currentStream = null;
+  let mediaRecorder = null;
+  let isRecording = false;
+  let chunkInterval;
+  let chunkIndex = 1;
+  let postData = {};
+  
+  let sessionUrls = [];
+  let sessionTranscripts = [];
+  let activeProcessingTasks = new Set(); // 追蹤正在處理的 API 任務
+
+  function log(msg) {
+    const logBox = document.getElementById('logBox');
+    logBox.innerHTML += `${msg}<br>`;
+    logBox.scrollTop = logBox.scrollHeight;
+  }
+
+  // 封裝與 GAS 溝通的 Fetch 函數
+  async function api(payload) {
+    try {
+      const response = await fetch(GAS_WEBAPP_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+      const res = await response.json();
+      if (res.status === 'success') return res.data;
+      throw new Error(res.message);
+    } catch (err) {
+      throw new Error("伺服器連線失敗：" + err.message);
+    }
+  }
+
+  // 1. 取得影音權限
+  async function acquireStream() {
+    try {
+      currentStream = await navigator.mediaDevices.getUserMedia({ 
+        video: { width: { ideal: 640 }, height: { ideal: 360 } }, 
+        audio: { echoCancellation: true, noiseSuppression: true } 
+      });
+      document.getElementById('mediaPlayer').srcObject = currentStream;
+      
+      document.getElementById('btnInit').style.display = 'none';
+      document.getElementById('btnStart').disabled = false;
+      log("攝影機與麥克風授權成功！");
+    } catch (err) {
+      log("硬體授權失敗：" + err.message);
+    }
+  }
+
+  // 2. 啟動錄製與後端連線
+  async function startPost() {
+    document.getElementById('btnStart').disabled = true;
+    log("正在向雲端建立專案資料夾與試算表紀錄...");
+    
+    try {
+      postData = await api({ action: "initPost", email: currentUser.email, role: currentUser.role });
+      
+      isRecording = true;
+      chunkIndex = 1;
+      sessionUrls = [];
+      sessionTranscripts = [];
+      
+      document.getElementById('btnStart').style.display = 'none';
+      document.getElementById('btnStop').style.display = 'inline-block';
+      
+      log("雲端連線成功，開始錄製！（每 60 秒自動切片上傳）");
+      startChunkRecording();
+    } catch(e) { 
+      log("初始化失敗：" + e.message);
+      document.getElementById('btnStart').disabled = false; 
+    }
+  }
+
+  // 3. 區段錄製核心邏輯 (每 60 秒切一段)
+  function startChunkRecording() {
+    if (!isRecording || !currentStream) return;
+    
+    let chunks = []; 
+    // 確保錄製格式相容
+    const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
+    mediaRecorder = new MediaRecorder(currentStream, { mimeType: mime });
+    
+    mediaRecorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+    
+    mediaRecorder.onstop = () => { 
+      if (chunks.length > 0) {
+        processChunk(new Blob(chunks, { type: mime }), mime, chunkIndex++);
+      }
+      // 如果還在錄製狀態，自動啟動下一個切片
+      if (isRecording) startChunkRecording(); 
+    };
+    
+    mediaRecorder.start();
+    
+    // 設定 60 秒後停止當前 Recorder (會觸發 onstop 進入處理並自動重啟)
+    chunkInterval = setTimeout(() => { 
+      if (mediaRecorder.state === "recording") mediaRecorder.stop(); 
+    }, 60000); 
+  }
+
+  // 4. 將切片轉為 Base64 並丟給 GAS 處理
+  function processChunk(blob, mime, cIndex) {
+    log(`區段 ${cIndex} 封裝完成，開始上傳與 AI 辨識...`);
+    
+    const task = new Promise(resolve => {
+      const reader = new FileReader(); 
+      reader.readAsDataURL(blob);
+      reader.onloadend = async () => {
+        const b64 = reader.result.split(',')[1];
+        try {
+          // 上傳影片到 Drive
+          const url = await api({ 
+            action: "saveDrive", base64Data: b64, mimeType: mime, 
+            folderId: postData.folderId, rowIndex: postData.rowIndex, chunkIndex: cIndex 
+          });
+          sessionUrls.push(url);
+          
+          // 呼叫 Gemini 解析
+          const transcript = await api({ 
+            action: "recognizeAI", base64Data: b64, mimeType: mime, 
+            email: currentUser.email, chunkIndex: cIndex 
+          });
+          sessionTranscripts.push({ index: cIndex, text: transcript });
+          
+          log(`✅ 區段 ${cIndex} 雲端歸檔與辨識完成！`);
+        } catch(e) { 
+          log(`❌ 區段 ${cIndex} 處理失敗：` + e.message); 
+        }
+        resolve();
+      };
+    });
+    
+    activeProcessingTasks.add(task);
+    task.then(() => activeProcessingTasks.delete(task));
+  }
+
+  // 5. 停止錄製並產生總結
+  async function stopMeeting() {
+    isRecording = false;
+    clearTimeout(chunkInterval);
+    if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
+    if (currentStream) currentStream.getTracks().forEach(t => t.stop());
+    
+    document.getElementById('btnStop').disabled = true;
+    log("正在等待所有背景區段上傳與辨識完成...");
+    
+    // 等待所有正在進行的上傳/辨識任務結束
+    while(activeProcessingTasks.size > 0) { 
+      await Promise.all(Array.from(activeProcessingTasks)); 
+    }
+    
+    log("所有片段處理完畢！正在呼叫 AI 總監生成最終摘要...");
+    
+    try {
+      // 確保陣列照時間順序排列
+      sessionTranscripts.sort((a, b) => a.index - b.index);
+      
+      await api({ 
+        action: "finalizePost", 
+        rowIndex: postData.rowIndex, 
+        urls: sessionUrls, 
+        transcripts: sessionTranscripts 
+      });
+      
+      log("🎉 任務大功告成！總結與影片皆已存入試算表。");
+    } catch(e) { 
+      log("封裝結算異常：" + e.message); 
+    }
+  }
+</script>
+
+</body>
+</html>
