@@ -110,24 +110,18 @@
     }
 
      
-    @media (orientation: portrait) {
-      .controls-island {
-        flex-direction: column;  
-        
+    .camera-grid {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;  
+      z-index: 5;  
+      background-image: 
          
-        left: auto;             
-        right: 20px;            
-        bottom: 20px;
-        transform: none;         
-        
+        linear-gradient(to right, transparent calc(33.33% - 0.5px), rgba(255,255,255,0.3) calc(33.33% - 0.5px), rgba(255,255,255,0.3) calc(33.33% + 0.5px), transparent calc(33.33% + 0.5px)),
+        linear-gradient(to right, transparent calc(66.66% - 0.5px), rgba(255,255,255,0.3) calc(66.66% - 0.5px), rgba(255,255,255,0.3) calc(66.66% + 0.5px), transparent calc(66.66% + 0.5px)),
          
-        padding: 16px 8px;      
-      }
-
-       
-      .controls-island.autohide {
-        transform: translateY(12px); 
-      }
+        linear-gradient(to bottom, transparent calc(33.33% - 0.5px), rgba(255,255,255,0.3) calc(33.33% - 0.5px), rgba(255,255,255,0.3) calc(33.33% + 0.5px), transparent calc(33.33% + 0.5px)),
+        linear-gradient(to bottom, transparent calc(66.66% - 0.5px), rgba(255,255,255,0.3) calc(66.66% - 0.5px), rgba(255,255,255,0.3) calc(66.66% + 0.5px), transparent calc(66.66% + 0.5px));
     }
 
     video { width: 100%; height: 100%; object-fit: cover; display: block; background: #000; }
@@ -194,26 +188,28 @@
      
     .controls-island {
       position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%) translateY(0);
+      top: 50%;    
+      left: 50%;   
+      transform: translate(-50%, -50%);  
       display: flex;
+      flex-direction: row;  
       align-items: center;
       gap: 10px;
-      padding: 8px 16px;
+      padding: 10px 16px;  
       background: var(--glass);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border: 1px solid var(--glass-border);
-      border-radius: 999px;
+      border-radius: 12px;  
       box-shadow: var(--shadow-md);
       z-index: 20;
       transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
+     
     .controls-island.autohide {
       opacity: 0;
-      transform: translateX(-50%) translateY(12px);
+      transform: translate(-50%, -50%) scale(0.95); 
       pointer-events: none;
     }
 
@@ -558,6 +554,9 @@
     <div class="viewport-container" id="videoWrapper" onmousemove="wakeControls()" ontouchstart="wakeControls()">
 
       
+      <div class="camera-grid" id="cameraGrid" style="display: none;"></div>
+
+      
       <div id="cameraPrompt" class="camera-prompt" onclick="enableHardware()">
         <i data-lucide="camera" style="width: 32px; height: 32px; color: var(--text);"></i>
         <div style="font-weight: 600; font-size: 15px;">點擊開啟攝影機與麥克風</div>
@@ -567,9 +566,11 @@
         <div class="pulse-dot"></div>
         <span id="recordTimer">00:00</span>
       </div>
-
+      
+      
       <video id="mediaPlayer" autoplay muted playsinline></video>
 
+      
       <div id="controlsIsland" class="controls-island" style="display: none;">
         
         <button class="ctrl-btn" id="btnSource" onclick="switchMediaSource()" title="切換鏡頭 / 螢幕來源">
@@ -595,9 +596,15 @@
         <button class="ctrl-btn stop-btn" id="btnStop" onclick="stopRecording()" style="display: none;" title="結束錄製">
           <i data-lucide="square"></i>
         </button>
+
+        
+        <button class="ctrl-btn" id="btnFullscreen" onclick="toggleFullscreen()" title="全螢幕">
+          <i data-lucide="maximize" id="iconFullscreen"></i>
+        </button>
       </div>
     </div>
 
+    
     <div class="terminal-log" id="sysLog">系統已就緒。相機處於休眠狀態，點選上方黑框按鈕以啟用設備。</div>
 
     
@@ -761,6 +768,10 @@
     if (ok) {
       document.getElementById('cameraPrompt').style.display = 'none';
       document.getElementById('controlsIsland').style.display = 'flex';
+      
+      
+      document.getElementById('cameraGrid').style.display = 'block'; 
+      
       wakeControls();
       log("> 攝影設備已就緒，可點擊紅色按鈕開始錄製。");
     }
@@ -1079,6 +1090,7 @@
     document.getElementById('cameraPrompt').style.display = 'flex';
     document.getElementById('controlsIsland').style.display = 'none';
     document.getElementById('statusBadge').style.display = 'none';
+    document.getElementById('cameraGrid').style.display = 'none'; 
 
     document.getElementById('btnStop').disabled = true;
     document.getElementById('btnPause').style.display = 'none';
@@ -1474,6 +1486,38 @@
       btnElement.style.opacity = "1";
     }
   }
+
+  // ==========================================
+  // 全螢幕切換功能與監聽器
+  // ==========================================
+  function toggleFullscreen() {
+    const viewport = document.getElementById('videoWrapper');
+    
+    if (!document.fullscreenElement) {
+      if (viewport.requestFullscreen) {
+        viewport.requestFullscreen();
+      } else if (viewport.webkitRequestFullscreen) { /* Safari 支援 */
+        viewport.webkitRequestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) { /* Safari 支援 */
+        document.webkitExitFullscreen();
+      }
+    }
+  }
+
+  document.addEventListener('fullscreenchange', () => {
+    const icon = document.getElementById('iconFullscreen');
+    if (!icon) return;
+    if (document.fullscreenElement) {
+      icon.setAttribute('data-lucide', 'minimize');
+    } else {
+      icon.setAttribute('data-lucide', 'maximize');
+    }
+    lucide.createIcons();
+  });
 
   // ==========================================
   // 【革命性核心】GAS Base64 預載隱形緩衝引擎
