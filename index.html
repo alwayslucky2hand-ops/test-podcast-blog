@@ -276,7 +276,7 @@
 
     .history-header {
       display: flex;
-      flex-wrap: wrap;  
+      flex-wrap: wrap; 
       justify-content: space-between;
       align-items: flex-start;
       gap: 12px;
@@ -377,7 +377,7 @@
 
     details.history-accordion summary {
       display: flex;
-      flex-wrap: wrap;  
+      flex-wrap: wrap; 
       justify-content: space-between;
       align-items: center;
       gap: 12px;
@@ -412,37 +412,155 @@
     }
 
      
-    .markdown-body {
-      font-size: 15px;
-      line-height: 2.2;
-      color: #1e293b;
-      letter-spacing: 0.3px;
+    .blog-preview-wrapper {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 32px 24px;
+      margin-top: 16px;
     }
 
-    .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 {
-      color: var(--text);
-      margin-top: 28px;
-      margin-bottom: 14px;
-      font-weight: 700;
-      line-height: 1.5;
+    .blog-meta-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+      gap: 16px;
     }
 
-    .markdown-body h1 { font-size: 20px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-    .markdown-body h2 { font-size: 18px; }
-    .markdown-body h3 { font-size: 16px; color: var(--accent); }
-    .markdown-body p { margin-bottom: 20px; }
-    .markdown-body ul, .markdown-body ol { padding-left: 24px; margin-bottom: 20px; }
-    .markdown-body li { margin-bottom: 8px; }
-    .markdown-body strong { color: #000000; font-weight: 600; }
-    .markdown-body blockquote {
-      border-left: 2px solid var(--accent);
-      padding: 12px 20px;
+    .blog-author-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .blog-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    .blog-stats {
+      display: flex;
+      gap: 16px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .blog-stats span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .blog-footer-cta {
+      margin-top: 40px;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .newsletter-box {
       background: var(--bg);
-      border-top: 1px solid var(--border);
-      border-right: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 20px;
-      color: #475569;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 20px;
+    }
+
+    .chat-action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--text);
+      color: #ffffff;
+      padding: 16px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 15px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    
+    .chat-action-btn:hover {
+      background: var(--accent);
+      color: #ffffff;
+    }
+
+     
+    .markdown-body {
+      font-size: 16px;
+      line-height: 2.1;
+      color: #1e293b;
+      letter-spacing: 0.5px;
+    }
+
+    .markdown-body h1 { 
+      font-size: 26px; 
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 24px; 
+      line-height: 1.4;
+    }
+    .markdown-body h2 { 
+      font-size: 20px; 
+      margin-top: 32px;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+    .markdown-body h3 { 
+      font-size: 18px; 
+      color: var(--accent); 
+      margin-top: 28px;
+      margin-bottom: 12px;
+    }
+    
+    .markdown-body p { 
+      margin-bottom: 24px; 
+    }
+    
+    .markdown-body ul, .markdown-body ol { 
+      padding-left: 24px; 
+      margin-bottom: 24px; 
+      background: var(--bg);
+    }
+    
+    .markdown-body li { 
+      margin-bottom: 10px; 
+    }
+    
+    .markdown-body strong { 
+      color: #000000; 
+      font-weight: 700; 
+    }
+    
+    .markdown-body blockquote {
+      border-left: 3px solid var(--accent);
+      padding: 16px 20px;
+      background: rgba(49, 117, 181, 0.04);
+      border-radius: 0 6px 6px 0;
+      margin-bottom: 24px;
+      color: #334155;
+      font-style: normal;
+    }
+
+    .markdown-body hr {
+      border: 0;
+      height: 1px;
+      background: var(--border-subtle);
+      margin: 32px 0;
     }
 
      
@@ -458,7 +576,7 @@
       padding: 12px 16px;
       background: var(--bg);
       display: flex;
-      flex-wrap: wrap;  
+      flex-wrap: wrap; 
       justify-content: space-between;
       align-items: center;
       gap: 12px;
@@ -514,7 +632,7 @@
 
     .workshop-step-header {
       display: flex;
-      flex-wrap: wrap;  
+      flex-wrap: wrap; 
       justify-content: space-between;
       align-items: flex-start;
       gap: 16px;
@@ -872,27 +990,30 @@
         <div style="display: flex; align-items: flex-start; gap: 12px;">
           <span class="step-badge">5</span>
           <div>
-            <div style="font-weight: 700; font-size: 15px;">部落格長文章預覽</div>
-            <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">具備 SEO 與 EEAT 的完整定稿</div>
+            <div style="font-weight: 700; font-size: 15px;">部落格發布模擬預覽</div>
+            <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">自動渲染高質感部落格排版，提供發布前最後檢閱</div>
           </div>
         </div>
         <div class="flex-wrap-gap">
           <button class="action-btn-sm action-btn-primary" onclick="assembleFullArticle()">
             <i data-lucide="layers" style="width: 14px; height: 14px;"></i> 整合
           </button>
-          <button class="action-btn-sm action-btn-icon" onclick="copyFullArticle()" title="複製全文">
+          <button class="action-btn-sm action-btn-icon" onclick="copyFullArticle()" title="複製原始 Markdown 全文">
             <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
           </button>
         </div>
       </div>
 
-      <div id="fullArticlePreview" class="markdown-body" style="border: 1px solid var(--border); border-radius: 4px; padding: 20px; min-height: 150px;">
-        <p style="color: var(--text-muted); font-size: 13px;">點擊「整合」即可預覽完整排版文章。</p>
+      
+      <div id="fullArticlePreview" style="min-height: 150px;">
+        <div style="border: 1px dashed var(--border); border-radius: 4px; padding: 32px; text-align: center;">
+          <p style="color: var(--text-muted); font-size: 13px;">點擊右上方「整合」即可渲染完整高質感部落格預覽畫面。</p>
+        </div>
       </div>
 
       <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-top: 8px;">
         <div style="font-size: 12px; color: var(--text-muted);">
-          * 點擊同步將寫入試算表。
+          * 點擊同步將純文字 Markdown 寫入試算表儲存。
         </div>
         <div class="flex-wrap-gap">
           <button class="action-btn-sm" onclick="saveCurrentStepData('full')">
@@ -1041,7 +1162,7 @@
     document.getElementById('statusBadge').style.display = 'none';
     document.getElementById('cameraGrid').style.display = 'none';
     
-    log("> 相機已手動關閉，返回待命狀態。");
+    log("> 相機已關閉，返回待命狀態。");
   }
 
   function updateSourceIcon() {
@@ -1678,10 +1799,16 @@
     document.getElementById('finalArticleBody').value = logItem.articleBody || '';
     document.getElementById('finalArticleEnding').value = logItem.articleEnding || '';
 
+    // 初始化時，如果已有完整 Markdown 內容，就幫他預覽渲染
     if (logItem.articleFull) {
-      document.getElementById('fullArticlePreview').innerHTML = renderMarkdown(logItem.articleFull);
+      window.currentSelectedFullMd = logItem.articleFull;
+      renderBlogPreview(logItem.articleFull);
     } else {
-      document.getElementById('fullArticlePreview').innerHTML = '<p style="color: var(--text-muted); font-size: 13px;">點擊「整合」即可預覽完整排版文章。</p>';
+      document.getElementById('fullArticlePreview').innerHTML = `
+        <div style="border: 1px dashed var(--border); border-radius: 4px; padding: 32px; text-align: center;">
+          <p style="color: var(--text-muted); font-size: 13px;">點擊右上方「整合」即可渲染完整高質感部落格預覽畫面。</p>
+        </div>
+      `;
     }
 
     switchTab('tab-article');
@@ -1826,6 +1953,54 @@
     }
   }
 
+  // 獨立抽出的渲染部落格預覽函數
+  function renderBlogPreview(fullMd) {
+    const today = new Date();
+    const dateStr = today.getFullYear() + '/' + String(today.getMonth() + 1).padStart(2, '0') + '/' + String(today.getDate()).padStart(2, '0');
+    
+    // 純前端組裝的部落格視覺外殼
+    const previewHtml = `
+      <div class="blog-preview-wrapper">
+        <div class="blog-meta-header">
+          <div class="blog-author-info">
+            <div class="blog-avatar">T</div>
+            <div>
+              <div style="font-weight: 700; color: var(--text); font-size: 15px;">特洛伊AI賦能師</div>
+              <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">${dateStr} 發布</div>
+            </div>
+          </div>
+          <div class="blog-stats">
+            <span><i data-lucide="eye" style="width: 15px; height: 15px;"></i> 1,208</span>
+            <span><i data-lucide="book-open" style="width: 15px; height: 15px;"></i> 85%</span>
+            <span><i data-lucide="message-circle" style="width: 15px; height: 15px;"></i> 12</span>
+          </div>
+        </div>
+
+        <div class="markdown-body">
+          ${renderMarkdown(fullMd)}
+        </div>
+
+        <div class="blog-footer-cta">
+          <div class="newsletter-box">
+            <div style="font-weight: 800; font-size: 16px; margin-bottom: 8px;">訂閱 GROWTHX 電子報</div>
+            <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">獲取第一手微型創業與 AI 實戰指南，每週為您的思維充能。</p>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <input type="email" placeholder="請輸入您的 Email..." style="flex: 1; min-width: 200px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; font-size: 14px; outline: none;">
+              <button class="action-btn-sm action-btn-primary" style="padding: 12px 24px; border-radius: 4px; white-space: nowrap; height: 42px;">訂閱</button>
+            </div>
+          </div>
+
+          <a href="https://rubybranddesign-cloud.github.io/e-line-card-share/troyAIempower/" target="_blank" class="chat-action-btn">
+            <i data-lucide="message-square" style="width: 18px; height: 18px;"></i> 聊聊創業 AI 實戰
+          </a>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('fullArticlePreview').innerHTML = previewHtml;
+    lucide.createIcons();
+  }
+
   function assembleFullArticle() {
     const title = document.getElementById('finalArticleTitle').value.trim();
     const hook = document.getElementById('finalArticleHook').value.trim();
@@ -1837,10 +2012,12 @@
       return;
     }
 
+    // 將所有步驟組合為乾淨的 Markdown，並存入全域變數
     const fullMd = `# ${title}\n\n> **閱讀提醒**：這是一篇寫給身兼數職、渴望用 AI 解放時間的微型創業者的陪伴成長指南。\n\n${hook}\n\n---\n\n${body}\n\n---\n\n${ending}`;
-
-    document.getElementById('fullArticlePreview').innerHTML = renderMarkdown(fullMd);
     window.currentSelectedFullMd = fullMd;
+
+    // 呼叫高擬真渲染
+    renderBlogPreview(fullMd);
 
     saveCurrentStepData('full');
     showToast("已整合定稿");
@@ -1848,7 +2025,8 @@
 
   function copyFullArticle() {
     if (!window.currentSelectedFullMd) {
-      assembleFullArticle();
+      alert("請先點擊「整合」生成文章！");
+      return;
     }
     copyTextToClipboard(window.currentSelectedFullMd);
   }
@@ -1884,9 +2062,9 @@
     alert("【預留接口】文章已準備就緒！接下來只要串接 API 或 GitHub Pages 即可一鍵推送。");
   }
 
-  
-  
-  
+  // ==========================================
+  // 通用 API 通訊端
+  // ==========================================
   async function api(payload) {
     if (typeof google !== 'undefined' && google.script && google.script.run) {
       return new Promise((resolve, reject) => {
