@@ -42,7 +42,7 @@
 
     .app-shell {
       width: 100%;
-      max-width: 900px;
+      max-width: 920px;
       display: flex;
       flex-direction: column;
       gap: 22px;
@@ -60,18 +60,18 @@
 
     .tab-btn {
       flex: 1;
-      padding: 10px 16px;
+      padding: 10px 14px;
       border: none;
       background: transparent;
       color: var(--text-muted);
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 600;
       border-radius: 10px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 7px;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -98,35 +98,30 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: aspect-ratio 0.3s ease;  
+      transition: aspect-ratio 0.3s ease;
     }
 
-     
     @media (orientation: portrait) {
       .viewport-container {
         aspect-ratio: 9 / 16;
-        max-height: 75vh;  
+        max-height: 75vh;
       }
     }
 
-     
     .camera-grid {
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      pointer-events: none;  
-      z-index: 5;  
+      pointer-events: none;
+      z-index: 5;
       background-image: 
-         
         linear-gradient(to right, transparent calc(33.33% - 0.5px), rgba(255,255,255,0.3) calc(33.33% - 0.5px), rgba(255,255,255,0.3) calc(33.33% + 0.5px), transparent calc(33.33% + 0.5px)),
         linear-gradient(to right, transparent calc(66.66% - 0.5px), rgba(255,255,255,0.3) calc(66.66% - 0.5px), rgba(255,255,255,0.3) calc(66.66% + 0.5px), transparent calc(66.66% + 0.5px)),
-         
         linear-gradient(to bottom, transparent calc(33.33% - 0.5px), rgba(255,255,255,0.3) calc(33.33% - 0.5px), rgba(255,255,255,0.3) calc(33.33% + 0.5px), transparent calc(33.33% + 0.5px)),
         linear-gradient(to bottom, transparent calc(66.66% - 0.5px), rgba(255,255,255,0.3) calc(66.66% - 0.5px), rgba(255,255,255,0.3) calc(66.66% + 0.5px), transparent calc(66.66% + 0.5px));
     }
 
     video { width: 100%; height: 100%; object-fit: cover; display: block; background: #000; }
 
-     
     .camera-prompt {
       position: absolute;
       display: flex;
@@ -150,7 +145,6 @@
       background: #ffffff;
     }
 
-     
     .status-capsule {
       position: absolute;
       top: 16px;
@@ -185,31 +179,29 @@
       100% { transform: scale(0.9); opacity: 0.7; }
     }
 
-     
     .controls-island {
       position: absolute;
-      top: 50%;    
-      left: 50%;   
-      transform: translate(-50%, -50%);  
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       display: flex;
-      flex-direction: row;  
+      flex-direction: row;
       align-items: center;
       gap: 10px;
-      padding: 10px 16px;  
+      padding: 10px 16px;
       background: var(--glass);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border: 1px solid var(--glass-border);
-      border-radius: 12px;  
+      border-radius: 12px;
       box-shadow: var(--shadow-md);
       z-index: 20;
       transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-     
     .controls-island.autohide {
       opacity: 0;
-      transform: translate(-50%, -50%) scale(0.95); 
+      transform: translate(-50%, -50%) scale(0.95);
       pointer-events: none;
     }
 
@@ -235,10 +227,9 @@
     .ctrl-btn.stop-btn { color: var(--danger); }
     .ctrl-btn.pause-btn { color: var(--warning); }
 
-     
     .terminal-log {
       width: 100%;
-      height: 120px; 
+      height: 120px;
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 14px;
@@ -251,7 +242,6 @@
       box-shadow: var(--shadow-sm);
     }
 
-     
     .archive-view {
       display: none;
       background: var(--card-bg);
@@ -262,7 +252,6 @@
       animation: fadeIn 0.25s ease;
     }
 
-     
     .history-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -304,7 +293,6 @@
       border: 1px solid rgba(255, 149, 0, 0.25);
     }
 
-     
     .file-chip {
       display: inline-flex;
       align-items: center;
@@ -325,17 +313,16 @@
       border-color: rgba(0, 113, 227, 0.3);
     }
 
-     
     .action-btn-sm {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      padding: 4px 10px;
+      padding: 5px 12px;
       background: #ffffff;
       border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 500;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
       color: var(--text-muted);
       cursor: pointer;
       transition: all 0.15s ease;
@@ -347,7 +334,16 @@
       background: var(--card-subtle);
     }
 
-     
+    .action-btn-primary {
+      background: var(--accent) !important;
+      color: #ffffff !important;
+      border-color: var(--accent) !important;
+    }
+
+    .action-btn-primary:hover {
+      background: #0062c4 !important;
+    }
+
     details.history-accordion {
       border: 1px solid var(--border);
       border-radius: 12px;
@@ -403,35 +399,34 @@
 
      
     .markdown-body {
-      font-size: 14px;
-      line-height: 1.8;
+      font-size: 14.5px;
+      line-height: 2.1;
       color: #2c2c2e;
+      letter-spacing: 0.3px;
     }
 
     .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 {
       color: #1d1d1f;
-      margin-top: 16px;
-      margin-bottom: 8px;
+      margin-top: 24px;
+      margin-bottom: 12px;
       font-weight: 700;
-      line-height: 1.4;
+      line-height: 1.5;
     }
 
-    .markdown-body h1 { font-size: 17px; }
-    .markdown-body h2 { font-size: 16px; }
-    .markdown-body h3 { font-size: 15px; }
-    .markdown-body h4 { font-size: 14px; }
+    .markdown-body h1 { font-size: 19px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px; }
+    .markdown-body h2 { font-size: 17px; }
+    .markdown-body h3 { font-size: 15.5px; color: var(--accent); }
 
-    .markdown-body p { margin-bottom: 12px; }
-    .markdown-body ul, .markdown-body ol { padding-left: 22px; margin-bottom: 12px; }
-    .markdown-body li { margin-bottom: 6px; }
+    .markdown-body p { margin-bottom: 18px; }
+    .markdown-body ul, .markdown-body ol { padding-left: 20px; margin-bottom: 18px; }
+    .markdown-body li { margin-bottom: 8px; }
     .markdown-body strong { color: #000000; font-weight: 600; }
-    .markdown-body hr { border: none; border-top: 1px solid var(--border-subtle); margin: 16px 0; }
     .markdown-body blockquote {
       border-left: 3px solid var(--accent);
-      padding: 8px 14px;
+      padding: 12px 18px;
       background: rgba(0, 113, 227, 0.04);
-      border-radius: 0 8px 8px 0;
-      margin-bottom: 12px;
+      border-radius: 0 10px 10px 0;
+      margin-bottom: 18px;
       color: #3a3a3c;
     }
 
@@ -443,9 +438,7 @@
       margin-bottom: 14px;
       overflow: hidden;
     }
-
     .minute-chunk-card:last-child { margin-bottom: 0; }
-
     .minute-chunk-header {
       padding: 10px 14px;
       background: #f2f2f7;
@@ -454,7 +447,6 @@
       align-items: center;
       border-bottom: 1px solid var(--border-subtle);
     }
-
     .minute-chunk-title {
       font-size: 13px;
       font-weight: 700;
@@ -463,21 +455,18 @@
       align-items: center;
       gap: 6px;
     }
-
     .minute-chunk-content {
       padding: 14px;
       display: flex;
       flex-direction: column;
       gap: 12px;
     }
-
     .sub-section {
       background: #ffffff;
       border: 1px solid var(--border-subtle);
       border-radius: 8px;
       padding: 12px 14px;
     }
-
     .sub-section-title {
       font-size: 12px;
       font-weight: 700;
@@ -489,18 +478,106 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-
     .desc-section .sub-section-title { color: #5856d6; }
     .voice-section .sub-section-title { color: #0071e3; }
-
     .voice-body {
       font-size: 13.5px;
-      line-height: 1.75;
+      line-height: 1.85;
       color: #1d1d1f;
       white-space: pre-wrap;
     }
 
      
+    .workshop-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .workshop-step-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 14px;
+    }
+
+    .step-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .workshop-textarea {
+      width: 100%;
+      min-height: 140px;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--text);
+      background: #fafafc;
+      resize: vertical;
+      transition: border-color 0.2s;
+    }
+
+    .workshop-textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: #ffffff;
+    }
+
+    .theme-select {
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      font-size: 13.5px;
+      color: var(--text);
+      outline: none;
+    }
+
+    .title-option-card {
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #ffffff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 14px;
+      line-height: 1.5;
+      transition: all 0.15s ease;
+    }
+
+    .title-option-card:hover {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .title-option-card.selected {
+      border-color: var(--accent);
+      background: rgba(0, 113, 227, 0.08);
+      font-weight: 600;
+      color: var(--accent);
+    }
+
     .toast-box {
       position: fixed;
       bottom: 24px;
@@ -547,16 +624,16 @@
     <button class="tab-btn" onclick="switchTab('tab-history', this)">
       <i data-lucide="history" style="width: 16px; height: 16px;"></i> 歷史日誌調閱
     </button>
+    <button class="tab-btn" onclick="switchTab('tab-article', this)">
+      <i data-lucide="file-edit" style="width: 16px; height: 16px;"></i> AI 長文工坊
+    </button>
   </div>
 
   
   <div id="tab-live" class="tab-content active">
     <div class="viewport-container" id="videoWrapper" onmousemove="wakeControls()" ontouchstart="wakeControls()">
-
-      
       <div class="camera-grid" id="cameraGrid" style="display: none;"></div>
 
-      
       <div id="cameraPrompt" class="camera-prompt" onclick="enableHardware()">
         <i data-lucide="camera" style="width: 32px; height: 32px; color: var(--text);"></i>
         <div style="font-weight: 600; font-size: 15px;">點擊開啟攝影機與麥克風</div>
@@ -567,47 +644,32 @@
         <span id="recordTimer">00:00</span>
       </div>
       
-      
       <video id="mediaPlayer" autoplay muted playsinline></video>
 
-      
       <div id="controlsIsland" class="controls-island" style="display: none;">
-        
         <button class="ctrl-btn" id="btnSource" onclick="switchMediaSource()" title="切換鏡頭 / 螢幕來源">
           <i data-lucide="switch-camera" id="iconSource"></i>
         </button>
-
-        
         <button class="ctrl-btn" id="btnVideoTrack" onclick="toggleVideoTrack()" title="開啟/關閉畫面">
           <i data-lucide="video" id="iconVideo"></i>
         </button>
-
-        
         <button class="ctrl-btn record-btn" id="btnStart" onclick="startRecording()" title="開始錄影">
           <i data-lucide="circle-dot"></i>
         </button>
-
-        
         <button class="ctrl-btn pause-btn" id="btnPause" onclick="togglePause()" style="display: none;" title="暫停錄製">
           <i data-lucide="pause" id="iconPause"></i>
         </button>
-
-        
         <button class="ctrl-btn stop-btn" id="btnStop" onclick="stopRecording()" style="display: none;" title="結束錄製">
           <i data-lucide="square"></i>
         </button>
-
-        
         <button class="ctrl-btn" id="btnFullscreen" onclick="toggleFullscreen()" title="全螢幕">
           <i data-lucide="maximize" id="iconFullscreen"></i>
         </button>
       </div>
     </div>
 
-    
     <div class="terminal-log" id="sysLog">系統已就緒。相機處於休眠狀態，點選上方黑框按鈕以啟用設備。</div>
 
-    
     <div id="archiveView" class="archive-view">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px;">
         <div style="font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px;">
@@ -617,7 +679,6 @@
         <div id="archiveLinks" style="display: flex; gap: 8px; flex-wrap: wrap;"></div>
       </div>
 
-      
       <div style="display: flex; flex-direction: column; gap: 12px;">
         <details class="history-accordion" open>
           <summary>
@@ -632,7 +693,6 @@
           </div>
         </details>
 
-        
         <details class="history-accordion">
           <summary>
             <span style="display: flex; align-items: center; gap: 8px;">
@@ -654,7 +714,7 @@
     <div style="display: flex; justify-content: space-between; align-items: center;">
       <div>
         <h3 style="font-size: 18px; font-weight: 700;">歷史影音日誌總帳</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">所有錄影記錄均預設收合，點擊卡片區塊即可按需展開閱讀重點與逐字稿。</p>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">點選卡片上的「產文案」可立即帶入此日誌逐字稿，啟動商業級長文章工作流。</p>
       </div>
       <button onclick="loadHistoryLogs()" class="ctrl-btn" style="width: auto; height: auto; padding: 7px 14px; border-radius: 8px; background: var(--card-bg); border: 1px solid var(--border); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; box-shadow: var(--shadow-sm);">
         <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> 重新整理
@@ -664,6 +724,177 @@
     <div id="historyContainer" style="display: flex; flex-direction: column; gap: 14px;">
       <div style="text-align: center; color: var(--text-muted); padding: 40px 0;">載入歷史日誌中...</div>
     </div>
+  </div>
+
+  
+  <div id="tab-article" class="tab-content">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h3 style="font-size: 18px; font-weight: 700;">AI 爆款商業長文章工坊</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">對標微型創業痛點，解構重組逐字稿為商業週刊等級深度文章。</p>
+      </div>
+      <div id="workshopActiveLogBadge" style="font-size: 13px; font-weight: 600; color: var(--accent); background: var(--accent-soft); padding: 6px 14px; border-radius: 999px; border: 1px solid rgba(0, 113, 227, 0.2);">
+        尚未選取日誌
+      </div>
+    </div>
+
+    
+    <div class="workshop-card" id="stepCard1">
+      <div class="workshop-step-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span class="step-badge">1</span>
+          <div>
+            <div style="font-weight: 700; font-size: 15px;">挑選爆款主題與文章標題</div>
+            <div style="font-size: 12px; color: var(--text-muted);">結合 7 大內容主題、流量密碼與 6 種標題寫法</div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <select id="articleThemeSelect" class="theme-select">
+            <option value="教知識 (行業揭秘/幹貨/避坑)">教知識 (乾貨輸出/懶人包)</option>
+            <option value="說故事 (成就故事/他人故事)">說故事 (配角思維/轉折契機)</option>
+            <option value="曬過程 (製作/改造/任務挑戰)">曬過程 (Before/After對比)</option>
+            <option value="熬雞湯 (自我成長/處事之道)">熬雞湯 (心靈共鳴金句)</option>
+            <option value="選立場 (犀利批判/反常識)">選立場 (三觀碰撞/反常識)</option>
+          </select>
+          <button class="action-btn-sm action-btn-primary" onclick="generateStepTitles()">
+            <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> 生成標題提案
+          </button>
+        </div>
+      </div>
+
+      <div id="titleProposalContainer" style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="color: var(--text-muted); font-size: 13.5px; padding: 10px 0;">點選上方「生成標題提案」按鈕，或手動在下方輸入文章標題。</div>
+      </div>
+
+      <div>
+        <label style="font-size: 12.5px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 6px;">確認並自訂文章標題 (結尾需包含：｜特洛伊AI賦能師)</label>
+        <input type="text" id="finalArticleTitle" class="workshop-textarea" style="min-height: 44px; padding: 8px 14px; font-weight: 600;" placeholder="選擇上方標題或自行撰寫...">
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 8px;">
+        <button class="action-btn-sm" onclick="saveCurrentStepData('title')">
+          <i data-lucide="save" style="width: 13px; height: 13px;"></i> 儲存標題
+        </button>
+      </div>
+    </div>
+
+    
+    <div class="workshop-card" id="stepCard2">
+      <div class="workshop-step-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span class="step-badge">2</span>
+          <div>
+            <div style="font-weight: 700; font-size: 15px;">黃金 3 秒 Hook 痛點開頭 (EEAT 架構)</div>
+            <div style="font-size: 12px; color: var(--text-muted);">直擊微創業者身心耗竭與時間貧窮，引人入勝</div>
+          </div>
+        </div>
+        <button class="action-btn-sm action-btn-primary" onclick="generateStepHook()">
+          <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> 產出開頭 Hook
+        </button>
+      </div>
+
+      <div>
+        <textarea id="finalArticleHook" class="workshop-textarea" style="min-height: 160px;" placeholder="開頭內容產出後可在此自由編輯調整..."></textarea>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 8px;">
+        <button class="action-btn-sm" onclick="saveCurrentStepData('hook')">
+          <i data-lucide="save" style="width: 13px; height: 13px;"></i> 儲存開頭
+        </button>
+      </div>
+    </div>
+
+    
+    <div class="workshop-card" id="stepCard3">
+      <div class="workshop-step-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span class="step-badge">3</span>
+          <div>
+            <div style="font-weight: 700; font-size: 15px;">長文章核心深度重構 (商業週刊規格)</div>
+            <div style="font-size: 12px; color: var(--text-muted);">一字不漏保留您的觀點與風格，黃山料式極致呼吸感排版 (約2000-4000字)</div>
+          </div>
+        </div>
+        <button class="action-btn-sm action-btn-primary" onclick="generateStepBody()">
+          <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> 提煉重構內文
+        </button>
+      </div>
+
+      <div>
+        <textarea id="finalArticleBody" class="workshop-textarea" style="min-height: 380px;" placeholder="深度長文章核心內文產出後可在此自由編輯調整..."></textarea>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 8px;">
+        <button class="action-btn-sm" onclick="saveCurrentStepData('body')">
+          <i data-lucide="save" style="width: 13px; height: 13px;"></i> 儲存內文
+        </button>
+      </div>
+    </div>
+
+    
+    <div class="workshop-card" id="stepCard4">
+      <div class="workshop-step-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span class="step-badge">4</span>
+          <div>
+            <div style="font-weight: 700; font-size: 15px;">結尾溫暖祝福與高轉化 CTA 訂閱框</div>
+            <div style="font-size: 12px; color: var(--text-muted);">收藏轉發呼籲、電子報訂閱留信箱文案</div>
+          </div>
+        </div>
+        <button class="action-btn-sm action-btn-primary" onclick="generateStepEnding()">
+          <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> 產出結尾與 CTA
+        </button>
+      </div>
+
+      <div>
+        <textarea id="finalArticleEnding" class="workshop-textarea" style="min-height: 160px;" placeholder="結尾與行動呼籲產出後可在此自由編輯調整..."></textarea>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 8px;">
+        <button class="action-btn-sm" onclick="saveCurrentStepData('ending')">
+          <i data-lucide="save" style="width: 13px; height: 13px;"></i> 儲存結尾
+        </button>
+      </div>
+    </div>
+
+    
+    <div class="workshop-card" id="stepCard5">
+      <div class="workshop-step-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span class="step-badge">5</span>
+          <div>
+            <div style="font-weight: 700; font-size: 15px;">整合完整部落格長文章預覽</div>
+            <div style="font-size: 12px; color: var(--text-muted);">具備 SEO 關鍵字、EEAT 與呼吸感閱讀體驗的完整定稿</div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="action-btn-sm action-btn-primary" onclick="assembleFullArticle()">
+            <i data-lucide="layers" style="width: 14px; height: 14px;"></i> 一鍵整合長文
+          </button>
+          <button class="action-btn-sm" onclick="copyFullArticle()">
+            <i data-lucide="copy" style="width: 14px; height: 14px;"></i> 複製全文
+          </button>
+        </div>
+      </div>
+
+      <div id="fullArticlePreview" class="markdown-body" style="background: #ffffff; border: 1px solid var(--border); border-radius: 12px; padding: 24px; min-height: 200px;">
+        <p style="color: var(--text-muted);">完成上方步驟後，點擊「一鍵整合長文」即可預覽完整排版文章。</p>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+        <div style="font-size: 12.5px; color: var(--text-muted);">
+          * 點擊儲存將完整定稿同步寫入試算表第 11 欄。
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button class="action-btn-sm" onclick="saveCurrentStepData('full')">
+            <i data-lucide="save" style="width: 13px; height: 13px;"></i> 同步試算表
+          </button>
+          <button class="action-btn-sm" style="background: #000; color: #fff; border-color: #000;" onclick="publishArticleToWeb()">
+            <i data-lucide="globe" style="width: 13px; height: 13px;"></i> 一鍵發布至網路
+          </button>
+        </div>
+      </div>
+    </div>
+
   </div>
 
 </div>
@@ -701,9 +932,9 @@
 
   const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-  
   window.logPlaylists = {};
   window.blobBuffers = {};
+  window.currentSelectedLog = null; 
 
   function log(msg) {
     const el = document.getElementById('sysLog');
@@ -754,7 +985,13 @@
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
-    btn.classList.add('active');
+    if (btn) {
+      btn.classList.add('active');
+    } else {
+      const targetBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(tabId));
+      if (targetBtn) targetBtn.classList.add('active');
+    }
+
     document.getElementById(tabId).classList.add('active');
 
     if (tabId === 'tab-history') {
@@ -768,10 +1005,7 @@
     if (ok) {
       document.getElementById('cameraPrompt').style.display = 'none';
       document.getElementById('controlsIsland').style.display = 'flex';
-      
-      
       document.getElementById('cameraGrid').style.display = 'block'; 
-      
       wakeControls();
       log("> 攝影設備已就緒，可點擊紅色按鈕開始錄製。");
     }
@@ -838,19 +1072,15 @@
           }
         };
       } else {
-        
         const isPortrait = window.innerHeight > window.innerWidth;
-
         let videoConstraints;
         if (isMobile) {
           videoConstraints = { 
             facingMode: mobileFacingMode, 
-            
             width: { ideal: isPortrait ? 720 : 1280 },
             height: { ideal: isPortrait ? 1280 : 720 }
           };
         } else {
-          
           videoConstraints = { width: { ideal: 1280 }, height: { ideal: 720 } };
         }
 
@@ -954,7 +1184,7 @@
       startChunkRecording();
       wakeControls();
       log("=========================================");
-      log("🟢 雙軌並行即時引擎啟動！系統將一邊錄製，一邊在背景將每分鐘的切片建檔至雲端硬碟，並同步寫入試算表！");
+      log("🟢 雙軌並行即時引擎啟動！錄影中每分鐘自動切片、即時轉寫寫入試算表！");
       log("=========================================");
     } catch (e) {
       log("> 初始化錯誤：" + e.message);
@@ -988,14 +1218,14 @@
 
     chunkTimer = setTimeout(() => {
       if (mediaRecorder && mediaRecorder.state === "recording") {
-        log(`[系統] 第 ${chunkIndex} 段影音已達 60 秒，自動切片並背景傳輸至雲端處理...`);
+        log(`[系統] 第 ${chunkIndex} 段影音已達 60 秒，自動切片傳輸至雲端...`);
         mediaRecorder.stop();
       }
     }, 60000);
   }
 
   function processChunk(blob, mime, index) {
-    log(`> [排隊中] 區段 ${index} 切片封裝完成，準備一邊錄製一邊上傳雲端硬碟...`);
+    log(`> [排隊中] 區段 ${index} 切片封裝完成，準備上傳至雲端硬碟...`);
     const task = new Promise(resolve => {
       const reader = new FileReader();
       reader.readAsDataURL(blob);
@@ -1069,7 +1299,7 @@
     clearInterval(timerInterval);
 
     if (mediaRecorder && mediaRecorder.state === "recording") {
-      log(`[系統] 偵測到結束指令，最後一段殘餘切片 (未滿 60 秒) 即刻發送雲端處理...`);
+      log(`[系統] 偵測到結束指令，最後一段殘餘切片即刻發送雲端處理...`);
     }
 
     await stopMediaRecorderAsync();
@@ -1085,12 +1315,12 @@
       audioContext.close();
       audioContext = null;
     }
-    log("> [安全] 攝影機已徹底關閉，指示燈熄滅。系統正在強制等待背景所有的即時寫入任務完成...");
+    log("> [安全] 攝影機已徹底關閉。系統正在等待背景所有的即時寫入任務完成...");
 
     document.getElementById('cameraPrompt').style.display = 'flex';
     document.getElementById('controlsIsland').style.display = 'none';
     document.getElementById('statusBadge').style.display = 'none';
-    document.getElementById('cameraGrid').style.display = 'none'; 
+    document.getElementById('cameraGrid').style.display = 'none';
 
     document.getElementById('btnStop').disabled = true;
     document.getElementById('btnPause').style.display = 'none';
@@ -1099,7 +1329,7 @@
       await Promise.all(Array.from(activeUploadTasks));
     }
 
-    log("> 所有影音切片皆已精準寫入雲端與試算表！正在提煉 AI 全局重點整理...");
+    log("> 所有影音切片皆已寫入雲端與試算表！正在提煉 AI 全局重點整理...");
 
     try {
       const res = await api({
@@ -1271,7 +1501,6 @@
         return;
       }
 
-      
       window.logPlaylists = {};
       window.blobBuffers = {};
 
@@ -1282,12 +1511,10 @@
         const safeSummaryRaw = item.summary || "";
         const safeContentRaw = item.content || "";
 
-        
         window.logPlaylists[item.logId] = urls;
 
         return `
           <div class="history-card" data-row-id="${item.logId}">
-            <!-- 卡片頂部資訊列 -->
             <div class="history-header">
               <div>
                 <div style="font-weight: 700; font-size: 15px; color: var(--text);">日誌 ID: ${item.logId}</div>
@@ -1297,13 +1524,16 @@
               </div>
               <div style="display: flex; align-items: center; gap: 8px;">
                 <span class="badge ${isRec ? 'recording' : ''}">${item.status}</span>
+                <!-- 新增：產文案按鈕 -->
+                <button type="button" class="action-btn-sm action-btn-primary" onclick="openArticleWorkshop(${JSON.stringify(item).replace(/"/g, '&quot;')})">
+                  <i data-lucide="file-text" style="width: 13px; height: 13px;"></i> 產文案
+                </button>
                 <button type="button" class="action-btn-sm" style="color: var(--danger); border-color: rgba(255,59,48,0.3); background: rgba(255,59,48,0.05);" onclick="deleteHistoryLog('${item.logId}')">
                   <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i> 刪除
                 </button>
               </div>
             </div>
 
-            <!-- 雲端切片按鈕列 -->
             <div>
               <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
                 雲端切片備份 (${urls.length} 個切片)
@@ -1316,7 +1546,6 @@
             </div>
 
             ${urls.length > 0 ? `
-            <!-- 【全新革命版】手風琴 0：GAS Base64 預載緩衝引擎 (徹底避開 Google Drive CORS 阻擋) -->
             <details class="history-accordion">
               <summary>
                 <span style="display: flex; align-items: center; gap: 8px;">
@@ -1336,7 +1565,6 @@
             </details>
             ` : ''}
 
-            <!-- 手風琴 1：AI 爆款短影音提案 -->
             <details class="history-accordion">
               <summary>
                 <span style="display: flex; align-items: center; gap: 8px;">
@@ -1367,7 +1595,6 @@
               </div>
             </details>
 
-            <!-- 手風琴 2：詳細畫面描述與逐字稿 -->
             <details class="history-accordion">
               <summary>
                 <span style="display: flex; align-items: center; gap: 8px;">
@@ -1407,6 +1634,224 @@
     }
   }
 
+  // ==========================================
+  // 分頁 3：AI 長文工坊互動核心模組
+  // ==========================================
+  function openArticleWorkshop(logItem) {
+    window.currentSelectedLog = logItem;
+    document.getElementById('workshopActiveLogBadge').innerText = `已載入日誌: ${logItem.logId} (${logItem.timestamp})`;
+
+    // 若該日誌曾寫入過長文章各欄位，自動復原填入
+    document.getElementById('finalArticleTitle').value = logItem.articleTitle || '';
+    document.getElementById('finalArticleHook').value = logItem.articleHook || '';
+    document.getElementById('finalArticleBody').value = logItem.articleBody || '';
+    document.getElementById('finalArticleEnding').value = logItem.articleEnding || '';
+
+    if (logItem.articleFull) {
+      document.getElementById('fullArticlePreview').innerHTML = renderMarkdown(logItem.articleFull);
+    } else {
+      document.getElementById('fullArticlePreview').innerHTML = '<p style="color: var(--text-muted);">完成上方步驟後，點擊「一鍵整合長文」即可預覽完整排版文章。</p>';
+    }
+
+    switchTab('tab-article');
+    showToast(`已載入日誌 ${logItem.logId} 至 AI 長文工坊`);
+  }
+
+  async function generateStepTitles() {
+    if (!window.currentSelectedLog) {
+      alert("請先至「歷史日誌調閱」選取一筆日誌並點擊「產文案」！");
+      return;
+    }
+    const container = document.getElementById('titleProposalContainer');
+    container.innerHTML = `<div style="color: var(--accent); padding: 10px 0;"><i data-lucide="loader" class="spin"></i> 正在深度分析逐字稿，提煉 5 組爆款標題...</div>`;
+    lucide.createIcons();
+
+    const theme = document.getElementById('articleThemeSelect').value;
+
+    try {
+      const res = await api({
+        action: "generateArticleStep",
+        step: 1,
+        theme: theme,
+        content: window.currentSelectedLog.content
+      });
+
+      const titles = res.titles || [];
+      container.innerHTML = titles.map((t, idx) => `
+        <div class="title-option-card" onclick="selectTitle('${escapeHtml(t)}', this)">
+          <span><strong>【提案 ${idx + 1}】</strong> ${escapeHtml(t)}</span>
+          <i data-lucide="check" style="width: 16px; height: 16px; opacity: 0;"></i>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+      showToast("標題提案生成完成！請點選喜愛的標題。");
+    } catch (e) {
+      container.innerHTML = `<div style="color: var(--danger); padding: 10px 0;">標題生成失敗: ${e.message}</div>`;
+    }
+  }
+
+  function selectTitle(titleText, cardEl) {
+    document.querySelectorAll('.title-option-card').forEach(c => {
+      c.classList.remove('selected');
+      const icon = c.querySelector('[data-lucide="check"]');
+      if (icon) icon.style.opacity = '0';
+    });
+
+    cardEl.classList.add('selected');
+    const checkIcon = cardEl.querySelector('[data-lucide="check"]');
+    if (checkIcon) checkIcon.style.opacity = '1';
+
+    document.getElementById('finalArticleTitle').value = titleText;
+    saveCurrentStepData('title');
+  }
+
+  async function generateStepHook() {
+    if (!window.currentSelectedLog) {
+      alert("請先載入日誌！");
+      return;
+    }
+    const title = document.getElementById('finalArticleTitle').value.trim();
+    if (!title) {
+      alert("請先在步驟 1 選擇或填寫文章標題！");
+      return;
+    }
+
+    const hookInput = document.getElementById('finalArticleHook');
+    hookInput.value = "正在結合 EEAT 與痛點黃金 Hook 撰寫開頭中，請稍候...";
+
+    try {
+      const res = await api({
+        action: "generateArticleStep",
+        step: 2,
+        title: title,
+        content: window.currentSelectedLog.content
+      });
+
+      hookInput.value = res.hook || "";
+      saveCurrentStepData('hook');
+      showToast("開頭 Hook 已成功產出並自動儲存！");
+    } catch (e) {
+      hookInput.value = "";
+      alert("產出開頭失敗: " + e.message);
+    }
+  }
+
+  async function generateStepBody() {
+    if (!window.currentSelectedLog) {
+      alert("請先載入日誌！");
+      return;
+    }
+    const title = document.getElementById('finalArticleTitle').value.trim();
+    const hook = document.getElementById('finalArticleHook').value.trim();
+    if (!title) {
+      alert("請先完成步驟 1 標題！");
+      return;
+    }
+
+    const bodyInput = document.getElementById('finalArticleBody');
+    bodyInput.value = "正在以商業週刊規格重構逐字稿，保留個人風味並排版呼吸感長文中（約需要 15-30 秒）...";
+
+    try {
+      const res = await api({
+        action: "generateArticleStep",
+        step: 3,
+        title: title,
+        hook: hook,
+        content: window.currentSelectedLog.content
+      });
+
+      bodyInput.value = res.body || "";
+      saveCurrentStepData('body');
+      showToast("核心長文章已成功提煉重構！");
+    } catch (e) {
+      bodyInput.value = "";
+      alert("提煉內文失敗: " + e.message);
+    }
+  }
+
+  async function generateStepEnding() {
+    const title = document.getElementById('finalArticleTitle').value.trim();
+    const endingInput = document.getElementById('finalArticleEnding');
+    endingInput.value = "正在撰寫溫暖結尾昇華金句與電子報訂閱 CTA...";
+
+    try {
+      const res = await api({
+        action: "generateArticleStep",
+        step: 4,
+        title: title
+      });
+
+      endingInput.value = res.ending || "";
+      saveCurrentStepData('ending');
+      showToast("結尾與行動呼籲已產出並儲存！");
+    } catch (e) {
+      endingInput.value = "";
+      alert("產出結尾失敗: " + e.message);
+    }
+  }
+
+  function assembleFullArticle() {
+    const title = document.getElementById('finalArticleTitle').value.trim();
+    const hook = document.getElementById('finalArticleHook').value.trim();
+    const body = document.getElementById('finalArticleBody').value.trim();
+    const ending = document.getElementById('finalArticleEnding').value.trim();
+
+    if (!title || !body) {
+      alert("請確保至少已完成步驟 1 (標題) 與步驟 3 (內文)！");
+      return;
+    }
+
+    const fullMd = `# ${title}\n\n> **閱讀提醒**：這是一篇寫給身兼數職、渴望用 AI 解放時間的微型創業者的陪伴成長指南。\n\n${hook}\n\n---\n\n${body}\n\n---\n\n${ending}\n\n---\n*標籤：#微型創業 #AI賦能 #VibeCoding #特洛伊AI賦能師*`;
+
+    document.getElementById('fullArticlePreview').innerHTML = renderMarkdown(fullMd);
+    window.currentSelectedFullMd = fullMd;
+
+    saveCurrentStepData('full');
+    showToast("完整長文章已整合完畢並同步至試算表！");
+  }
+
+  function copyFullArticle() {
+    if (!window.currentSelectedFullMd) {
+      assembleFullArticle();
+    }
+    copyTextToClipboard(window.currentSelectedFullMd, "已成功複製整篇 Markdown 長文章");
+  }
+
+  async function saveCurrentStepData(field) {
+    if (!window.currentSelectedLog) {
+      alert("尚未選取日誌，無法儲存！");
+      return;
+    }
+
+    let content = "";
+    if (field === 'title') content = document.getElementById('finalArticleTitle').value;
+    else if (field === 'hook') content = document.getElementById('finalArticleHook').value;
+    else if (field === 'body') content = document.getElementById('finalArticleBody').value;
+    else if (field === 'ending') content = document.getElementById('finalArticleEnding').value;
+    else if (field === 'full') content = window.currentSelectedFullMd || "";
+
+    try {
+      await api({
+        action: "saveArticleSection",
+        logId: window.currentSelectedLog.logId,
+        field: field,
+        content: content
+      });
+      showToast(`已儲存【${field}】至試算表`);
+    } catch (e) {
+      console.error(e);
+      alert("儲存至試算表失敗: " + e.message);
+    }
+  }
+
+  function publishArticleToWeb() {
+    alert("【預留接口】文章已準備就緒！接下來只要串接您的部落格發布 API 或 GitHub Pages 即可一鍵推送到您的官方網站。");
+  }
+
+  
+  
+  
   async function api(payload) {
     if (typeof google !== 'undefined' && google.script && google.script.run) {
       return new Promise((resolve, reject) => {
@@ -1487,22 +1932,19 @@
     }
   }
 
-  // ==========================================
-  // 全螢幕切換功能與監聽器
-  // ==========================================
   function toggleFullscreen() {
     const viewport = document.getElementById('videoWrapper');
     
     if (!document.fullscreenElement) {
       if (viewport.requestFullscreen) {
         viewport.requestFullscreen();
-      } else if (viewport.webkitRequestFullscreen) { /* Safari 支援 */
+      } else if (viewport.webkitRequestFullscreen) {
         viewport.webkitRequestFullscreen();
       }
     } else {
       if (document.exitFullscreen) {
         document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) { /* Safari 支援 */
+      } else if (document.webkitExitFullscreen) {
         document.webkitExitFullscreen();
       }
     }
@@ -1519,9 +1961,6 @@
     lucide.createIcons();
   });
 
-  // ==========================================
-  // 【革命性核心】GAS Base64 預載隱形緩衝引擎
-  // ==========================================
   window.startSeamlessPlay = async function(logId) {
     const urls = window.logPlaylists[logId];
     if (!urls || urls.length === 0) return;
@@ -1529,35 +1968,26 @@
     const videoEl = document.getElementById(`player-${logId}`);
     const statusEl = document.getElementById(`player-status-${logId}`);
 
-    // 防止重複點擊啟動
     if (videoEl.dataset.playing === 'true') return;
     videoEl.dataset.playing = 'true';
 
-    // 如果手風琴尚未打開，自動將其展開
     const detailsNode = videoEl.closest('details');
     if (detailsNode && !detailsNode.open) detailsNode.open = true;
 
-    // 初始化該日誌的獨立緩衝區
     if (!window.blobBuffers[logId]) window.blobBuffers[logId] = [];
     const buffer = window.blobBuffers[logId];
 
     let currentIndex = 0;
 
-    // 負責向 GAS 索取 Base64 影片並轉為本地 Blob (記憶體網址)
     const loadChunk = async (index) => {
       if (index >= urls.length) return null;
-      if (buffer[index]) return buffer[index]; // 若已在記憶體中，直接返回
+      if (buffer[index]) return buffer[index];
 
       statusEl.innerText = `⏳ 正在透過後端讀取 第 ${index + 1} / ${urls.length} 段切片...`;
       try {
-        // 1. 呼叫 GAS 後端把 Google Drive 影片讀出，變成 Base64
         const res = await api({ action: 'getVideoChunk', url: urls[index] });
-        
-        // 2. 利用瀏覽器原生的 fetch 效能，瞬間將 Base64 轉換為二進位 Blob (避免 JS 迴圈死機)
         const fetchRes = await fetch(`data:${res.mimeType};base64,${res.base64}`);
         const blob = await fetchRes.blob();
-        
-        // 3. 建立本地端的虛擬網址 (不受 CORS 限制)
         const blobUrl = URL.createObjectURL(blob);
         buffer[index] = blobUrl;
         return blobUrl;
@@ -1568,20 +1998,18 @@
       }
     };
 
-    // 播放調度器
     const playNext = async () => {
       if (currentIndex >= urls.length) {
         statusEl.innerText = '✅ 全片無縫播放完畢';
-        videoEl.dataset.playing = 'false'; // 允許再次點擊重播
+        videoEl.dataset.playing = 'false';
         return;
       }
 
       statusEl.innerText = `⚡ 播放中: 第 ${currentIndex + 1} / ${urls.length} 段 (背景自動預載下一段中...)`;
 
-      // 取得或下載當前影片段
       let blobUrl = buffer[currentIndex];
       if (!blobUrl) {
-         blobUrl = await loadChunk(currentIndex);
+        blobUrl = await loadChunk(currentIndex);
       }
 
       if (blobUrl) {
@@ -1590,27 +2018,22 @@
           statusEl.innerText = `⏸ 準備就緒：第 ${currentIndex + 1} 段 (請手動點擊畫面播放鍵)`;
         });
 
-        // 【無縫關鍵】在此段播放的同時，利用非同步背景提前下載並轉檔下一段！
         if (currentIndex + 1 < urls.length) {
           loadChunk(currentIndex + 1).catch(e => console.log('背景預載下一段失敗', e));
         }
       } else {
-        // 容錯防禦：若該段損毀，直接跳過播放下一段
         currentIndex++;
         playNext();
       }
     };
 
-    // 監聽當前影片結束事件，無縫替換來源並接續播放
     videoEl.onended = () => {
       currentIndex++;
       playNext();
     };
 
-    // 正式點火啟動
     playNext();
   };
-
 </script>
 
 </body>
