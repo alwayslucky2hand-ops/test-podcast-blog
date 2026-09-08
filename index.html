@@ -283,8 +283,8 @@
   let isRecording = false;
   let isPaused = false;
   let isVideoEnabled = true;
-  let currentSourceType = "camera";
-  let mobileFacingMode = "user";
+  let currentSourceType = "camera"; // "camera" | "screen"
+  let mobileFacingMode = "user";    // "user" | "environment"
 
   let chunkIndex = 1;
   let chunkTimer = null;
@@ -313,9 +313,12 @@
     }, 3000);
   }
 
+  // ================= 影音串流獲取引擎 =================
   async function acquireStream() {
+    // 若原先有串流，先釋放乾淨
     if (currentStream) {
       currentStream.getTracks().forEach(t => t.stop());
+      currentStream = null;
     }
     if (audioContext) {
       audioContext.close();
@@ -326,11 +329,13 @@
 
     try {
       if (!isMobile && currentSourceType === "screen") {
+        // 電腦端：螢幕畫面 + 系統聲音
         const screenStream = await navigator.mediaDevices.getDisplayMedia({
           video: { frameRate: { ideal: 30 } },
           audio: true
         });
 
+        // 混音麥克風
         let micStream = null;
         try {
           micStream = await navigator.mediaDevices.getUserMedia({ audio: audioConstraints });
@@ -355,12 +360,17 @@
           mixedAudioDest.stream.getAudioTracks()[0]
         ]);
 
+        // 監聽使用者主動點擊瀏覽器浮動列「停止共用」
         screenStream.getVideoTracks()[0].onended = () => {
-          switchMediaSource();
+          if (currentSourceType === "screen") {
+            log("螢幕共用已停止，自動切回鏡頭模式繼續錄製...");
+            switchMediaSource();
+          }
         };
 
         document.getElementById('iconSource').setAttribute('data-lucide', 'monitor');
       } else {
+        // 電腦視訊 或 手機相機
         const videoConstraints = isMobile
           ? { facingMode: mobileFacingMode, width: { ideal: 1280 } }
           : { width: { ideal: 1280 }, height: { ideal: 720 } };
@@ -375,16 +385,20 @@
 
       document.getElementById('mediaPlayer').srcObject = currentStream;
 
+      // 同步視訊開關軌道
       const vTrack = currentStream.getVideoTracks()[0];
       if (vTrack) vTrack.enabled = isVideoEnabled;
 
       lucide.createIcons();
-      log(`硬體載入成功：[${isMobile ? '手機 ' + mobileFacingMode : currentSourceType}]`);
+      log(`硬體啟用成功：[${isMobile ? '手機 ' + mobileFacingMode : currentSourceType}]`);
+      return true;
     } catch (err) {
       log("硬體存取失敗：" + err.message);
+      return false;
     }
   }
 
+  // 1. 切換有/無影像 (純音訊)
   function toggleVideoTrack() {
     isVideoEnabled = !isVideoEnabled;
     if (currentStream && currentStream.getVideoTracks().length > 0) {
@@ -396,34 +410,65 @@
     document.getElementById('btnVideoTrack').classList.toggle('active', !isVideoEnabled);
     lucide.createIcons();
 
-    log(`視訊畫面已${isVideoEnabled ? '開啟' : '關閉（僅純音訊收音）'}`);
+    log(`視訊畫面已${isVideoEnabled ? '開啟' : '關閉（進入純音訊收音）'}`);
     wakeControls();
   }
 
+  // 🌟 2. 切換錄影來源（無縫接軌繼續錄製核心）
   async function switchMediaSource() {
+    const wasRecording = isRecording;
+
+    // 紀錄切換前的設定
+    const prevSourceType = currentSourceType;
+    const prevFacingMode = mobileFacingMode;
+
     if (isMobile) {
       mobileFacingMode = (mobileFacingMode === "user") ? "environment" : "user";
     } else {
       currentSourceType = (currentSourceType === "camera") ? "screen" : "camera";
     }
 
-    const wasRecording = isRecording;
+    // 如果當前正在錄影，立刻將切換前的片段封裝送出，避免片段損毀
     if (wasRecording && mediaRecorder && mediaRecorder.state === "recording") {
-      mediaRecorder.stop();
       clearTimeout(chunkTimer);
+      mediaRecorder.stop();
     }
 
-    await acquireStream();
+    log(`切換來源至 [${isMobile ? mobileFacingMode : currentSourceType}]...`);
+    const success = await acquireStream();
 
-    if (wasRecording && !isPaused) {
+    if (!success) {
+      // 容錯機制：如果切換失敗（如使用者在螢幕共享彈窗按取消），安全回滾原本模式
+      log("⚠️ 來源切換取消，自動恢復原設備...");
+      currentSourceType = prevSourceType;
+      mobileFacingMode = prevFacingMode;
+      await acquireStream();
+    }
+
+    // 🌟 關鍵：若在錄影中，立即重啟新的切片錄製，總計時器與錄影狀態無縫接軌！
+    if (wasRecording && !isPaused && currentStream) {
       startChunkRecording();
+      log("✅ 設備切換完成，已無縫接軌繼續錄影！");
     }
+
     wakeControls();
   }
 
+  // 3. 開始錄製
   async function startRecording() {
     document.getElementById('btnStart').disabled = true;
     document.getElementById('archiveView').style.display = 'none';
+
+    // 🌟 若攝影機先前已關閉（停止後），自動重新喚醒攝影機
+    if (!currentStream || currentStream.getTracks().every(t => t.readyState === 'ended')) {
+      log("正在喚醒攝影機與麥克風...");
+      const ok = await acquireStream();
+      if (!ok) {
+        document.getElementById('btnStart').disabled = false;
+        return;
+      }
+    }
+
     log("正在向雲端建立專屬日誌資料夾與試算表列...");
 
     try {
@@ -460,7 +505,8 @@
       if (chunks.length > 0) {
         processChunk(new Blob(chunks, { type: mime }), mime, chunkIndex++);
       }
-      if (isRecording && !isPaused) {
+      // 若仍處於錄影狀態且未切換中，自動銜接下一分鐘切片
+      if (isRecording && !isPaused && mediaRecorder && mediaRecorder.state === "inactive") {
         startChunkRecording();
       }
     };
@@ -471,7 +517,6 @@
     }, 60000);
   }
 
-  // 🌟 軌道二＋軌道三：切片封裝後立即送往後端寫入 Drive 與試算表
   function processChunk(blob, mime, index) {
     log(`區段 ${index} 切片完成，背景傳輸中...`);
     const task = new Promise(resolve => {
@@ -480,7 +525,7 @@
       reader.onloadend = async () => {
         const base64 = reader.result.split(',')[1];
         try {
-          const res = await api({
+          await api({
             action: "processChunkRealtime",
             base64Data: base64,
             mimeType: mime,
@@ -522,14 +567,33 @@
     wakeControls();
   }
 
+  // 🌟 3. 停止錄影並徹底關閉攝像頭硬體
   async function stopRecording() {
     isRecording = false;
     isPaused = false;
     clearTimeout(chunkTimer);
     clearInterval(timerInterval);
 
+    // 1. 停止錄影器
     if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
 
+    // 🌟 2. 核心功能：徹底關閉硬體攝影機與麥克風，指示燈即刻熄滅
+    if (currentStream) {
+      currentStream.getTracks().forEach(track => {
+        track.stop(); // 停止視訊與音訊軌道硬體運作
+      });
+      currentStream = null;
+    }
+    if (document.getElementById('mediaPlayer')) {
+      document.getElementById('mediaPlayer').srcObject = null;
+    }
+    if (audioContext) {
+      audioContext.close();
+      audioContext = null;
+    }
+    log("🔒 攝影機與麥克風硬體已徹底關閉，指示燈已熄滅。");
+
+    // UI 狀態更新
     document.getElementById('btnStop').disabled = true;
     document.getElementById('btnPause').style.display = 'none';
     document.getElementById('statusBadge').style.display = 'none';
