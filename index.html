@@ -666,7 +666,6 @@
 
   
   window.logPlaylists = {};
-  window.blobBuffers = {};
 
   function log(msg) {
     const el = document.getElementById('sysLog');
@@ -1219,7 +1218,6 @@
 
       
       window.logPlaylists = {};
-      window.blobBuffers = {};
 
       container.innerHTML = logs.map(item => {
         const cleanTime = sanitizeTimestamp(item.timestamp);
@@ -1262,19 +1260,23 @@
             </div>
 
             ${urls.length > 0 ? `
-            <!-- 【全新革命版】手風琴 0：GAS Base64 預載緩衝引擎 (徹底避開 Google Drive CORS 阻擋) -->
+            <!-- 【業界級】手風琴 0：原生 A/B 雙軌無縫連續播放器 (繞過 Google 防毒牆) -->
             <details class="history-accordion">
               <summary>
                 <span style="display: flex; align-items: center; gap: 8px;">
                   <i data-lucide="play-circle" style="width: 15px; height: 15px; color: var(--accent);"></i>
-                  全片無縫連續播放器 (前端緩衝串流)
+                  全片無縫連續播放器 (秒開極速版)
                 </span>
                 <button class="action-btn-sm" style="background: var(--accent); color: white; border-color: var(--accent);" onclick="event.stopPropagation(); window.startSeamlessPlay('${item.logId}')">
                   <i data-lucide="play" style="width: 12px; height: 12px;"></i> 啟動串流
                 </button>
               </summary>
               <div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border-subtle);">
-                <video id="player-${item.logId}" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block;"></video>
+                <!-- 原生 A/B 雙軌重疊架構 -->
+                <div id="seamless-container-${item.logId}" style="position: relative; width: 100%; aspect-ratio: 16/9; background: #000;">
+                  <video id="playerA-${item.logId}" controls playsinline style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; background: #000;"></video>
+                  <video id="playerB-${item.logId}" controls playsinline style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; background: #000;"></video>
+                </div>
                 <div id="player-status-${item.logId}" style="padding: 10px 14px; background: #1d1d1f; color: #f5f5f7; font-size: 13px; font-weight: 500; text-align: center; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
                   等待載入中... (請點擊右上方「啟動串流」按鈕)
                 </div>
@@ -1433,96 +1435,94 @@
     }
   }
 
-  // ==========================================
-  // 【革命性核心】GAS Base64 預載隱形緩衝引擎
-  // ==========================================
-  window.startSeamlessPlay = async function(logId) {
+  
+  
+  
+  window.startSeamlessPlay = function(logId) {
     const urls = window.logPlaylists[logId];
     if (!urls || urls.length === 0) return;
 
-    const videoEl = document.getElementById(`player-${logId}`);
+    const container = document.getElementById(`seamless-container-${logId}`);
     const statusEl = document.getElementById(`player-status-${logId}`);
 
-    // 防止重複點擊啟動
-    if (videoEl.dataset.playing === 'true') return;
-    videoEl.dataset.playing = 'true';
+    
+    if (container.dataset.playing === 'true') return;
+    container.dataset.playing = 'true';
 
-    // 如果手風琴尚未打開，自動將其展開
-    const detailsNode = videoEl.closest('details');
+    
+    const detailsNode = container.closest('details');
     if (detailsNode && !detailsNode.open) detailsNode.open = true;
 
-    // 初始化該日誌的獨立緩衝區
-    if (!window.blobBuffers[logId]) window.blobBuffers[logId] = [];
-    const buffer = window.blobBuffers[logId];
-
-    let currentIndex = 0;
-
-    // 負責向 GAS 索取 Base64 影片並轉為本地 Blob (記憶體網址)
-    const loadChunk = async (index) => {
-      if (index >= urls.length) return null;
-      if (buffer[index]) return buffer[index]; // 若已在記憶體中，直接返回
-
-      statusEl.innerText = `⏳ 正在透過後端讀取 第 ${index + 1} / ${urls.length} 段切片...`;
-      try {
-        // 1. 呼叫 GAS 後端把 Google Drive 影片讀出，變成 Base64
-        const res = await api({ action: 'getVideoChunk', url: urls[index] });
-        
-        // 2. 利用瀏覽器原生的 fetch 效能，瞬間將 Base64 轉換為二進位 Blob (避免 JS 迴圈死機)
-        const fetchRes = await fetch(`data:${res.mimeType};base64,${res.base64}`);
-        const blob = await fetchRes.blob();
-        
-        // 3. 建立本地端的虛擬網址 (不受 CORS 限制)
-        const blobUrl = URL.createObjectURL(blob);
-        buffer[index] = blobUrl;
-        return blobUrl;
-      } catch (err) {
-        console.error(err);
-        statusEl.innerText = `❌ 第 ${index + 1} 段載入失敗: ${err.message}`;
-        return null;
-      }
+    
+    const getDirectUrl = (url) => {
+      const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      return match ? `https:
     };
 
-    // 播放調度器
-    const playNext = async () => {
-      if (currentIndex >= urls.length) {
+    let currentIndex = 0;
+    let activePlayer = 'A'; 
+
+    const playerA = document.getElementById(`playerA-${logId}`);
+    const playerB = document.getElementById(`playerB-${logId}`);
+
+    playerA.style.display = 'block';
+    playerB.style.display = 'none';
+
+    
+    const playSegment = (index) => {
+      if (index >= urls.length) {
         statusEl.innerText = '✅ 全片無縫播放完畢';
-        videoEl.dataset.playing = 'false'; // 允許再次點擊重播
+        container.dataset.playing = 'false'; 
+        playerA.style.display = 'none';
+        playerB.style.display = 'none';
         return;
       }
 
-      statusEl.innerText = `⚡ 播放中: 第 ${currentIndex + 1} / ${urls.length} 段 (背景自動預載下一段中...)`;
+      statusEl.innerText = `⚡ 雙軌極速串流中: 第 ${index + 1} / ${urls.length} 段 (背景自動預載下一段中...)`;
 
-      // 取得或下載當前影片段
-      let blobUrl = buffer[currentIndex];
-      if (!blobUrl) {
-         blobUrl = await loadChunk(currentIndex);
+      const currentVideo = activePlayer === 'A' ? playerA : playerB;
+      const nextVideo = activePlayer === 'A' ? playerB : playerA;
+
+      // 如果當前影片尚未被上一輪設定 src，就立刻賦值
+      const targetUrl = getDirectUrl(urls[index]);
+      if (!currentVideo.src || !currentVideo.src.includes(urls[index].match(/\/d\/([a-zA-Z0-9_-]+)/)[1])) {
+        currentVideo.src = targetUrl;
       }
 
-      if (blobUrl) {
-        videoEl.src = blobUrl;
-        videoEl.play().catch(e => {
-          statusEl.innerText = `⏸ 準備就緒：第 ${currentIndex + 1} 段 (請手動點擊畫面播放鍵)`;
-        });
+      currentVideo.style.display = 'block';
+      nextVideo.style.display = 'none';
 
-        // 【無縫關鍵】在此段播放的同時，利用非同步背景提前下載並轉檔下一段！
-        if (currentIndex + 1 < urls.length) {
-          loadChunk(currentIndex + 1).catch(e => console.log('背景預載下一段失敗', e));
-        }
-      } else {
-        // 容錯防禦：若該段損毀，直接跳過播放下一段
-        currentIndex++;
-        playNext();
+      currentVideo.play().catch(e => {
+        statusEl.innerText = `⏸ 準備就緒：第 ${index + 1} 段 (請手動點擊畫面播放鍵)`;
+      });
+
+      
+      if (index + 1 < urls.length) {
+        nextVideo.src = getDirectUrl(urls[index + 1]);
+        nextVideo.load(); 
       }
     };
 
-    // 監聽當前影片結束事件，無縫替換來源並接續播放
-    videoEl.onended = () => {
+    
+    const onEnded = () => {
+      activePlayer = activePlayer === 'A' ? 'B' : 'A';
       currentIndex++;
-      playNext();
+      playSegment(currentIndex);
     };
 
-    // 正式點火啟動
-    playNext();
+    playerA.onended = onEnded;
+    playerB.onended = onEnded;
+
+    
+    const onError = () => {
+      statusEl.innerText = `⚠️ 第 ${currentIndex + 1} 段載入異常，自動跳至下一段...`;
+      setTimeout(onEnded, 2000);
+    };
+    playerA.onerror = onError;
+    playerB.onerror = onError;
+
+    
+    playSegment(0);
   };
 
 </script>
