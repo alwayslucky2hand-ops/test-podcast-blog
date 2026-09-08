@@ -582,11 +582,12 @@
 
       
       <div style="display: flex; flex-direction: column; gap: 12px;">
+        
         <details class="history-accordion" open>
           <summary>
             <span style="display: flex; align-items: center; gap: 8px;">
               <i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>
-              AI 全局重點整理
+              AI 爆款短影音提案
             </span>
             <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
           </summary>
@@ -1265,14 +1266,14 @@ async function loadHistoryLogs() {
             <summary>
               <span style="display: flex; align-items: center; gap: 8px;">
                 <i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>
-                AI 全局重點整理
+                AI 爆款短影音提案
               </span>
               <div style="display: flex; align-items: center; gap: 8px;">
-                <!-- 【新增】編輯按鈕 -->
+                <!-- 編輯按鈕 -->
                 <button type="button" id="btn-edit-summary-${item.logId}" class="action-btn-sm" onclick="event.stopPropagation(); toggleEditMode('${item.logId}', 'summary')">
                   <i data-lucide="edit-3" style="width: 12px; height: 12px;"></i> 編輯
                 </button>
-                <button type="button" class="action-btn-sm" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute('data-text'), '已複製重點')" data-text="${escapeHtml(safeSummaryRaw)}">
+                <button type="button" class="action-btn-sm" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute('data-text'), '已複製短影音提案')" data-text="${escapeHtml(safeSummaryRaw)}">
                   <i data-lucide="copy" style="width: 12px; height: 12px;"></i> 複製
                 </button>
                 <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
