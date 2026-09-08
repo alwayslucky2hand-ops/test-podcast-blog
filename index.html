@@ -1110,81 +1110,85 @@
   }
 
   
-  function formatTranscriptContent(rawText, urls) {
-    if (!rawText || !rawText.trim()) {
-      return '<div style="color:var(--text-muted); font-size:13.5px; padding:12px 0;">（尚無逐字稿紀錄）</div>';
-    }
-
-    const urlList = Array.isArray(urls) ? urls : [];
-    const hasChunkPattern = /【第\s*\d+\s*(?:分鐘|段影音|段)】/.test(rawText);
-
-    if (!hasChunkPattern) {
-      return `<div class="markdown-body">${renderMarkdown(rawText)}</div>`;
-    }
-
-    const parts = rawText.split(/(【第\s*\d+\s*(?:分鐘|段影音|段)】)/);
-    let html = '';
-    let currentTitle = '';
-
-    for (let i = 0; i < parts.length; i++) {
-      const part = parts[i].trim();
-      if (!part) continue;
-
-      if (/^【第\s*\d+\s*(?:分鐘|段影音|段)】$/.test(part)) {
-        currentTitle = part;
-      } else {
-        const numMatch = currentTitle.match(/\d+/);
-        const chunkNum = numMatch ? parseInt(numMatch[0], 10) : (Math.floor(i / 2) + 1);
-        const videoUrl = urlList[chunkNum - 1] || '';
-
-        let screenDesc = '';
-        let voiceText = '';
-
-        const screenMatch = part.match(/\[畫面描述\]([\s\S]*?)(?=\[語音逐字稿\]|$)/i);
-        const voiceMatch = part.match(/\[語音逐字稿\]([\s\S]*?)$/i);
-
-        if (screenMatch) screenDesc = screenMatch.trim();
-        if (voiceMatch) voiceText = voiceMatch.trim();
-
-        if (!screenDesc && !voiceText) {
-          screenDesc = part;
-        }
-
-        html += `
-          <div class="minute-chunk-card">
-            <div class="minute-chunk-header">
-              <div class="minute-chunk-title">
-                <i data-lucide="clock" style="width: 14px; height: 14px; color: var(--accent);"></i>
-                <span>${currentTitle || ('【第 ' + chunkNum + ' 分鐘】')}</span>
-              </div>
-              ${videoUrl ? `<a href="${videoUrl}" target="_blank" class="file-chip"><i data-lucide="film" style="width: 12px; height: 12px;"></i> 開啟切片影片</a>` : ''}
-            </div>
-            <div class="minute-chunk-content">
-              ${screenDesc ? `
-                <div class="sub-section desc-section">
-                  <div class="sub-section-title">
-                    <i data-lucide="eye" style="width: 13px; height: 13px;"></i> 畫面操作描述
-                  </div>
-                  <div class="markdown-body">${renderMarkdown(screenDesc)}</div>
-                </div>
-              ` : ''}
-              ${voiceText ? `
-                <div class="sub-section voice-section">
-                  <div class="sub-section-title">
-                    <i data-lucide="mic" style="width: 13px; height: 13px;"></i> 語音逐字稿
-                  </div>
-                  <div class="voice-body">${escapeHtml(voiceText)}</div>
-                </div>
-              ` : ''}
-            </div>
-          </div>
-        `;
-        currentTitle = '';
-      }
-    }
-
-    return html || `<div class="markdown-body">${renderMarkdown(rawText)}</div>`;
+function formatTranscriptContent(rawText, urls) {
+  if (!rawText || !rawText.trim()) {
+    return '<div style="color:var(--text-muted); font-size:13.5px; padding:12px 0;">（尚無逐字稿紀錄）</div>';
   }
+
+  const urlList = Array.isArray(urls) ? urls : [];
+  const hasChunkPattern = /【第\s*\d+\s*(?:分鐘|段影音|段)】/.test(rawText);
+
+  if (!hasChunkPattern) {
+    return `<div class="markdown-body">${renderMarkdown(rawText)}</div>`;
+  }
+
+  const parts = rawText.split(/(【第\s*\d+\s*(?:分鐘|段影音|段)】)/);
+  let html = '';
+  let currentTitle = '';
+
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i].trim();
+    if (!part) continue;
+
+    if (/^【第\s*\d+\s*(?:分鐘|段影音|段)】$/.test(part)) {
+      currentTitle = part;
+    } else {
+      const numMatch = currentTitle.match(/\d+/);
+      const chunkNum = numMatch ? parseInt(numMatch[0], 10) : (Math.floor(i / 2) + 1);
+      const videoUrl = urlList[chunkNum - 1] || '';
+
+      let screenDesc = '';
+      let voiceText = '';
+
+      const screenMatch = part.match(/\[畫面描述\]([\s\S]*?)(?=\[語音逐字稿\]|$)/i);
+      const voiceMatch = part.match(/\[語音逐字稿\]([\s\S]*?)$/i);
+
+      if (screenMatch && screenMatch[1]) {
+        screenDesc = screenMatch[1].replace(/(\r?\n\s*[-—]{3,}\s*)?(\r?\n\s*#{1,6}\s*)?$/, '').trim();
+      }
+      if (voiceMatch && voiceMatch[1]) {
+        voiceText = voiceMatch[1].trim();
+      }
+
+      if (!screenDesc && !voiceText) {
+        screenDesc = part;
+      }
+
+      html += `
+        <div class="minute-chunk-card">
+          <div class="minute-chunk-header">
+            <div class="minute-chunk-title">
+              <i data-lucide="clock" style="width: 14px; height: 14px; color: var(--accent);"></i>
+              <span>${currentTitle || ('【第 ' + chunkNum + ' 分鐘】')}</span>
+            </div>
+            ${videoUrl ? `<a href="${videoUrl}" target="_blank" class="file-chip"><i data-lucide="film" style="width: 12px; height: 12px;"></i> 開啟切片影片</a>` : ''}
+          </div>
+          <div class="minute-chunk-content">
+            ${screenDesc ? `
+              <div class="sub-section desc-section">
+                <div class="sub-section-title">
+                  <i data-lucide="eye" style="width: 13px; height: 13px;"></i> 畫面操作描述
+                </div>
+                <div class="markdown-body">${renderMarkdown(screenDesc)}</div>
+              </div>
+            ` : ''}
+            ${voiceText ? `
+              <div class="sub-section voice-section">
+                <div class="sub-section-title">
+                  <i data-lucide="mic" style="width: 13px; height: 13px;"></i> 語音逐字稿
+                </div>
+                <div class="voice-body">${escapeHtml(voiceText)}</div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+      currentTitle = '';
+    }
+  }
+
+  return html || `<div class="markdown-body">${renderMarkdown(rawText)}</div>`;
+}
 
   // 歷史日誌調閱
   async function loadHistoryLogs() {
