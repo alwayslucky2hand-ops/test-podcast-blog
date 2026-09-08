@@ -438,7 +438,9 @@
       border-left: 2px solid var(--accent);
       padding: 12px 20px;
       background: var(--bg);
-      border: 1px solid var(--border);
+      border-top: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
       margin-bottom: 20px;
       color: #475569;
     }
@@ -675,6 +677,10 @@
         </button>
         <button class="ctrl-btn" id="btnFullscreen" onclick="toggleFullscreen()" title="全螢幕">
           <i data-lucide="maximize" id="iconFullscreen"></i>
+        </button>
+        
+        <button class="ctrl-btn" id="btnCloseCamera" onclick="closeCamera()" title="關閉相機">
+          <i data-lucide="x"></i>
         </button>
       </div>
     </div>
@@ -1009,10 +1015,33 @@
     if (ok) {
       document.getElementById('cameraPrompt').style.display = 'none';
       document.getElementById('controlsIsland').style.display = 'flex';
+      document.getElementById('btnCloseCamera').style.display = 'flex';
       document.getElementById('cameraGrid').style.display = 'block'; 
       wakeControls();
       log("> 設備就緒，可點擊錄影。");
     }
+  }
+
+  
+  function closeCamera() {
+    if (currentStream) {
+      currentStream.getTracks().forEach(t => t.stop());
+      currentStream = null;
+    }
+    if (document.getElementById('mediaPlayer')) {
+      document.getElementById('mediaPlayer').srcObject = null;
+    }
+    if (audioContext) {
+      audioContext.close();
+      audioContext = null;
+    }
+    
+    document.getElementById('cameraPrompt').style.display = 'flex';
+    document.getElementById('controlsIsland').style.display = 'none';
+    document.getElementById('statusBadge').style.display = 'none';
+    document.getElementById('cameraGrid').style.display = 'none';
+    
+    log("> 相機已手動關閉，返回待命狀態。");
   }
 
   function updateSourceIcon() {
@@ -1180,6 +1209,7 @@
       secondsElapsed = 0;
 
       document.getElementById('btnStart').style.display = 'none';
+      document.getElementById('btnCloseCamera').style.display = 'none'; 
       document.getElementById('btnPause').style.display = 'flex';
       document.getElementById('btnStop').style.display = 'flex';
       document.getElementById('statusBadge').style.display = 'flex';
@@ -1326,6 +1356,7 @@
 
     document.getElementById('btnStop').disabled = true;
     document.getElementById('btnPause').style.display = 'none';
+    document.getElementById('btnCloseCamera').style.display = 'flex'; 
 
     while (activeUploadTasks.size > 0) {
       await Promise.all(Array.from(activeUploadTasks));
