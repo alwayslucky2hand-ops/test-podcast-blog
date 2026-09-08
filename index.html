@@ -515,16 +515,19 @@
       line-height: 1.4;
     }
     .markdown-body h2 { 
-      font-size: 20px; 
-      margin-top: 32px;
+      font-size: 22px; 
+      margin-top: 36px;
       margin-bottom: 16px;
       color: var(--text);
+      font-weight: 800;
     }
+     
     .markdown-body h3 { 
-      font-size: 18px; 
+      font-size: 20px; 
       color: var(--accent); 
-      margin-top: 28px;
-      margin-bottom: 12px;
+      margin-top: 32px;
+      margin-bottom: 16px;
+      font-weight: 800;
     }
     
     .markdown-body p { 
@@ -556,11 +559,12 @@
       font-style: normal;
     }
 
+     
     .markdown-body hr {
       border: 0;
       height: 1px;
-      background: var(--border-subtle);
-      margin: 32px 0;
+      background: var(--border);
+      margin: 40px 0;
     }
 
      
@@ -1699,11 +1703,11 @@
             <details class="history-accordion">
               <summary>
                 <span style="display: flex; align-items: center; gap: 8px;">
-                  <i data-lucide="play-circle" style="width: 16px; height: 16px; color: var(--accent);"></i>
+                  <i data-lucide="play-circle" style="width: 15px; height: 15px; color: var(--accent);"></i>
                   播放全片
                 </span>
                 <button class="action-btn-sm action-btn-primary" onclick="event.stopPropagation(); window.startSeamlessPlay('${item.logId}')">
-                  <i data-lucide="play" style="width: 14px; height: 14px;"></i> 啟動
+                  <i data-lucide="play" style="width: 13px; height: 13px;"></i> 啟動
                 </button>
               </summary>
               <div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border);">
@@ -1718,7 +1722,7 @@
             <details class="history-accordion">
               <summary>
                 <span style="display: flex; align-items: center; gap: 8px;">
-                  <i data-lucide="sparkles" style="width: 16px; height: 16px; color: var(--accent);"></i>
+                  <i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>
                   短影音提案
                 </span>
                 <div class="flex-wrap-gap">
@@ -1748,7 +1752,7 @@
             <details class="history-accordion">
               <summary>
                 <span style="display: flex; align-items: center; gap: 8px;">
-                  <i data-lucide="file-text" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
+                  <i data-lucide="file-text" style="width: 15px; height: 15px; color: var(--text-muted);"></i>
                   詳細逐字稿
                 </span>
                 <div class="flex-wrap-gap">
@@ -1980,7 +1984,7 @@
 
         <div class="blog-footer-cta">
           <div class="newsletter-box">
-            <div style="font-weight: 800; font-size: 16px; margin-bottom: 8px;">訂閱 GROWTHX 電子報</div>
+            <div style="font-weight: 800; font-size: 16px; margin-bottom: 8px;">訂閱 特洛伊AI賦能師 電子報</div>
             <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">獲取第一手微型創業與 AI 實戰指南，每週為您的思維充能。</p>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
               <input type="email" placeholder="請輸入您的 Email..." style="flex: 1; min-width: 200px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; font-size: 14px; outline: none;">
