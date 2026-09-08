@@ -1810,7 +1810,8 @@
       return;
     }
 
-    const fullMd = `# ${title}\n\n> **閱讀提醒**：這是一篇寫給身兼數職、渴望用 AI 解放時間的微型創業者的陪伴成長指南。\n\n${hook}\n\n---\n\n${body}\n\n---\n\n${ending}\n\n---\n*標籤：#微型創業 #AI賦能 #VibeCoding #特洛伊AI賦能師*`;
+    // 移除死板寫入的後綴標籤，因為完美收尾金句已在 ending 變數最後
+    const fullMd = `# ${title}\n\n> **閱讀提醒**：這是一篇寫給身兼數職、渴望用 AI 解放時間的微型創業者的陪伴成長指南。\n\n${hook}\n\n---\n\n${body}\n\n---\n\n${ending}`;
 
     document.getElementById('fullArticlePreview').innerHTML = renderMarkdown(fullMd);
     window.currentSelectedFullMd = fullMd;
@@ -1857,7 +1858,7 @@
     alert("【預留接口】文章已準備就緒！接下來只要串接您的部落格發布 API 或 GitHub Pages 即可一鍵推送到您的官方網站。");
   }
 
-  // ==========================================
+  
   
   
   async function api(payload) {
