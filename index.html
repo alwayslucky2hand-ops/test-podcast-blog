@@ -503,46 +503,6 @@
       opacity: 1;
     }
 
-     
-    .history-player-container {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      background-color: #000000;
-      border-radius: 12px;
-      overflow: hidden;
-      margin-top: 16px;
-      display: none;  
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--border);
-      animation: fadeIn 0.3s ease;
-    }
-
-    .history-player-container video {
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: contain;
-    }
-
-    .playlist-status {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      background: rgba(29, 29, 31, 0.75);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      color: #ffffff;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      z-index: 10;
-    }
-
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
@@ -552,7 +512,7 @@
 <body>
 
 <div class="app-shell">
-  
+
   
   <div class="tab-nav">
     <button class="tab-btn active" onclick="switchTab('tab-live', this)">
@@ -566,7 +526,7 @@
   
   <div id="tab-live" class="tab-content active">
     <div class="viewport-container" id="videoWrapper" onmousemove="wakeControls()" ontouchstart="wakeControls()">
-      
+
       
       <div id="cameraPrompt" class="camera-prompt" onclick="enableHardware()">
         <i data-lucide="camera" style="width: 32px; height: 32px; color: var(--text);"></i>
@@ -622,7 +582,6 @@
 
       
       <div style="display: flex; flex-direction: column; gap: 12px;">
-        
         <details class="history-accordion" open>
           <summary>
             <span style="display: flex; align-items: center; gap: 8px;">
@@ -970,7 +929,7 @@
     };
 
     mediaRecorder.start();
-    
+
     
     chunkTimer = setTimeout(() => {
       if (mediaRecorder && mediaRecorder.state === "recording") {
@@ -1291,35 +1250,18 @@ async function loadHistoryLogs() {
 
           <!-- 雲端切片按鈕列 -->
           <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-              <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">
-                雲端切片備份 (${urls.length} 個切片)
-              </div>
-              
-              <!-- 【新增】無縫播放全部按鈕 (只有當影片 > 0 時才顯示) -->
-              ${urls.length > 0 ? `
-              <button type="button" class="action-btn-sm" style="color: #ffffff; background: var(--accent); border-color: var(--accent);" onclick="startSequentialPlayback('${item.logId}', this)" data-urls="${encodeURIComponent(JSON.stringify(urls))}">
-                <i data-lucide="play" style="width: 13px; height: 13px; fill: currentColor;"></i> 無縫播放全部
-              </button>
-              ` : ''}
+            <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+              雲端切片備份 (${urls.length} 個切片)
             </div>
-
             <div style="display: flex; flex-wrap: wrap; gap: 8px;">
               ${urls.length > 0 
                 ? urls.map((u, i) => `<a href="${u}" target="_blank" class="file-chip"><i data-lucide="film" style="width: 13px; height: 13px;"></i> 片段 ${i+1}</a>`).join('')
                 : '<span style="font-size:12.5px; color:var(--text-muted);">無切片影片</span>'}
             </div>
-
-            <!-- 【新增】內嵌連續播放器容器 -->
-            <div id="player-container-${item.logId}" class="history-player-container">
-              <div id="player-status-${item.logId}" class="playlist-status">
-                <i data-lucide="play-circle" style="width: 14px; height: 14px;"></i> 準備播放...
-              </div>
-              <video id="player-video-${item.logId}" controls playsinline></video>
-            </div>
           </div>
 
-          <!-- 手風琴 1：AI 全局重點整理 -->
+          <!-- 【修改後】請將上面的區塊替換為： -->
+          <!-- 手風琴 1：AI 爆款短影音提案 -->
           <details class="history-accordion">
             <summary>
               <span style="display: flex; align-items: center; gap: 8px;">
@@ -1396,7 +1338,7 @@ async function loadHistoryLogs() {
   }
 }
 
-  
+  // 雙棲 API 呼叫核心（修正空值防護）
   async function api(payload) {
     if (typeof google !== 'undefined' && google.script && google.script.run) {
       return new Promise((resolve, reject) => {
@@ -1427,37 +1369,37 @@ async function loadHistoryLogs() {
     lucide.createIcons();
   });
 
-  
+  // ==========================================
+// 【新增】刪除與編輯控制邏輯
+// ==========================================
 
-
-
-
+// 1. 刪除日誌功能
 async function deleteHistoryLog(logId) {
-  
+  // 顯示原生確認視窗，避免誤刪
   if (!confirm("確定要刪除這筆日誌嗎？試算表中的資料將會永久移除。")) return;
   
   try {
     showToast("正在刪除中...");
     await api({ action: "deleteLog", logId: logId });
     showToast("✅ 日誌已成功刪除");
-    
+    // 刪除成功後，自動重新整理歷史清單
     loadHistoryLogs(); 
   } catch (e) {
     alert("刪除失敗：" + e.message);
   }
 }
 
-
+// 2. 切換編輯/唯讀模式
 function toggleEditMode(logId, field) {
   const viewEl = document.getElementById(`view-${field}-${logId}`);
   const editEl = document.getElementById(`edit-${field}-${logId}`);
   const editBtn = document.getElementById(`btn-edit-${field}-${logId}`);
 
-  
+  // 判斷目前狀態進行切換
   if (editEl.style.display === "none") {
     viewEl.style.display = "none";
     editEl.style.display = "flex";
-    editBtn.style.display = "none"; 
+    editBtn.style.display = "none"; // 編輯中先隱藏上方編輯按鈕
   } else {
     viewEl.style.display = "block";
     editEl.style.display = "none";
@@ -1465,24 +1407,24 @@ function toggleEditMode(logId, field) {
   }
 }
 
-
+// 3. 儲存日誌更新並送出 API
 async function saveHistoryLog(logId, field, btnElement) {
   const textarea = document.getElementById(`input-${field}-${logId}`);
   const newText = textarea.value;
   const originalBtnText = btnElement.innerText;
   
-  
+  // 防止重複點擊，改變按鈕狀態
   btnElement.innerText = "儲存中...";
   btnElement.disabled = true;
   btnElement.style.opacity = "0.7";
 
   try {
-    
+    // 發送請求更新至 Google 試算表
     await api({ action: "updateLog", logId: logId, field: field, newText: newText });
     
     showToast("✅ 更新已成功儲存至試算表！");
     
-    
+    // 最保險且能確保 markdown 或影片切片重構的方式，就是直接重載列表
     loadHistoryLogs();
   } catch (e) {
     alert("儲存失敗：" + e.message);
@@ -1495,75 +1437,6 @@ async function saveHistoryLog(logId, field, btnElement) {
 
 
 
-
-
-
-function getDriveDirectStreamUrl(url) {
-  
-  const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
-  if (match && match[1]) {
-    return `https:
-  }
-  return url; 
-}
-
-
-function startSequentialPlayback(logId, btnElement) {
-  
-  const encodedUrls = btnElement.getAttribute('data-urls');
-  const urls = JSON.parse(decodeURIComponent(encodedUrls));
-  
-  if (!urls || urls.length === 0) return;
-
-  
-  const container = document.getElementById(`player-container-${logId}`);
-  const videoPlayer = document.getElementById(`player-video-${logId}`);
-  const statusBadge = document.getElementById(`player-status-${logId}`);
-  
-  
-  container.style.display = 'block';
-  
-  
-  if (videoPlayer.getAttribute('data-playing') === 'true') return;
-  videoPlayer.setAttribute('data-playing', 'true');
-
-  let currentIndex = 0;
-
-  
-  const playNextChunk = () => {
-    if (currentIndex >= urls.length) {
-      
-      statusBadge.innerHTML = `<i data-lucide="check-circle" style="width: 14px; height: 14px;"></i> 全部切片播放完畢`;
-      videoPlayer.setAttribute('data-playing', 'false');
-      lucide.createIcons();
-      return;
-    }
-
-    // 更新狀態列
-    statusBadge.innerHTML = `<i data-lucide="loader" class="spin" style="width: 14px; height: 14px;"></i> 正在播放第 ${currentIndex + 1} / ${urls.length} 段...`;
-    lucide.createIcons();
-
-    
-    const directUrl = getDriveDirectStreamUrl(urls[currentIndex]);
-    
-    
-    videoPlayer.src = directUrl;
-    videoPlayer.play().catch(e => {
-      console.warn("自動播放遭瀏覽器阻擋，需使用者手動點擊", e);
-      statusBadge.innerHTML = `<i data-lucide="pause-circle" style="width: 14px; height: 14px;"></i> 已暫停，請點擊播放鍵`;
-      lucide.createIcons();
-    });
-  };
-
-  // 4. 綁定影片結束事件 (無縫接軌的關鍵)
-  videoPlayer.onended = () => {
-    currentIndex++; 
-    playNextChunk(); 
-  };
-
-  
-  playNextChunk();
-}
 
 </script>
 
