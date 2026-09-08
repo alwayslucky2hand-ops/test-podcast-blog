@@ -786,10 +786,10 @@
           mixedAudioDest.stream.getAudioTracks()[0]
         ]);
 
-        screenStream.getVideoTracks()[0].onended = () => {
+        screenStream.getVideoTracks()[0].onended = async () => {
           if (currentSourceType === "screen") {
             log("螢幕共用停止，自動切回鏡頭模式繼續錄影...");
-            switchMediaSource();
+            await switchMediaSource();
           }
         };
       } else {
@@ -845,7 +845,8 @@
 
     if (wasRecording && mediaRecorder && mediaRecorder.state === "recording") {
       clearTimeout(chunkTimer);
-      mediaRecorder.stop();
+      
+      await stopMediaRecorderAsync();
     }
 
     log(`切換來源至 [${isMobile ? mobileFacingMode : currentSourceType}]...`);
@@ -936,7 +937,8 @@
       const reader = new FileReader();
       reader.readAsDataURL(blob);
       reader.onloadend = async () => {
-        const base64 = reader.result.split(',');
+        
+        const base64 = reader.result.split(',')[1];
         try {
           await api({
             action: "processChunkRealtime",
@@ -1320,4 +1322,3 @@
 
 </body>
 </html>
-
