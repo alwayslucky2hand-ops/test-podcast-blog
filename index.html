@@ -1209,101 +1209,133 @@
     return html || `<div class="markdown-body">${renderMarkdown(rawText)}</div>`;
   }
 
-  // 歷史日誌調閱
-  async function loadHistoryLogs() {
-    const container = document.getElementById('historyContainer');
-    container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> 載入中...</div>`;
-    lucide.createIcons();
+  // 歷史日誌調閱 (包含刪除與編輯結構)
+async function loadHistoryLogs() {
+  const container = document.getElementById('historyContainer');
+  container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> 載入中...</div>`;
+  lucide.createIcons();
 
-    try {
-      const logs = await api({ action: "getHistoryLogs" });
-      if (!logs || logs.length === 0) {
-        container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 0; background:var(--card-bg); border:1px solid var(--border); border-radius:16px;">目前尚無歷史錄影紀錄。</div>`;
-        return;
-      }
+  try {
+    const logs = await api({ action: "getHistoryLogs" });
+    if (!logs || logs.length === 0) {
+      container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 0; background:var(--card-bg); border:1px solid var(--border); border-radius:16px;">目前尚無歷史錄影紀錄。</div>`;
+      return;
+    }
 
-      container.innerHTML = logs.map(item => {
-        const cleanTime = sanitizeTimestamp(item.timestamp);
-        const isRec = item.status && item.status.includes('錄製中');
-        const urls = Array.isArray(item.urls) ? item.urls : [];
-        const safeSummaryRaw = item.summary || "";
-        const safeContentRaw = item.content || "";
+    container.innerHTML = logs.map(item => {
+      const cleanTime = sanitizeTimestamp(item.timestamp);
+      const isRec = item.status && item.status.includes('錄製中');
+      const urls = Array.isArray(item.urls) ? item.urls : [];
+      const safeSummaryRaw = item.summary || "";
+      const safeContentRaw = item.content || "";
 
-        return `
-          <div class="history-card" data-row-id="${item._rowId || item.rowIndex || ''}">
-            <!-- 卡片頂部資訊列 -->
-            <div class="history-header">
-              <div>
-                <div style="font-weight: 700; font-size: 15px; color: var(--text);">日誌 ID: ${item.logId}</div>
-                <div style="font-size: 12.5px; color: var(--text-muted); font-family: ui-monospace, monospace; margin-top: 4px; display: flex; align-items: center; gap: 5px;">
-                  <i data-lucide="clock" style="width: 13px; height: 13px;"></i> ${cleanTime}
-                </div>
-              </div>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span class="badge ${isRec ? 'recording' : ''}">${item.status}</span>
-              </div>
-            </div>
-
-            <!-- 雲端切片按鈕列 -->
+      return `
+        <div class="history-card" data-row-id="${item.logId}">
+          <!-- 卡片頂部資訊列 -->
+          <div class="history-header">
             <div>
-              <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
-                雲端切片備份 (${urls.length} 個切片)
-              </div>
-              <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-                ${urls.length > 0 
-                  ? urls.map((u, i) => `<a href="${u}" target="_blank" class="file-chip"><i data-lucide="film" style="width: 13px; height: 13px;"></i> 片段 ${i+1}</a>`).join('')
-                  : '<span style="font-size:12.5px; color:var(--text-muted);">無切片影片</span>'}
+              <div style="font-weight: 700; font-size: 15px; color: var(--text);">日誌 ID: ${item.logId}</div>
+              <div style="font-size: 12.5px; color: var(--text-muted); font-family: ui-monospace, monospace; margin-top: 4px; display: flex; align-items: center; gap: 5px;">
+                <i data-lucide="clock" style="width: 13px; height: 13px;"></i> ${cleanTime}
               </div>
             </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="badge ${isRec ? 'recording' : ''}">${item.status}</span>
+              <!-- 【新增】刪除按鈕 -->
+              <button type="button" class="action-btn-sm" style="color: var(--danger); border-color: rgba(255,59,48,0.3); background: rgba(255,59,48,0.05);" onclick="deleteHistoryLog('${item.logId}')">
+                <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i> 刪除
+              </button>
+            </div>
+          </div>
 
-            <!-- 按需展開手風琴 1：AI 全局重點整理 -->
-            <details class="history-accordion">
-              <summary>
-                <span style="display: flex; align-items: center; gap: 8px;">
-                  <i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>
-                  AI 全局重點整理
-                </span>
-                <div style="display: flex; align-items: center; gap: 10px;">
-                  <button type="button" class="action-btn-sm" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute('data-text'), '已複製 AI 全局重點整理')" data-text="${escapeHtml(safeSummaryRaw)}">
-                    <i data-lucide="copy" style="width: 12px; height: 12px;"></i> 複製重點
-                  </button>
-                  <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
-                </div>
-              </summary>
-              <div class="accordion-body">
-                <div class="markdown-body" style="border-left: 3px solid var(--accent); padding-left: 14px;">
-                  ${renderMarkdown(safeSummaryRaw)}
+          <!-- 雲端切片按鈕列 -->
+          <div>
+            <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+              雲端切片備份 (${urls.length} 個切片)
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+              ${urls.length > 0 
+                ? urls.map((u, i) => `<a href="${u}" target="_blank" class="file-chip"><i data-lucide="film" style="width: 13px; height: 13px;"></i> 片段 ${i+1}</a>`).join('')
+                : '<span style="font-size:12.5px; color:var(--text-muted);">無切片影片</span>'}
+            </div>
+          </div>
+
+          <!-- 手風琴 1：AI 全局重點整理 -->
+          <details class="history-accordion">
+            <summary>
+              <span style="display: flex; align-items: center; gap: 8px;">
+                <i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>
+                AI 全局重點整理
+              </span>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <!-- 【新增】編輯按鈕 -->
+                <button type="button" id="btn-edit-summary-${item.logId}" class="action-btn-sm" onclick="event.stopPropagation(); toggleEditMode('${item.logId}', 'summary')">
+                  <i data-lucide="edit-3" style="width: 12px; height: 12px;"></i> 編輯
+                </button>
+                <button type="button" class="action-btn-sm" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute('data-text'), '已複製重點')" data-text="${escapeHtml(safeSummaryRaw)}">
+                  <i data-lucide="copy" style="width: 12px; height: 12px;"></i> 複製
+                </button>
+                <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
+              </div>
+            </summary>
+            <div class="accordion-body">
+              <!-- 唯讀模式 -->
+              <div id="view-summary-${item.logId}" class="markdown-body" style="border-left: 3px solid var(--accent); padding-left: 14px;">
+                ${renderMarkdown(safeSummaryRaw)}
+              </div>
+              <!-- 編輯模式 (預設隱藏) -->
+              <div id="edit-summary-${item.logId}" style="display: none; flex-direction: column; gap: 10px;">
+                <textarea id="input-summary-${item.logId}" style="width: 100%; min-height: 180px; padding: 12px; border: 1px solid var(--accent); border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; line-height: 1.6;">${escapeHtml(safeSummaryRaw)}</textarea>
+                <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                  <button class="action-btn-sm" onclick="toggleEditMode('${item.logId}', 'summary')">取消</button>
+                  <button class="action-btn-sm" style="background: var(--accent); color: white; border-color: var(--accent);" onclick="saveHistoryLog('${item.logId}', 'summary', this)">儲存更新</button>
                 </div>
               </div>
-            </details>
+            </div>
+          </details>
 
-            <!-- 按需展開手風琴 2：詳細畫面描述與逐字稿 -->
-            <details class="history-accordion">
-              <summary>
-                <span style="display: flex; align-items: center; gap: 8px;">
-                  <i data-lucide="file-text" style="width: 15px; height: 15px; color: var(--text-muted);"></i>
-                  詳細畫面描述與逐字稿總帳
-                </span>
-                <div style="display: flex; align-items: center; gap: 10px;">
-                  <button type="button" class="action-btn-sm" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute('data-text'), '已複製畫面描述與逐字稿總帳')" data-text="${escapeHtml(safeContentRaw)}">
-                    <i data-lucide="copy" style="width: 12px; height: 12px;"></i> 複製逐字稿
-                  </button>
-                  <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
-                </div>
-              </summary>
-              <div class="accordion-body">
+          <!-- 手風琴 2：詳細畫面描述與逐字稿 -->
+          <details class="history-accordion">
+            <summary>
+              <span style="display: flex; align-items: center; gap: 8px;">
+                <i data-lucide="file-text" style="width: 15px; height: 15px; color: var(--text-muted);"></i>
+                詳細畫面描述與逐字稿總帳
+              </span>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <!-- 【新增】編輯按鈕 -->
+                <button type="button" id="btn-edit-content-${item.logId}" class="action-btn-sm" onclick="event.stopPropagation(); toggleEditMode('${item.logId}', 'content')">
+                  <i data-lucide="edit-3" style="width: 12px; height: 12px;"></i> 編輯
+                </button>
+                <button type="button" class="action-btn-sm" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute('data-text'), '已複製逐字稿')" data-text="${escapeHtml(safeContentRaw)}">
+                  <i data-lucide="copy" style="width: 12px; height: 12px;"></i> 複製
+                </button>
+                <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
+              </div>
+            </summary>
+            <div class="accordion-body">
+              <!-- 唯讀模式 -->
+              <div id="view-content-${item.logId}">
                 ${formatTranscriptContent(safeContentRaw, urls)}
               </div>
-            </details>
-          </div>
-        `;
-      }).join('');
+              <!-- 編輯模式 (預設隱藏) -->
+              <div id="edit-content-${item.logId}" style="display: none; flex-direction: column; gap: 10px;">
+                <textarea id="input-content-${item.logId}" style="width: 100%; min-height: 250px; padding: 12px; border: 1px solid var(--accent); border-radius: 8px; font-family: inherit; font-size: 14px; resize: vertical; line-height: 1.6;">${escapeHtml(safeContentRaw)}</textarea>
+                <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                  <button class="action-btn-sm" onclick="toggleEditMode('${item.logId}', 'content')">取消</button>
+                  <button class="action-btn-sm" style="background: var(--accent); color: white; border-color: var(--accent);" onclick="saveHistoryLog('${item.logId}', 'content', this)">儲存更新</button>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+      `;
+    }).join('');
 
-      lucide.createIcons();
-    } catch (e) {
-      container.innerHTML = `<div style="text-align:center; color:var(--danger); padding:30px 0; background:var(--card-bg); border:1px solid var(--border); border-radius:16px;">載入失敗：${e.message}</div>`;
-    }
+    lucide.createIcons();
+  } catch (e) {
+    container.innerHTML = `<div style="text-align:center; color:var(--danger); padding:30px 0; background:var(--card-bg); border:1px solid var(--border); border-radius:16px;">載入失敗：${e.message}</div>`;
   }
+}
 
   // 雙棲 API 呼叫核心（修正空值防護）
   async function api(payload) {
@@ -1335,6 +1367,75 @@
   window.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
   });
+
+  // ==========================================
+// 【新增】刪除與編輯控制邏輯
+// ==========================================
+
+// 1. 刪除日誌功能
+async function deleteHistoryLog(logId) {
+  // 顯示原生確認視窗，避免誤刪
+  if (!confirm("確定要刪除這筆日誌嗎？試算表中的資料將會永久移除。")) return;
+  
+  try {
+    showToast("正在刪除中...");
+    await api({ action: "deleteLog", logId: logId });
+    showToast("✅ 日誌已成功刪除");
+    // 刪除成功後，自動重新整理歷史清單
+    loadHistoryLogs(); 
+  } catch (e) {
+    alert("刪除失敗：" + e.message);
+  }
+}
+
+// 2. 切換編輯/唯讀模式
+function toggleEditMode(logId, field) {
+  const viewEl = document.getElementById(`view-${field}-${logId}`);
+  const editEl = document.getElementById(`edit-${field}-${logId}`);
+  const editBtn = document.getElementById(`btn-edit-${field}-${logId}`);
+
+  // 判斷目前狀態進行切換
+  if (editEl.style.display === "none") {
+    viewEl.style.display = "none";
+    editEl.style.display = "flex";
+    editBtn.style.display = "none"; // 編輯中先隱藏上方編輯按鈕
+  } else {
+    viewEl.style.display = "block";
+    editEl.style.display = "none";
+    editBtn.style.display = "inline-flex";
+  }
+}
+
+// 3. 儲存日誌更新並送出 API
+async function saveHistoryLog(logId, field, btnElement) {
+  const textarea = document.getElementById(`input-${field}-${logId}`);
+  const newText = textarea.value;
+  const originalBtnText = btnElement.innerText;
+  
+  // 防止重複點擊，改變按鈕狀態
+  btnElement.innerText = "儲存中...";
+  btnElement.disabled = true;
+  btnElement.style.opacity = "0.7";
+
+  try {
+    // 發送請求更新至 Google 試算表
+    await api({ action: "updateLog", logId: logId, field: field, newText: newText });
+    
+    showToast("✅ 更新已成功儲存至試算表！");
+    
+    // 最保險且能確保 markdown 或影片切片重構的方式，就是直接重載列表
+    loadHistoryLogs();
+  } catch (e) {
+    alert("儲存失敗：" + e.message);
+    btnElement.innerText = originalBtnText;
+    btnElement.disabled = false;
+    btnElement.style.opacity = "1";
+  }
+}
+
+
+
+
 </script>
 
 </body>
