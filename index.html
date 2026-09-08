@@ -3,41 +3,80 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>極簡智能影音錄製引擎</title>
+  <title>極簡智能影音錄製與日誌系統</title>
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     :root {
-      --bg: #000000;
+      --bg: #0c0c0e;
       --card-bg: #161618;
       --text: #ffffff;
+      --text-muted: #86868b;
       --accent: #0071e3;
       --danger: #ff453a;
       --warning: #ff9f0a;
-      --glass: rgba(30, 30, 32, 0.65);
+      --success: #34c759;
+      --glass: rgba(28, 28, 30, 0.75);
       --glass-border: rgba(255, 255, 255, 0.12);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background-color: #0c0c0e;
+      background-color: var(--bg);
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      padding: 24px 16px;
+      color: var(--text);
       display: flex;
       justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 16px;
-      color: var(--text);
       -webkit-font-smoothing: antialiased;
     }
 
-    .recorder-wrapper {
+    .app-shell {
       width: 100%;
-      max-width: 860px;
+      max-width: 880px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 20px;
     }
 
+    /* 頂部極簡雙分頁導航 */
+    .tab-nav {
+      display: flex;
+      background: var(--card-bg);
+      padding: 6px;
+      border-radius: 16px;
+      border: 1px solid var(--glass-border);
+      gap: 8px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 14.5px;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--glass);
+      color: var(--text);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+      border: 1px solid var(--glass-border);
+    }
+
+    .tab-content { display: none; flex-direction: column; gap: 16px; animation: fadeIn 0.3s ease; }
+    .tab-content.active { display: flex; }
+
+    /* 播放器視窗容器 */
     .viewport-container {
       position: relative;
       width: 100%;
@@ -45,19 +84,13 @@
       background-color: var(--card-bg);
       border-radius: 24px;
       overflow: hidden;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
       border: 1px solid var(--glass-border);
-      touch-action: manipulation;
     }
 
-    video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      background: #000;
-    }
+    video { width: 100%; height: 100%; object-fit: cover; display: block; background: #000; }
 
+    /* 錄製狀態浮動標籤 */
     .status-capsule {
       position: absolute;
       top: 16px;
@@ -73,9 +106,6 @@
       border-radius: 999px;
       font-size: 13px;
       font-weight: 600;
-      color: var(--text);
-      pointer-events: none;
-      transition: opacity 0.3s ease;
       z-index: 10;
     }
 
@@ -93,6 +123,7 @@
       100% { transform: scale(0.9); opacity: 0.7; }
     }
 
+    /* 極簡浮動控制島 */
     .controls-island {
       position: absolute;
       bottom: 20px;
@@ -108,8 +139,6 @@
       border: 1px solid var(--glass-border);
       border-radius: 999px;
       z-index: 20;
-      opacity: 1;
-      visibility: visible;
       transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -131,33 +160,15 @@
       justify-content: center;
       cursor: pointer;
       outline: none;
-      transition: background 0.2s ease, transform 0.15s ease;
+      transition: background 0.2s, transform 0.15s;
     }
 
-    .ctrl-btn:hover {
-      background: rgba(255, 255, 255, 0.12);
-      transform: scale(1.05);
-    }
-
-    .ctrl-btn:active {
-      transform: scale(0.95);
-    }
-
-    .ctrl-btn.active {
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    .ctrl-btn.record-btn {
-      color: var(--danger);
-    }
-
-    .ctrl-btn.stop-btn {
-      color: var(--danger);
-    }
-
-    .ctrl-btn.pause-btn {
-      color: var(--warning);
-    }
+    .ctrl-btn:hover { background: rgba(255, 255, 255, 0.12); transform: scale(1.05); }
+    .ctrl-btn:active { transform: scale(0.95); }
+    .ctrl-btn.active { background: rgba(255, 255, 255, 0.2); }
+    .ctrl-btn.record-btn { color: var(--danger); }
+    .ctrl-btn.stop-btn { color: var(--danger); }
+    .ctrl-btn.pause-btn { color: var(--warning); }
 
     .terminal-log {
       width: 100%;
@@ -169,17 +180,17 @@
       font-family: ui-monospace, "SF Mono", Menlo, monospace;
       font-size: 12px;
       line-height: 1.6;
-      color: #34c759;
+      color: var(--success);
       overflow-y: auto;
     }
 
+    /* 歸檔輸出區 */
     .archive-view {
       display: none;
       background: var(--card-bg);
       border-radius: 20px;
       border: 1px solid var(--glass-border);
       padding: 20px;
-      margin-top: 8px;
       animation: fadeIn 0.3s ease;
     }
 
@@ -188,11 +199,40 @@
       font-size: 13.5px;
       line-height: 1.7;
       color: #cfcfd4;
-      max-height: 300px;
+      max-height: 320px;
       overflow-y: auto;
       padding: 14px;
       background: #1c1c1e;
       border-radius: 12px;
+    }
+
+    /* 第二分頁歷史紀錄卡片 */
+    .history-card {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: transform 0.2s;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--glass-border);
+      padding-bottom: 12px;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(52, 199, 89, 0.15);
+      color: var(--success);
     }
 
     @keyframes fadeIn {
@@ -203,76 +243,97 @@
 </head>
 <body>
 
-<div class="recorder-wrapper">
-  <!-- 播放與操作主視窗 -->
-  <div class="viewport-container" id="videoWrapper" onmousemove="wakeControls()" ontouchstart="wakeControls()">
-    
-    <!-- 錄製狀態浮動標籤 -->
-    <div id="statusBadge" class="status-capsule" style="display: none;">
-      <div class="pulse-dot"></div>
-      <span id="recordTimer">00:00</span>
+<div class="app-shell">
+  
+  <!-- 雙分頁導航 -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('tab-live')">
+      <i data-lucide="video"></i> 影音即時錄製
+    </button>
+    <button class="tab-btn" onclick="switchTab('tab-history')">
+      <i data-lucide="history"></i> 歷史日誌調閱
+    </button>
+  </div>
+
+  <!-- 分頁 1：即時錄製 -->
+  <div id="tab-live" class="tab-content active">
+    <div class="viewport-container" id="videoWrapper" onmousemove="wakeControls()" ontouchstart="wakeControls()">
+      
+      <div id="statusBadge" class="status-capsule" style="display: none;">
+        <div class="pulse-dot"></div>
+        <span id="recordTimer">00:00</span>
+      </div>
+
+      <video id="mediaPlayer" autoplay muted playsinline></video>
+
+      <div id="controlsIsland" class="controls-island">
+        <!-- 切換來源 (相機/螢幕 或 手機前後鏡頭) -->
+        <button class="ctrl-btn" id="btnSource" onclick="switchMediaSource()" title="切換錄製來源">
+          <i data-lucide="camera" id="iconSource"></i>
+        </button>
+
+        <!-- 切換影像 (有畫面 / 純音訊收音) -->
+        <button class="ctrl-btn" id="btnVideoTrack" onclick="toggleVideoTrack()" title="開啟/關閉畫面">
+          <i data-lucide="video" id="iconVideo"></i>
+        </button>
+
+        <!-- 開始錄製 -->
+        <button class="ctrl-btn record-btn" id="btnStart" onclick="startRecording()" title="開始錄影">
+          <i data-lucide="circle-dot"></i>
+        </button>
+
+        <!-- 暫停 / 繼續 -->
+        <button class="ctrl-btn pause-btn" id="btnPause" onclick="togglePause()" style="display: none;" title="暫停錄製">
+          <i data-lucide="pause" id="iconPause"></i>
+        </button>
+
+        <!-- 停止錄影並歸檔 -->
+        <button class="ctrl-btn stop-btn" id="btnStop" onclick="stopRecording()" style="display: none;" title="結束錄製">
+          <i data-lucide="square"></i>
+        </button>
+      </div>
     </div>
 
-    <!-- 視訊畫面 -->
-    <video id="mediaPlayer" autoplay muted playsinline></video>
+    <div class="terminal-log" id="sysLog">系統準備就緒...</div>
 
-    <!-- 極簡動態控制列島 -->
-    <div id="controlsIsland" class="controls-island">
-      <!-- 1. 切換影音來源 (鏡頭/螢幕 或 手機前後鏡頭) -->
-      <button class="ctrl-btn" id="btnSource" onclick="switchMediaSource()" title="切換錄製來源">
-        <i data-lucide="camera" id="iconSource"></i>
-      </button>
+    <!-- 即時歸檔結果卡片 -->
+    <div id="archiveView" class="archive-view">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h4 style="margin: 0; color: var(--success); font-size: 16px;">🎉 影音日誌已成功歸檔至 Google 試算表</h4>
+        <div id="archiveLinks" style="font-size: 13px;"></div>
+      </div>
 
-      <!-- 2. 切換影像啟用 (有畫面 / 純音訊收音) -->
-      <button class="ctrl-btn" id="btnVideoTrack" onclick="toggleVideoTrack()" title="啟用/關閉畫面">
-        <i data-lucide="video" id="iconVideo"></i>
-      </button>
+      <div style="margin-bottom: 16px;">
+        <div style="font-weight: 700; font-size: 14px; color: var(--accent); margin-bottom: 8px;">🎯 AI 全局重點整理</div>
+        <div id="archiveSummary" class="archive-text" style="border-left: 4px solid var(--accent); background: #18181b;"></div>
+      </div>
 
-      <!-- 3. 錄影主控 (開始錄製) -->
-      <button class="ctrl-btn record-btn" id="btnStart" onclick="startRecording()" title="開始錄影">
-        <i data-lucide="circle-dot"></i>
-      </button>
-
-      <!-- 4. 暫停 / 繼續 -->
-      <button class="ctrl-btn pause-btn" id="btnPause" onclick="togglePause()" style="display: none;" title="暫停錄製">
-        <i data-lucide="pause" id="iconPause"></i>
-      </button>
-
-      <!-- 5. 停止錄影並歸檔 -->
-      <button class="ctrl-btn stop-btn" id="btnStop" onclick="stopRecording()" style="display: none;" title="結束錄製">
-        <i data-lucide="square"></i>
-      </button>
+      <details style="cursor: pointer;">
+        <summary style="font-weight: 600; font-size: 13px; color: var(--text-muted); outline: none; margin-bottom: 8px;">
+          👁️ 展開檢視各分鐘畫面描述與逐字稿總帳
+        </summary>
+        <div id="archiveContent" class="archive-text" style="margin-top: 8px;"></div>
+      </details>
     </div>
   </div>
 
-  <!-- 系統底層監控日誌 -->
-  <div class="terminal-log" id="sysLog">系統就緒，正在等待硬體權限授權...</div>
-
-  <!-- 寫入完成與內容展示 -->
-  <div id="archiveView" class="archive-view">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-      <h4 style="margin: 0; color: #34c759; font-size: 16px;">🎉 影音日誌已成功歸檔至 Google 試算表</h4>
-      <div id="archiveLinks" style="font-size: 13px;"></div>
+  <!-- 分頁 2：歷史紀錄調閱 -->
+  <div id="tab-history" class="tab-content">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h3 style="font-size: 18px; font-weight: 700;">歷史影音日誌總帳</h3>
+      <button onclick="loadHistoryLogs()" class="ctrl-btn" style="width: auto; height: auto; padding: 8px 14px; border-radius: 10px; background: var(--card-bg); border: 1px solid var(--glass-border); font-size: 13px;">
+        <i data-lucide="refresh-cw" style="width: 14px; margin-right: 4px;"></i> 重新整理
+      </button>
     </div>
-
-    <!-- AI 全局重點整理 -->
-    <div style="margin-bottom: 16px;">
-      <div style="font-weight: 700; font-size: 14px; color: var(--accent); margin-bottom: 8px;">🎯 AI 全局重點整理</div>
-      <div id="archiveSummary" class="archive-text" style="border-left: 4px solid var(--accent); background: #18181b;"></div>
+    <div id="historyContainer" style="display: flex; flex-direction: column; gap: 16px;">
+      <div style="text-align: center; color: var(--text-muted); padding: 40px 0;">點擊重新整理載入歷史資料...</div>
     </div>
-
-    <!-- 每分鐘畫面描述與詳細逐字稿 -->
-    <details style="cursor: pointer;">
-      <summary style="font-weight: 600; font-size: 13px; color: #86868b; outline: none; margin-bottom: 8px;">
-        👁️ 展開檢視各分鐘畫面描述與逐字稿總帳
-      </summary>
-      <div id="archiveContent" class="archive-text" style="margin-top: 8px;"></div>
-    </details>
   </div>
+
 </div>
 
 <script>
-  // 🌟 請填入你的 GAS 部署 URL
+  // 🌟 已直接帶入你的 GAS 網址
   const GAS_URL = "https://script.google.com/macros/s/AKfycbyeqKhWv3TY8bpSdB9ZfWXNkR9yap66PyGxzEJqxpawWn9hZ9chfIuBPJfZHHoP91newQ/exec";
 
   let currentStream = null;
@@ -283,8 +344,8 @@
   let isRecording = false;
   let isPaused = false;
   let isVideoEnabled = true;
-  let currentSourceType = "camera"; // "camera" | "screen"
-  let mobileFacingMode = "user";    // "user" | "environment"
+  let currentSourceType = "camera";
+  let mobileFacingMode = "user";
 
   let chunkIndex = 1;
   let chunkTimer = null;
@@ -294,6 +355,7 @@
 
   let activeUploadTasks = new Set();
   let logSession = null;
+  let recordedChunks = []; // 暫存切片 blob 陣列
 
   const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
@@ -313,9 +375,21 @@
     }, 3000);
   }
 
-  // ================= 影音串流獲取引擎 =================
+  // 雙分頁切換
+  function switchTab(tabId) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+    event.currentTarget.classList.add('active');
+    document.getElementById(tabId).classList.add('active');
+
+    if (tabId === 'tab-history') {
+      loadHistoryLogs();
+    }
+  }
+
+  // 影音串流獲取
   async function acquireStream() {
-    // 若原先有串流，先釋放乾淨
     if (currentStream) {
       currentStream.getTracks().forEach(t => t.stop());
       currentStream = null;
@@ -329,18 +403,16 @@
 
     try {
       if (!isMobile && currentSourceType === "screen") {
-        // 電腦端：螢幕畫面 + 系統聲音
         const screenStream = await navigator.mediaDevices.getDisplayMedia({
           video: { frameRate: { ideal: 30 } },
           audio: true
         });
 
-        // 混音麥克風
         let micStream = null;
         try {
           micStream = await navigator.mediaDevices.getUserMedia({ audio: audioConstraints });
         } catch (e) {
-          log("未獲取麥克風，將僅錄製系統音訊。");
+          log("未獲取麥克風，僅收錄系統聲音。");
         }
 
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -360,17 +432,15 @@
           mixedAudioDest.stream.getAudioTracks()[0]
         ]);
 
-        // 監聽使用者主動點擊瀏覽器浮動列「停止共用」
         screenStream.getVideoTracks()[0].onended = () => {
           if (currentSourceType === "screen") {
-            log("螢幕共用已停止，自動切回鏡頭模式繼續錄製...");
+            log("螢幕共用中斷，自動切回鏡頭模式繼續錄製...");
             switchMediaSource();
           }
         };
 
         document.getElementById('iconSource').setAttribute('data-lucide', 'monitor');
       } else {
-        // 電腦視訊 或 手機相機
         const videoConstraints = isMobile
           ? { facingMode: mobileFacingMode, width: { ideal: 1280 } }
           : { width: { ideal: 1280 }, height: { ideal: 720 } };
@@ -385,12 +455,11 @@
 
       document.getElementById('mediaPlayer').srcObject = currentStream;
 
-      // 同步視訊開關軌道
       const vTrack = currentStream.getVideoTracks()[0];
       if (vTrack) vTrack.enabled = isVideoEnabled;
 
       lucide.createIcons();
-      log(`硬體啟用成功：[${isMobile ? '手機 ' + mobileFacingMode : currentSourceType}]`);
+      log(`硬體就緒：[${isMobile ? '手機 ' + mobileFacingMode : currentSourceType}]`);
       return true;
     } catch (err) {
       log("硬體存取失敗：" + err.message);
@@ -398,7 +467,6 @@
     }
   }
 
-  // 1. 切換有/無影像 (純音訊)
   function toggleVideoTrack() {
     isVideoEnabled = !isVideoEnabled;
     if (currentStream && currentStream.getVideoTracks().length > 0) {
@@ -410,15 +478,13 @@
     document.getElementById('btnVideoTrack').classList.toggle('active', !isVideoEnabled);
     lucide.createIcons();
 
-    log(`視訊畫面已${isVideoEnabled ? '開啟' : '關閉（進入純音訊收音）'}`);
+    log(`視訊畫面已${isVideoEnabled ? '開啟' : '關閉（純音訊收音）'}`);
     wakeControls();
   }
 
-  // 🌟 2. 切換錄影來源（無縫接軌繼續錄製核心）
+  // 無縫切換影音來源
   async function switchMediaSource() {
     const wasRecording = isRecording;
-
-    // 紀錄切換前的設定
     const prevSourceType = currentSourceType;
     const prevFacingMode = mobileFacingMode;
 
@@ -428,7 +494,7 @@
       currentSourceType = (currentSourceType === "camera") ? "screen" : "camera";
     }
 
-    // 如果當前正在錄影，立刻將切換前的片段封裝送出，避免片段損毀
+    // 封裝切換前的片段
     if (wasRecording && mediaRecorder && mediaRecorder.state === "recording") {
       clearTimeout(chunkTimer);
       mediaRecorder.stop();
@@ -438,30 +504,26 @@
     const success = await acquireStream();
 
     if (!success) {
-      // 容錯機制：如果切換失敗（如使用者在螢幕共享彈窗按取消），安全回滾原本模式
       log("⚠️ 來源切換取消，自動恢復原設備...");
       currentSourceType = prevSourceType;
       mobileFacingMode = prevFacingMode;
       await acquireStream();
     }
 
-    // 🌟 關鍵：若在錄影中，立即重啟新的切片錄製，總計時器與錄影狀態無縫接軌！
     if (wasRecording && !isPaused && currentStream) {
       startChunkRecording();
       log("✅ 設備切換完成，已無縫接軌繼續錄影！");
     }
-
     wakeControls();
   }
 
-  // 3. 開始錄製
+  // 開始錄影
   async function startRecording() {
     document.getElementById('btnStart').disabled = true;
     document.getElementById('archiveView').style.display = 'none';
 
-    // 🌟 若攝影機先前已關閉（停止後），自動重新喚醒攝影機
     if (!currentStream || currentStream.getTracks().every(t => t.readyState === 'ended')) {
-      log("正在喚醒攝影機與麥克風...");
+      log("喚醒攝影機與麥克風中...");
       const ok = await acquireStream();
       if (!ok) {
         document.getElementById('btnStart').disabled = false;
@@ -496,16 +558,20 @@
   function startChunkRecording() {
     if (!isRecording || !currentStream || isPaused) return;
 
-    let chunks = [];
+    recordedChunks = [];
     const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
     mediaRecorder = new MediaRecorder(currentStream, { mimeType: mime });
 
-    mediaRecorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+    mediaRecorder.ondataavailable = e => {
+      if (e.data && e.data.size > 0) recordedChunks.push(e.data);
+    };
+
     mediaRecorder.onstop = () => {
-      if (chunks.length > 0) {
-        processChunk(new Blob(chunks, { type: mime }), mime, chunkIndex++);
+      if (recordedChunks.length > 0) {
+        const chunkBlob = new Blob(recordedChunks, { type: mime });
+        processChunk(chunkBlob, mime, chunkIndex++);
+        recordedChunks = [];
       }
-      // 若仍處於錄影狀態且未切換中，自動銜接下一分鐘切片
       if (isRecording && !isPaused && mediaRecorder && mediaRecorder.state === "inactive") {
         startChunkRecording();
       }
@@ -518,7 +584,7 @@
   }
 
   function processChunk(blob, mime, index) {
-    log(`區段 ${index} 切片完成，背景傳輸中...`);
+    log(`區段 ${index} 切片完成，背景傳輸至雲端中...`);
     const task = new Promise(resolve => {
       const reader = new FileReader();
       reader.readAsDataURL(blob);
@@ -567,21 +633,35 @@
     wakeControls();
   }
 
-  // 🌟 3. 停止錄影並徹底關閉攝像頭硬體
+  // 🌟 非同步收尾保全：確保未滿 1 分鐘的切片 100% 寫入
+  function stopMediaRecorderAsync() {
+    return new Promise((resolve) => {
+      if (!mediaRecorder || mediaRecorder.state === "inactive") {
+        resolve();
+        return;
+      }
+      const originalOnStop = mediaRecorder.onstop;
+      mediaRecorder.onstop = (e) => {
+        if (originalOnStop) originalOnStop(e);
+        resolve();
+      };
+      mediaRecorder.stop();
+    });
+  }
+
+  // 🌟 停止錄影並歸檔
   async function stopRecording() {
     isRecording = false;
     isPaused = false;
     clearTimeout(chunkTimer);
     clearInterval(timerInterval);
 
-    // 1. 停止錄影器
-    if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
+    // 1. 強制封裝最後一段影音切片（即便只有幾秒）
+    await stopMediaRecorderAsync();
 
-    // 🌟 2. 核心功能：徹底關閉硬體攝影機與麥克風，指示燈即刻熄滅
+    // 2. 立即關閉硬體攝影機與麥克風，指示燈即刻熄滅
     if (currentStream) {
-      currentStream.getTracks().forEach(track => {
-        track.stop(); // 停止視訊與音訊軌道硬體運作
-      });
+      currentStream.getTracks().forEach(t => t.stop());
       currentStream = null;
     }
     if (document.getElementById('mediaPlayer')) {
@@ -591,21 +671,21 @@
       audioContext.close();
       audioContext = null;
     }
-    log("🔒 攝影機與麥克風硬體已徹底關閉，指示燈已熄滅。");
+    log("🔒 攝影機已徹底關閉，指示燈熄滅。正在等待背景最後切片寫入試算表...");
 
-    // UI 狀態更新
     document.getElementById('btnStop').disabled = true;
     document.getElementById('btnPause').style.display = 'none';
     document.getElementById('statusBadge').style.display = 'none';
 
-    log("錄製已結束，等待背景進行中的切片完成寫入試算表...");
+    // 3. 等待所有進行中的切片（含尾段）全部完成上傳與辨識
     while (activeUploadTasks.size > 0) {
       await Promise.all(Array.from(activeUploadTasks));
     }
 
-    log("所有切片皆已寫入試算表！正在產出 AI 全局重點整理...");
+    log("所有影音切片皆已歸檔試算表！正在提煉 AI 全局重點整理...");
 
     try {
+      // 4. 呼叫後端 finalizeLog 產出重點整理
       const res = await api({
         action: "finalizeLog",
         rowIndex: logSession.rowIndex
@@ -643,6 +723,56 @@
       const s = String(secondsElapsed % 60).padStart(2, '0');
       document.getElementById('recordTimer').innerText = `${m}:${s}`;
     }, 1000);
+  }
+
+  // 第二分頁：載入歷史日誌
+  async function loadHistoryLogs() {
+    const container = document.getElementById('historyContainer');
+    container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:30px 0;"><i data-lucide="loader" class="spin"></i> 載入中...</div>`;
+    lucide.createIcons();
+
+    try {
+      const logs = await api({ action: "getHistoryLogs" });
+      if (!logs || logs.length === 0) {
+        container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 0;">目前尚無歷史錄影紀錄。</div>`;
+        return;
+      }
+
+      container.innerHTML = logs.map(item => `
+        <div class="history-card">
+          <div class="history-header">
+            <div>
+              <div style="font-weight: 700; font-size: 15px;">日誌 ID: ${item.logId}</div>
+              <div style="font-size: 12px; color: var(--text-muted); font-family: monospace; margin-top: 4px;">${item.timestamp}</div>
+            </div>
+            <span class="badge">${item.status}</span>
+          </div>
+
+          <div>
+            <div style="font-weight: 600; font-size: 13px; color: var(--accent); margin-bottom: 6px;">雲端切片檔案</div>
+            <div style="font-size: 13px;">
+              ${item.urls.length > 0 
+                ? item.urls.map((u, i) => `<a href="${u}" target="_blank" style="color:var(--accent); text-decoration:none; margin-right:12px;">📁 片段 ${i+1}</a>`).join('')
+                : '<span style="color:var(--text-muted)">無影片連結</span>'}
+            </div>
+          </div>
+
+          <div>
+            <div style="font-weight: 600; font-size: 13px; color: var(--accent); margin-bottom: 6px;">🎯 AI 全局重點整理</div>
+            <div class="archive-text" style="padding: 10px; font-size: 13px; background: #111;">${item.summary}</div>
+          </div>
+
+          <details style="cursor: pointer;">
+            <summary style="font-size: 12.5px; color: var(--text-muted); outline: none;">👁️ 查看詳細畫面描述與逐字稿</summary>
+            <div class="archive-text" style="margin-top: 8px; font-size: 12.5px;">${item.content}</div>
+          </details>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    } catch (e) {
+      container.innerHTML = `<div style="text-align:center; color:var(--danger); padding:30px 0;">載入失敗：${e.message}</div>`;
+    }
   }
 
   async function api(payload) {
