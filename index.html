@@ -650,7 +650,7 @@
         <div class="stage-header">
           <div class="stage-title">
             <i data-lucide="lightbulb" style="width: 16px; height: 16px; color: #f59e0b;"></i>
-            第二階段：陳修平流量密碼 20 個爆款提案[cite: 1]
+            第二階段：陳修平流量密碼 20 個爆款提案
           </div>
           <div class="sync-status" id="syncStage2"><i data-lucide="cloud" style="width: 12px; height: 12px;"></i> 即時同步至 H 欄</div>
         </div>
@@ -671,7 +671,7 @@
         <div class="stage-header">
           <div class="stage-title">
             <i data-lucide="flame" style="width: 16px; height: 16px; color: var(--danger);"></i>
-            第三階段：黃金 3 秒 Hook 標題與痛點開頭摘要[cite: 1]
+            第三階段：黃金 3 秒 Hook 標題與痛點開頭摘要
           </div>
           <div class="sync-status" id="syncStage3"><i data-lucide="cloud" style="width: 12px; height: 12px;"></i> 即時同步至 I 欄</div>
         </div>
@@ -723,12 +723,19 @@
   const GAS_WEB_URL = "https://script.google.com/macros/s/AKfycbyeqKhWv3TY8bpSdB9ZfWXNkR9yap66PyGxzEJqxpawWn9hZ9chfIuBPJfZHHoP91newQ/exec";
   let activeItem = null;
   let syncTimeouts = {};
+  window.historyLogsCache = {};
 
   
   let currentStream = null, mediaRecorder = null, isRecording = false, isPaused = false, isVideoEnabled = true;
   let currentSourceType = "camera", mobileFacingMode = "user", chunkIndex = 1, chunkTimer = null, timerInterval = null, secondsElapsed = 0;
   let activeUploadTasks = new Set(), logSession = null, recordedChunks = [];
   const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  function safeCreateIcons() {
+    if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') {
+      try { lucide.createIcons(); } catch (err) { console.warn("Lucide 圖示渲染重試中...", err); }
+    }
+  }
 
   function log(msg) {
     const el = document.getElementById('sysLog');
@@ -742,7 +749,7 @@
     if (!t || !m) return;
     m.innerText = msg;
     t.classList.add('show');
-    lucide.createIcons();
+    safeCreateIcons();
     setTimeout(() => t.classList.remove('show'), 2200);
   }
 
@@ -753,7 +760,16 @@
     const target = document.getElementById(tabId);
     if (target) target.classList.add('active');
     if (tabId === 'tab-history') loadHistoryLogs();
-    lucide.createIcons();
+    safeCreateIcons();
+  }
+
+  function openWorkshopById(logId) {
+    const item = window.historyLogsCache[logId];
+    if (!item) {
+      showToast("找不到對應的日誌資料，請重新整理總帳");
+      return;
+    }
+    openWorkshop(item);
   }
 
   
@@ -790,7 +806,7 @@
     updateSyncBadge('stage2', item.stage2 ? 'saved' : 'idle');
     updateSyncBadge('stage3', item.stage3 ? 'saved' : 'idle');
     updateSyncBadge('stage4', item.stage4 ? 'saved' : 'idle');
-    lucide.createIcons();
+    safeCreateIcons();
   }
 
   function switchStreamVideo(url, btn) {
@@ -826,7 +842,7 @@
     if (!el) return;
     if (status === 'syncing') {
       el.className = 'sync-status syncing';
-      el.innerHTML = `<i data-lucide="loader" style="width:12px; height:12px;" class="spin"></i> 同步至試算表中...`;
+      el.innerHTML = `<i data-lucide="loader" style="width:12px; height:12px;"></i> 同步至試算表中...`;
     } else if (status === 'saved') {
       el.className = 'sync-status saved';
       const colMap = { stage1: 'G', stage2: 'H', stage3: 'I', stage4: 'J' };
@@ -835,7 +851,7 @@
       el.className = 'sync-status';
       el.innerHTML = `<i data-lucide="cloud" style="width:12px; height:12px;"></i> 支援雲端即時同步`;
     }
-    lucide.createIcons();
+    safeCreateIcons();
   }
 
   // 第二階段：提煉 20 組提案
@@ -909,8 +925,8 @@
   
   async function loadHistoryLogs() {
     const container = document.getElementById('historyContainer');
-    container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> 載入中...</div>`;
-    lucide.createIcons();
+    container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader"></i> 載入中...</div>`;
+    safeCreateIcons();
 
     try {
       const logs = await api({ action: "getHistoryLogs" });
@@ -919,11 +935,12 @@
         return;
       }
 
+      window.historyLogsCache = {};
       container.innerHTML = logs.map(item => {
+        window.historyLogsCache[item.logId] = item;
         const rawUrls = Array.isArray(item.urls) ? item.urls : [];
         const urls = rawUrls.filter(u => typeof u === 'string' && (u.startsWith('http://') || u.startsWith('https:
         const isRec = item.status && item.status.includes('錄製中');
-        const jsonSafe = JSON.stringify(item).replace(/'/g, "&apos;");
 
         return `
           <div class="history-card">
@@ -981,14 +998,14 @@
               <div style="font-size:12.5px; color:var(--text-muted);">
                 ${item.stage4 ? '<span style="color:var(--success); font-weight:600;">✅ 已建立方格子文章 (J欄)</span>' : '尚未產出部落格長文'}
               </div>
-              <button onclick='openWorkshop(${jsonSafe})' class="action-btn">
+              <button onclick="openWorkshopById('${item.logId}')" class="action-btn">
                 <i data-lucide="sparkles" style="width:13px; height:13px;"></i> 一鍵產出商周/遠見級部落格文章
               </button>
             </div>
           </div>
         `;
       }).join('');
-      lucide.createIcons();
+      safeCreateIcons();
     } catch (e) {
       container.innerHTML = `<div style="text-align:center; color:var(--danger); padding:20px;">載入失敗: ${e.message}</div>`;
     }
@@ -1078,6 +1095,7 @@
       document.getElementById('cameraPrompt').style.display = 'none';
       document.getElementById('controlsIsland').style.display = 'flex';
       log("攝影設備已就緒。");
+      safeCreateIcons();
     } catch (e) {
       log("無法啟用相機: " + e.message);
     }
@@ -1088,7 +1106,7 @@
       isVideoEnabled = !isVideoEnabled;
       currentStream.getVideoTracks()[0].enabled = isVideoEnabled;
       document.getElementById('iconVideo').setAttribute('data-lucide', isVideoEnabled ? 'video' : 'video-off');
-      lucide.createIcons();
+      safeCreateIcons();
     }
   }
 
@@ -1115,6 +1133,7 @@
         document.getElementById('recordTimer').innerText = `${m}:${s}`;
       }, 1000);
       startChunkRecording();
+      safeCreateIcons();
     } catch (e) {
       log("初始化錯誤: " + e.message);
       document.getElementById('btnStart').disabled = false;
@@ -1182,12 +1201,12 @@
       document.getElementById('archiveContent').innerHTML = formatTranscriptContent(res.content, res.urls);
       document.getElementById('archiveView').style.display = 'block';
       log("歸檔完成！可在歷史日誌總帳中點選寫作按鈕進入四階段工作坊。");
-      lucide.createIcons();
+      safeCreateIcons();
     } catch (e) { log("歸檔失敗: " + e.message); }
   }
 
   window.addEventListener('DOMContentLoaded', () => {
-    lucide.createIcons();
+    safeCreateIcons();
   });
 </script>
 
