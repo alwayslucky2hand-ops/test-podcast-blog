@@ -19,17 +19,13 @@
       --text-muted: #64748b;
       --border: #cbd5e1;         
       --border-subtle: #e2e8f0;
-      
       --accent: #3175B5;         
       --accent-soft: rgba(49, 117, 181, 0.08);
       --accent-green: #B5D333;   
-      
       --danger: #ef4444;
       --warning: #f59e0b;
       --success: #10b981;
       --glass: rgba(255, 255, 255, 0.98);
-      --shadow-sm: none;         
-      --shadow-md: none;         
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -54,75 +50,38 @@
 
      
     #loginOverlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: var(--bg);
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      transition: opacity 0.3s ease;
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--bg); z-index: 9999;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 24px; transition: opacity 0.3s ease;
     }
     .login-box {
-      width: 100%;
-      max-width: 400px;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 32px 24px;
-      text-align: center;
-      background: #ffffff;
+      width: 100%; max-width: 360px; border: 1px solid var(--border);
+      border-radius: 4px; padding: 32px 24px; text-align: center; background: #ffffff;
     }
     .login-input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      font-size: 14px;
-      margin-bottom: 16px;
-      outline: none;
+      width: 100%; padding: 12px; border: 1px solid var(--border);
+      border-radius: 4px; font-size: 14px; margin-bottom: 16px; outline: none;
     }
     .login-input:focus { border-color: var(--accent); }
 
      
     .tab-nav {
-      display: flex;
-      background: var(--bg);
-      padding: 0;
-      border-bottom: 1px solid var(--border);
-      gap: 24px;
-      margin-bottom: 8px;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
+      display: flex; background: var(--bg); padding: 0;
+      border-bottom: 1px solid var(--border); gap: 24px; margin-bottom: 8px;
+      flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
     }
     .tab-nav::-webkit-scrollbar { display: none; }
 
     .tab-btn {
-      flex: none;
-      padding: 12px 4px;
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      position: relative;
-      transition: color 0.2s;
+      flex: none; padding: 12px 4px; border: none; background: transparent;
+      color: var(--text-muted); font-size: 15px; font-weight: 600; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      position: relative; transition: color 0.2s;
     }
     .tab-btn::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      left: 0; right: 0; height: 2px;
-      background: var(--accent);
-      transform: scaleX(0);
-      transition: transform 0.2s ease;
+      content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px;
+      background: var(--accent); transform: scaleX(0); transition: transform 0.2s ease;
     }
     .tab-btn:hover, .tab-btn.active { color: var(--accent); }
     .tab-btn.active::after { transform: scaleX(1); }
@@ -132,74 +91,50 @@
 
      
     .viewport-container {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      background-color: #000000;
-      border-radius: 4px; 
-      overflow: hidden;
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: relative; width: 100%; aspect-ratio: 16 / 9;
+      background-color: #000000; border-radius: 4px; overflow: hidden;
+      border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
       transition: aspect-ratio 0.3s ease;
     }
-    @media (orientation: portrait) {
-      .viewport-container { aspect-ratio: 9 / 16; max-height: 75vh; }
-    }
-
+    @media (orientation: portrait) { .viewport-container { aspect-ratio: 9 / 16; max-height: 75vh; } }
     .camera-grid {
-      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      pointer-events: none; z-index: 5;
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 5;
       background-image: 
         linear-gradient(to right, transparent calc(33.33% - 0.5px), rgba(255,255,255,0.15) calc(33.33% - 0.5px), rgba(255,255,255,0.15) calc(33.33% + 0.5px), transparent calc(33.33% + 0.5px)),
         linear-gradient(to right, transparent calc(66.66% - 0.5px), rgba(255,255,255,0.15) calc(66.66% - 0.5px), rgba(255,255,255,0.15) calc(66.66% + 0.5px), transparent calc(66.66% + 0.5px)),
         linear-gradient(to bottom, transparent calc(33.33% - 0.5px), rgba(255,255,255,0.15) calc(33.33% - 0.5px), rgba(255,255,255,0.15) calc(33.33% + 0.5px), transparent calc(33.33% + 0.5px)),
         linear-gradient(to bottom, transparent calc(66.66% - 0.5px), rgba(255,255,255,0.15) calc(66.66% - 0.5px), rgba(255,255,255,0.15) calc(66.66% + 0.5px), transparent calc(66.66% + 0.5px));
     }
-
     video { width: 100%; height: 100%; object-fit: cover; display: block; background: #000; }
 
     .camera-prompt {
-      position: absolute;
-      display: flex; flex-direction: column; align-items: center; gap: 12px;
-      cursor: pointer; padding: 24px 32px;
-      background: var(--glass); border: 1px solid var(--border); border-radius: 4px;
-      transition: transform 0.2s, border-color 0.2s; z-index: 15;
+      position: absolute; display: flex; flex-direction: column; align-items: center; gap: 12px;
+      cursor: pointer; padding: 24px 32px; background: var(--glass); border: 1px solid var(--border);
+      border-radius: 4px; transition: transform 0.2s, border-color 0.2s; z-index: 15;
     }
     .camera-prompt:hover { transform: scale(1.02); border-color: var(--accent); }
 
     .status-capsule {
-      position: absolute; top: 16px; left: 16px;
-      display: flex; align-items: center; gap: 8px;
-      padding: 6px 14px; background: var(--glass);
-      border: 1px solid var(--border); border-radius: 4px;
+      position: absolute; top: 16px; left: 16px; display: flex; align-items: center; gap: 8px;
+      padding: 6px 14px; background: var(--glass); border: 1px solid var(--border); border-radius: 4px;
       font-size: 13px; font-weight: 600; color: var(--text); z-index: 10;
     }
-
-    .pulse-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background-color: var(--danger); animation: pulse 1.5s infinite;
-    }
+    .pulse-dot { width: 8px; height: 8px; border-radius: 50%; background-color: var(--danger); animation: pulse 1.5s infinite; }
     @keyframes pulse { 0% { transform: scale(0.9); opacity: 0.7; } 50% { transform: scale(1.3); opacity: 1; } 100% { transform: scale(0.9); opacity: 0.7; } }
 
      
     .controls-island {
       position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
       display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
-      padding: 8px 12px; background: var(--glass);
-      border: 1px solid var(--border); border-radius: 4px; z-index: 20;
-      transition: opacity 0.3s ease;
-      width: 90%; max-width: 400px;
+      padding: 8px 12px; background: var(--glass); border: 1px solid var(--border); border-radius: 4px; z-index: 20;
+      transition: opacity 0.3s ease; width: 90%; max-width: 400px;
     }
     .controls-island.autohide { opacity: 0; pointer-events: none; }
 
     .ctrl-btn {
-      background: transparent; border: 1px solid var(--border); color: var(--text);
-      width: 40px; height: 40px; border-radius: 4px;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; outline: none; font-size: 13px; font-weight: 700;
-      transition: border-color 0.15s, transform 0.15s; background: #ffffff;
+      background: #ffffff; border: 1px solid var(--border); color: var(--text);
+      width: 40px; height: 40px; border-radius: 4px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; outline: none; font-size: 13px; font-weight: 700; transition: border-color 0.15s, transform 0.15s;
     }
     .ctrl-btn:hover { border-color: var(--accent); transform: scale(1.05); }
     .ctrl-btn:active { transform: scale(0.95); }
@@ -209,64 +144,34 @@
     .ctrl-btn.pause-btn { color: var(--warning); }
 
     .terminal-log {
-      width: 100%; height: 100px; background: #ffffff;
-      border: 1px solid var(--border); border-radius: 4px; padding: 12px 16px;
-      font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12.5px;
+      width: 100%; height: 100px; background: #ffffff; border: 1px solid var(--border); border-radius: 4px;
+      padding: 12px 16px; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12.5px;
       line-height: 1.6; color: #334155; overflow-y: auto;
     }
 
-    .archive-view {
-      display: none; background: var(--card-bg); border-radius: 4px;
-      border: 1px solid var(--border); padding: 24px; animation: fadeIn 0.3s ease;
-    }
-
-    .history-card {
-      background: var(--card-bg); border: 1px solid var(--border);
-      border-radius: 4px; padding: 20px; display: flex; flex-direction: column;
-      gap: 16px; transition: border-color 0.2s;
-    }
+     
+    .archive-view { display: none; background: var(--card-bg); border-radius: 4px; border: 1px solid var(--border); padding: 24px; animation: fadeIn 0.3s ease; }
+    .history-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 4px; padding: 20px; display: flex; flex-direction: column; gap: 16px; transition: border-color 0.2s; }
     .history-card:hover { border-color: var(--accent); }
+    .history-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 12px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 16px; }
 
-    .history-header {
-      display: flex; flex-wrap: wrap; justify-content: space-between;
-      align-items: flex-start; gap: 12px; border-bottom: 1px solid var(--border-subtle);
-      padding-bottom: 16px;
-    }
-
-    .badge {
-      padding: 4px 10px; border-radius: 2px; font-size: 12px; font-weight: 600;
-      background: transparent; color: var(--accent-green); border: 1px solid var(--accent-green);
-    }
+    .badge { padding: 4px 10px; border-radius: 2px; font-size: 12px; font-weight: 600; background: transparent; color: var(--accent-green); border: 1px solid var(--accent-green); }
     .badge.recording { color: var(--warning); border-color: var(--warning); }
 
-    .file-chip {
-      display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
-      background: transparent; border: 1px solid var(--border); border-radius: 4px;
-      font-size: 12.5px; font-weight: 500; color: var(--text-muted); text-decoration: none;
-      transition: all 0.15s ease;
-    }
+    .file-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: transparent; border: 1px solid var(--border); border-radius: 4px; font-size: 12.5px; font-weight: 500; color: var(--text-muted); text-decoration: none; transition: all 0.15s ease; }
     .file-chip:hover { color: var(--accent); border-color: var(--accent); }
 
-    .action-btn-sm {
-      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-      padding: 6px 10px; background: #ffffff; border: 1px solid var(--border);
-      border-radius: 4px; font-size: 13px; font-weight: 600; color: var(--text);
-      cursor: pointer; transition: all 0.2s ease; white-space: nowrap;
-    }
+    .action-btn-sm { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 6px 10px; background: #ffffff; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; font-weight: 600; color: var(--text); cursor: pointer; transition: all 0.2s ease; white-space: nowrap; }
     .action-btn-sm:hover { border-color: var(--accent); color: var(--accent); }
     .action-btn-primary { color: var(--accent) !important; border: 1px solid var(--accent) !important; background: #ffffff !important; }
     .action-btn-primary:hover { background: var(--accent) !important; color: #ffffff !important; }
-
-    .action-btn-icon { padding: 6px; color: var(--text-muted); }
-    .action-btn-icon:hover { color: var(--accent); }
+    .action-btn-icon { padding: 6px; color: var(--text-muted); border: 1px solid transparent; }
+    .action-btn-icon:hover { border-color: var(--border); color: var(--accent); }
     .action-btn-icon.danger:hover { color: var(--danger); border-color: var(--danger); }
 
+     
     details.history-accordion { border: 1px solid var(--border); border-radius: 4px; overflow: hidden; background: var(--card-bg); }
-    details.history-accordion summary {
-      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;
-      padding: 14px 16px; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--text);
-      background: var(--bg); user-select: none; list-style: none; outline: none; transition: background 0.15s ease;
-    }
+    details.history-accordion summary { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--text); background: var(--bg); user-select: none; list-style: none; outline: none; transition: background 0.15s ease; }
     details.history-accordion summary::-webkit-details-marker { display: none; }
     details.history-accordion summary:hover { background: var(--border-subtle); }
     .accordion-toggle-icon { display: inline-flex; align-items: center; color: var(--text-muted); transition: transform 0.2s ease; }
@@ -275,10 +180,7 @@
     .accordion-body { padding: 16px; background: #ffffff; }
 
      
-    .blog-preview-wrapper {
-      border: 1px solid var(--border); border-radius: 8px; background: #ffffff;
-      padding: 32px 24px; margin-top: 16px;
-    }
+    .blog-preview-wrapper { border: 1px solid var(--border); border-radius: 8px; background: #ffffff; padding: 32px 24px; margin-top: 16px; }
     .preview-main-title { font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 16px; line-height: 1.4; }
     .blog-meta-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 16px; margin-bottom: 24px; gap: 16px; }
     .blog-author-info { display: flex; align-items: center; gap: 12px; }
@@ -302,16 +204,9 @@
     .markdown-body blockquote { border-left: 3px solid var(--accent); padding: 16px 20px; background: rgba(49, 117, 181, 0.04); border-radius: 0 6px 6px 0; margin-bottom: 24px; color: #334155; font-style: normal; }
     .markdown-body hr { border: 0; height: 1px; background: var(--border); margin: 40px 0; }
 
-    .minute-chunk-card { border: 1px solid var(--border); border-radius: 4px; background: #ffffff; margin-bottom: 16px; overflow: hidden; }
-    .minute-chunk-header { padding: 12px 16px; background: var(--bg); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
-    .minute-chunk-title { font-size: 14px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
-    .minute-chunk-content { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
-    .sub-section { border-left: 2px solid var(--border); padding-left: 16px; }
-    .sub-section-title { font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; letter-spacing: 0.5px; }
-    .voice-body { font-size: 14.5px; line-height: 2; color: #334155; white-space: pre-wrap; }
-
-    .workshop-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 4px; padding: 24px; display: flex; flex-direction: column; gap: 20px; }
-    .workshop-step-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 16px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+     
+    .workshop-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 4px; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+    .workshop-step-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
     .step-badge { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--accent); color: var(--accent); background: #ffffff; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
     .workshop-textarea { width: 100%; min-height: 140px; padding: 16px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; font-size: 15px; line-height: 1.8; color: var(--text); background: #ffffff; resize: vertical; transition: border-color 0.2s; }
     .workshop-textarea:focus { outline: none; border-color: var(--accent); }
@@ -319,7 +214,7 @@
     .title-option-card:hover { border-color: var(--accent); }
     .title-option-card.selected { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
 
-    .flex-wrap-gap { display: flex; flex-wrap: wrap; gap: 8px; }
+    .flex-wrap-gap { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 
     .toast-box { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(50px); opacity: 0; background: var(--text); color: #ffffff; padding: 10px 20px; border-radius: 4px; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 10px; transition: transform 0.3s ease, opacity 0.3s ease; z-index: 1000; pointer-events: none; }
     .toast-box.show { transform: translateX(-50%) translateY(0); opacity: 1; }
@@ -332,8 +227,7 @@
 <div id="loginOverlay">
   <div class="login-box">
     <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">BVlog-錄誌</h2>
-    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">請登入以存取您的專屬日誌與 AI 提示詞</p>
-    
+    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">登入以存取專屬日誌與提示詞</p>
     
     <div id="g_id_onload"
          data-client_id="YOUR_GOOGLE_CLIENT_ID_HERE"
@@ -344,9 +238,8 @@
     </div>
     <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline" data-text="signin_with" data-size="large" data-logo_alignment="left" style="margin-bottom: 16px;"></div>
     
-    <div style="font-size: 12px; color: var(--border); margin-bottom: 16px;">─ 或手動測試登入 ─</div>
-    
-    <input type="email" id="mockEmailInput" class="login-input" placeholder="請輸入 Email...">
+    <div style="font-size: 12px; color: var(--border); margin-bottom: 16px;">─ 測試登入 ─</div>
+    <input type="email" id="mockEmailInput" class="login-input" placeholder="輸入信箱...">
     <button class="action-btn-sm action-btn-primary" style="width: 100%; padding: 10px; height: 42px;" onclick="mockLogin()">登入</button>
   </div>
 </div>
@@ -354,10 +247,8 @@
 <div class="app-shell" id="mainAppShell" style="display: none;">
 
   
-  <div style="padding: 4px 4px 0px 4px; display: flex; justify-content: space-between; align-items: center;">
-    <div style="display: flex; align-items: center; gap: 12px;">
-      <h2 style="font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: 0.5px;">BVlog-<span style="font-weight: 400; color: var(--accent); font-size: 18px; margin-left: 2px;">錄誌</span></h2>
-    </div>
+  <div style="padding: 4px 4px 0px 4px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;">
+    <h2 style="font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: 0.5px;">BVlog<span style="font-weight: 400; color: var(--accent); font-size: 18px; margin-left: 2px;">-錄誌</span></h2>
     <div style="font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
       <i data-lucide="user" style="width: 14px; height: 14px;"></i> <span id="currentUserEmail"></span>
       <button class="action-btn-sm action-btn-icon" onclick="logout()" title="登出"><i data-lucide="log-out" style="width: 14px; height: 14px;"></i></button>
@@ -365,18 +256,10 @@
   </div>
 
   <div class="tab-nav">
-    <button class="tab-btn active" onclick="switchTab('tab-live', this)">
-      <i data-lucide="video" style="width: 16px; height: 16px;"></i> 錄製
-    </button>
-    <button class="tab-btn" onclick="switchTab('tab-history', this)">
-      <i data-lucide="history" style="width: 16px; height: 16px;"></i> 日誌
-    </button>
-    <button class="tab-btn" onclick="switchTab('tab-article', this)">
-      <i data-lucide="file-edit" style="width: 16px; height: 16px;"></i> 工坊
-    </button>
-    <button class="tab-btn" onclick="switchTab('tab-settings', this)">
-      <i data-lucide="settings" style="width: 16px; height: 16px;"></i> 設定
-    </button>
+    <button class="tab-btn active" onclick="switchTab('tab-live', this)"><i data-lucide="video" style="width: 16px; height: 16px;"></i> 錄製</button>
+    <button class="tab-btn" onclick="switchTab('tab-history', this)"><i data-lucide="history" style="width: 16px; height: 16px;"></i> 日誌</button>
+    <button class="tab-btn" onclick="switchTab('tab-article', this)"><i data-lucide="file-edit" style="width: 16px; height: 16px;"></i> 工坊</button>
+    <button class="tab-btn" onclick="switchTab('tab-settings', this)"><i data-lucide="settings" style="width: 16px; height: 16px;"></i> 設定</button>
   </div>
 
   
@@ -386,7 +269,7 @@
 
       <div id="cameraPrompt" class="camera-prompt" onclick="enableHardware()">
         <i data-lucide="camera" style="width: 32px; height: 32px; color: var(--text);"></i>
-        <div style="font-weight: 600; font-size: 14px;">開啟設備</div>
+        <div style="font-weight: 600; font-size: 14px;">啟動</div>
       </div>
 
       <div id="statusBadge" class="status-capsule" style="display: none;">
@@ -397,66 +280,39 @@
       <video id="mediaPlayer" autoplay muted playsinline></video>
 
       <div id="controlsIsland" class="controls-island" style="display: none;">
-        <button class="ctrl-btn" id="btnSource" onclick="switchMediaSource()" title="切換鏡頭">
-          <i data-lucide="switch-camera" id="iconSource"></i>
-        </button>
-        <button class="ctrl-btn" id="btnVideoTrack" onclick="toggleVideoTrack()" title="關閉畫面">
-          <i data-lucide="video" id="iconVideo"></i>
-        </button>
-        
-        <button class="ctrl-btn" id="btnZoom" onclick="toggleZoom()" title="切換廣角">1x</button>
-        <button class="ctrl-btn" id="btnFps" onclick="toggleFps()" title="切換幀率">30</button>
+        <button class="ctrl-btn" id="btnSource" onclick="switchMediaSource()" title="鏡頭"><i data-lucide="switch-camera" id="iconSource"></i></button>
+        <button class="ctrl-btn" id="btnVideoTrack" onclick="toggleVideoTrack()" title="畫面"><i data-lucide="video" id="iconVideo"></i></button>
+        <button class="ctrl-btn" id="btnZoom" onclick="toggleZoom()" title="廣角">1x</button>
+        <button class="ctrl-btn" id="btnFps" onclick="toggleFps()" title="幀率">30</button>
         <div style="width: 1px; height: 24px; background: var(--border); margin: 0 4px;"></div>
-        <button class="ctrl-btn record-btn" id="btnStart" onclick="startRecording()" title="開始錄影">
-          <i data-lucide="circle-dot"></i>
-        </button>
-        <button class="ctrl-btn pause-btn" id="btnPause" onclick="togglePause()" style="display: none;" title="暫停">
-          <i data-lucide="pause" id="iconPause"></i>
-        </button>
-        <button class="ctrl-btn stop-btn" id="btnStop" onclick="stopRecording()" style="display: none;" title="結束">
-          <i data-lucide="square"></i>
-        </button>
-        <button class="ctrl-btn" id="btnCloseCamera" onclick="closeCamera()" title="關閉相機">
-          <i data-lucide="x"></i>
-        </button>
+        <button class="ctrl-btn record-btn" id="btnStart" onclick="startRecording()" title="錄影"><i data-lucide="circle-dot"></i></button>
+        <button class="ctrl-btn pause-btn" id="btnPause" onclick="togglePause()" style="display: none;" title="暫停"><i data-lucide="pause" id="iconPause"></i></button>
+        <button class="ctrl-btn stop-btn" id="btnStop" onclick="stopRecording()" style="display: none;" title="結束"><i data-lucide="square"></i></button>
+        <button class="ctrl-btn" id="btnCloseCamera" onclick="closeCamera()" title="關閉"><i data-lucide="x"></i></button>
       </div>
     </div>
 
-    <div class="terminal-log" id="sysLog">系統已就緒。相機處於休眠狀態，點選上方圖示啟用設備。</div>
+    <div class="terminal-log" id="sysLog">系統就緒。點擊上方啟動設備。</div>
 
     <div id="archiveView" class="archive-view">
       <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 16px; gap: 12px;">
-        <div style="font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px;">
-          <i data-lucide="check-circle" style="width: 18px; height: 18px; color: var(--success);"></i>
-          日誌已歸檔
-        </div>
+        <div style="font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px;"><i data-lucide="check-circle" style="width: 18px; height: 18px; color: var(--success);"></i> 歸檔</div>
         <div id="archiveLinks" class="flex-wrap-gap"></div>
       </div>
-
       <div style="display: flex; flex-direction: column; gap: 16px;">
         <details class="history-accordion" open>
           <summary>
-            <span style="display: flex; align-items: center; gap: 8px;">
-              <i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>
-              短影音提案
-            </span>
+            <span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>提案</span>
             <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
           </summary>
-          <div class="accordion-body">
-            <div id="archiveSummary" class="markdown-body"></div>
-          </div>
+          <div class="accordion-body"><div id="archiveSummary" class="markdown-body"></div></div>
         </details>
         <details class="history-accordion">
           <summary>
-            <span style="display: flex; align-items: center; gap: 8px;">
-              <i data-lucide="file-text" style="width: 15px; height: 15px; color: var(--text-muted);"></i>
-              逐字稿總帳
-            </span>
+            <span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="file-text" style="width: 15px; height: 15px; color: var(--text-muted);"></i>內容</span>
             <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
           </summary>
-          <div class="accordion-body">
-            <div id="archiveContent"></div>
-          </div>
+          <div class="accordion-body"><div id="archiveContent"></div></div>
         </details>
       </div>
     </div>
@@ -466,14 +322,11 @@
   <div id="tab-history" class="tab-content">
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;">
       <div>
-        <h3 style="font-size: 18px; font-weight: 700;">歷史日誌總帳</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">點選產文，帶入長文章工作流。</p>
+        <h3 style="font-size: 18px; font-weight: 700;">歷史</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">點選產文。</p>
       </div>
-      <button onclick="loadHistoryLogs()" class="action-btn-sm" title="重新整理">
-        <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> 重整
-      </button>
+      <button onclick="loadHistoryLogs()" class="action-btn-sm" title="重整"><i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> 重整</button>
     </div>
-
     <div id="historyContainer" style="display: flex; flex-direction: column; gap: 16px;">
       <div style="text-align: center; color: var(--text-muted); padding: 40px 0;">載入中...</div>
     </div>
@@ -483,150 +336,90 @@
   <div id="tab-article" class="tab-content">
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;">
       <div>
-        <h3 style="font-size: 18px; font-weight: 700;">爆款長文工坊</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">解構重組逐字稿為深度文章。</p>
+        <h3 style="font-size: 18px; font-weight: 700;">工坊</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">解構重組。</p>
       </div>
-      <div id="workshopActiveLogBadge" style="font-size: 12px; font-weight: 600; color: var(--text-muted); padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px;">
-        尚未選取日誌
-      </div>
+      <div id="workshopActiveLogBadge" style="font-size: 12px; font-weight: 600; color: var(--text-muted); padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px;">未選</div>
     </div>
 
-    
     <div class="workshop-card" id="stepCard1">
       <div class="workshop-step-header">
-        <div style="display: flex; align-items: flex-start; gap: 12px;">
-          <span class="step-badge">1</span>
-          <div>
-            <div style="font-weight: 700; font-size: 15px;">20 組爆款策略與標題</div>
-            <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">依據設定檔生成，結合流量密碼</div>
-          </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span class="step-badge">1</span><div style="font-weight: 700; font-size: 15px;">提案</div>
         </div>
         <div class="flex-wrap-gap">
-          <button class="action-btn-sm action-btn-primary" onclick="generateStepTitles()">
-            <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> 提案
-          </button>
+          <button class="action-btn-sm action-btn-primary" onclick="generateStepTitles()"><i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> 提案</button>
         </div>
       </div>
       <div id="titleProposalContainer" style="display: flex; flex-direction: column; gap: 10px;">
-        <div style="color: var(--text-muted); font-size: 13px; padding: 10px 0;">點選上方按鈕，或手動在下方輸入。</div>
+        <div style="color: var(--text-muted); font-size: 13px; padding: 10px 0;">點擊上方。</div>
       </div>
       <div>
-        <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 8px;">確認並自訂標題</label>
-        <input type="text" id="finalArticleTitle" class="workshop-textarea" style="min-height: 40px; padding: 10px 14px; font-weight: 600;" placeholder="選擇上方標題或自行撰寫...">
+        <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 8px;">標題</label>
+        <input type="text" id="finalArticleTitle" class="workshop-textarea" style="min-height: 40px; padding: 10px 14px; font-weight: 600;" placeholder="選擇或撰寫...">
       </div>
       <div style="display: flex; justify-content: flex-end;">
-        <button class="action-btn-sm" onclick="saveCurrentStepData('title')" title="儲存標題">
-          <i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存
-        </button>
+        <button class="action-btn-sm" onclick="saveCurrentStepData('title')" title="儲存"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button>
       </div>
     </div>
 
-    
     <div class="workshop-card" id="stepCard2">
       <div class="workshop-step-header">
-        <div style="display: flex; align-items: flex-start; gap: 12px;">
-          <span class="step-badge">2</span>
-          <div>
-            <div style="font-weight: 700; font-size: 15px;">EEAT 提要與痛點 Hook</div>
-            <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">建立權威感，直擊創業痛點</div>
-          </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span class="step-badge">2</span><div style="font-weight: 700; font-size: 15px;">開頭</div>
         </div>
-        <button class="action-btn-sm action-btn-primary" onclick="generateStepHook()">
-          <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> 開頭
-        </button>
+        <button class="action-btn-sm action-btn-primary" onclick="generateStepHook()"><i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> 開頭</button>
       </div>
-      <div>
-        <textarea id="finalArticleHook" class="workshop-textarea" style="min-height: 120px;" placeholder="開頭內容..."></textarea>
-      </div>
+      <div><textarea id="finalArticleHook" class="workshop-textarea" style="min-height: 120px;" placeholder="開頭..."></textarea></div>
       <div style="display: flex; justify-content: flex-end;">
-        <button class="action-btn-sm" onclick="saveCurrentStepData('hook')" title="儲存開頭">
-          <i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存
-        </button>
+        <button class="action-btn-sm" onclick="saveCurrentStepData('hook')" title="儲存"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button>
       </div>
     </div>
 
-    
     <div class="workshop-card" id="stepCard3">
       <div class="workshop-step-header">
-        <div style="display: flex; align-items: flex-start; gap: 12px;">
-          <span class="step-badge">3</span>
-          <div>
-            <div style="font-weight: 700; font-size: 15px;">核心深度重構</div>
-            <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">保留原意，市場化次標題與故事感排版</div>
-          </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span class="step-badge">3</span><div style="font-weight: 700; font-size: 15px;">內文</div>
         </div>
-        <button class="action-btn-sm action-btn-primary" onclick="generateStepBody()">
-          <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> 重構
-        </button>
+        <button class="action-btn-sm action-btn-primary" onclick="generateStepBody()"><i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> 重構</button>
       </div>
-      <div>
-        <textarea id="finalArticleBody" class="workshop-textarea" style="min-height: 300px;" placeholder="深度長文章核心內文..."></textarea>
-      </div>
+      <div><textarea id="finalArticleBody" class="workshop-textarea" style="min-height: 300px;" placeholder="內文..."></textarea></div>
       <div style="display: flex; justify-content: flex-end;">
-        <button class="action-btn-sm" onclick="saveCurrentStepData('body')" title="儲存內文">
-          <i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存
-        </button>
+        <button class="action-btn-sm" onclick="saveCurrentStepData('body')" title="儲存"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button>
       </div>
     </div>
 
-    
     <div class="workshop-card" id="stepCard4">
       <div class="workshop-step-header">
-        <div style="display: flex; align-items: flex-start; gap: 12px;">
-          <span class="step-badge">4</span>
-          <div>
-            <div style="font-weight: 700; font-size: 15px;">溫暖結尾與專屬 CTA</div>
-            <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">正向鼓勵、名單磁鐵與 Slogan</div>
-          </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span class="step-badge">4</span><div style="font-weight: 700; font-size: 15px;">結尾</div>
         </div>
-        <button class="action-btn-sm action-btn-primary" onclick="generateStepEnding()">
-          <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> 結尾
-        </button>
+        <button class="action-btn-sm action-btn-primary" onclick="generateStepEnding()"><i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> 結尾</button>
       </div>
-      <div>
-        <textarea id="finalArticleEnding" class="workshop-textarea" style="min-height: 120px;" placeholder="結尾與行動呼籲..."></textarea>
-      </div>
+      <div><textarea id="finalArticleEnding" class="workshop-textarea" style="min-height: 120px;" placeholder="結尾..."></textarea></div>
       <div style="display: flex; justify-content: flex-end;">
-        <button class="action-btn-sm" onclick="saveCurrentStepData('ending')" title="儲存結尾">
-          <i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存
-        </button>
+        <button class="action-btn-sm" onclick="saveCurrentStepData('ending')" title="儲存"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button>
       </div>
     </div>
 
-    
     <div class="workshop-card" id="stepCard5">
       <div class="workshop-step-header">
-        <div style="display: flex; align-items: flex-start; gap: 12px;">
-          <span class="step-badge">5</span>
-          <div>
-            <div style="font-weight: 700; font-size: 15px;">部落格發布模擬預覽</div>
-            <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">自動渲染高質感部落格排版，提供發布前最後檢閱</div>
-          </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span class="step-badge">5</span><div style="font-weight: 700; font-size: 15px;">預覽</div>
         </div>
         <div class="flex-wrap-gap">
-          <button class="action-btn-sm action-btn-primary" onclick="assembleFullArticle()">
-            <i data-lucide="layers" style="width: 14px; height: 14px;"></i> 整合
-          </button>
-          <button class="action-btn-sm action-btn-icon" onclick="copyFullArticle()" title="複製原始 Markdown 全文">
-            <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
-          </button>
+          <button class="action-btn-sm action-btn-primary" onclick="assembleFullArticle()"><i data-lucide="layers" style="width: 14px; height: 14px;"></i> 整合</button>
+          <button class="action-btn-sm action-btn-icon" onclick="copyFullArticle()" title="複製"><i data-lucide="copy" style="width: 16px; height: 16px;"></i></button>
         </div>
       </div>
-      
       <div id="fullArticlePreview" style="min-height: 150px;">
-        <div style="border: 1px dashed var(--border); border-radius: 4px; padding: 32px; text-align: center;">
-          <p style="color: var(--text-muted); font-size: 13px;">點擊右上方「整合」即可渲染完整高質感部落格預覽畫面。</p>
-        </div>
+        <div style="border: 1px dashed var(--border); border-radius: 4px; padding: 32px; text-align: center;"><p style="color: var(--text-muted); font-size: 13px;">點擊整合，渲染預覽。</p></div>
       </div>
       <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-top: 8px;">
-        <div style="font-size: 12px; color: var(--text-muted);">* 點擊同步寫入資料庫儲存。</div>
+        <div style="font-size: 12px; color: var(--text-muted);">* 同步寫入資料庫。</div>
         <div class="flex-wrap-gap">
-          <button class="action-btn-sm" onclick="saveCurrentStepData('full')">
-            <i data-lucide="save" style="width: 14px; height: 14px;"></i> 同步
-          </button>
-          <button class="action-btn-sm" style="color: var(--text); border-color: var(--text);" onclick="publishArticleToWeb()">
-            <i data-lucide="globe" style="width: 14px; height: 14px;"></i> 發布
-          </button>
+          <button class="action-btn-sm" onclick="saveCurrentStepData('full')"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 同步</button>
+          <button class="action-btn-sm" style="color: var(--text); border-color: var(--text);" onclick="publishArticleToWeb()"><i data-lucide="globe" style="width: 14px; height: 14px;"></i> 發布</button>
         </div>
       </div>
     </div>
@@ -636,8 +429,8 @@
   <div id="tab-settings" class="tab-content">
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;">
       <div>
-        <h3 style="font-size: 18px; font-weight: 700;">提示詞全域設定</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">自定義工坊四個階段的專屬 AI 指令，修改將同步至您的帳號。</p>
+        <h3 style="font-size: 18px; font-weight: 700;">設定</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">自訂指令</p>
       </div>
       <button class="action-btn-sm action-btn-primary" onclick="saveAllPrompts()">
         <i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存
@@ -645,20 +438,20 @@
     </div>
 
     <div class="workshop-card">
-      <label style="font-size: 14px; font-weight: 700;">階段一：20 組爆款策略</label>
-      <textarea id="promptStep1" class="workshop-textarea" style="min-height: 200px; font-size: 13.5px;"></textarea>
+      <label style="font-size: 14px; font-weight: 700;">提案</label>
+      <textarea id="promptStep1" class="workshop-textarea" style="min-height: 160px; font-size: 13.5px;"></textarea>
     </div>
     <div class="workshop-card">
-      <label style="font-size: 14px; font-weight: 700;">階段二：EEAT 與 Hook 開頭</label>
-      <textarea id="promptStep2" class="workshop-textarea" style="min-height: 200px; font-size: 13.5px;"></textarea>
+      <label style="font-size: 14px; font-weight: 700;">開頭</label>
+      <textarea id="promptStep2" class="workshop-textarea" style="min-height: 160px; font-size: 13.5px;"></textarea>
     </div>
     <div class="workshop-card">
-      <label style="font-size: 14px; font-weight: 700;">階段三：核心深度重構</label>
-      <textarea id="promptStep3" class="workshop-textarea" style="min-height: 200px; font-size: 13.5px;"></textarea>
+      <label style="font-size: 14px; font-weight: 700;">內文</label>
+      <textarea id="promptStep3" class="workshop-textarea" style="min-height: 160px; font-size: 13.5px;"></textarea>
     </div>
     <div class="workshop-card">
-      <label style="font-size: 14px; font-weight: 700;">階段四：結尾與 CTA</label>
-      <textarea id="promptStep4" class="workshop-textarea" style="min-height: 200px; font-size: 13.5px;"></textarea>
+      <label style="font-size: 14px; font-weight: 700;">結尾</label>
+      <textarea id="promptStep4" class="workshop-textarea" style="min-height: 160px; font-size: 13.5px;"></textarea>
     </div>
   </div>
 
@@ -667,7 +460,7 @@
 
 <div id="toast" class="toast-box">
   <i data-lucide="check" style="width: 16px; height: 16px;"></i>
-  <span id="toastMsg">內容已複製</span>
+  <span id="toastMsg">已複製</span>
 </div>
 
 <script>
@@ -684,7 +477,6 @@
   let isVideoEnabled = true;
   let currentSourceType = "camera";
   let mobileFacingMode = "user";
-  
   
   let cameraZoom = 1.0;
   let cameraFps = 30;
@@ -714,7 +506,7 @@
       document.getElementById('loginOverlay').style.display = 'none';
       document.getElementById('mainAppShell').style.display = 'flex';
       document.getElementById('currentUserEmail').innerText = email;
-      loadPrompts(email); 
+      loadPrompts(email);
     } else {
       document.getElementById('loginOverlay').style.display = 'flex';
       document.getElementById('mainAppShell').style.display = 'none';
@@ -723,10 +515,7 @@
 
   function mockLogin() {
     const email = document.getElementById('mockEmailInput').value.trim();
-    if (!email || !email.includes('@')) {
-      alert("請輸入有效的 Email");
-      return;
-    }
+    if (!email || !email.includes('@')) { alert("無效信箱"); return; }
     localStorage.setItem('bvlog_user_email', email);
     checkLoginStatus();
   }
@@ -736,12 +525,9 @@
     checkLoginStatus();
   }
 
-  
   function handleCredentialResponse(response) {
-    
-    
-    console.log("Encoded JWT ID token: " + response.credential);
-    alert("已收到 Google Token，請先使用下方手動測試登入確保流程暢通。");
+    console.log("Token: " + response.credential);
+    alert("收到 Google Token，請使用手動測試登入確保流程。");
   }
 
   window.addEventListener('DOMContentLoaded', () => {
@@ -761,9 +547,7 @@
         document.getElementById('promptStep3').value = res.prompts.step3 || "";
         document.getElementById('promptStep4').value = res.prompts.step4 || "";
       }
-    } catch (e) {
-      console.log("無法載入提示詞：", e.message);
-    }
+    } catch (e) { console.log("載入失敗：", e.message); }
   }
 
   async function saveAllPrompts() {
@@ -785,14 +569,9 @@
 
     try {
       await api({ action: "savePrompts", email: email, prompts: prompts });
-      showToast("提示詞已儲存");
-    } catch (e) {
-      alert("儲存失敗：" + e.message);
-    } finally {
-      btn.innerHTML = originalHtml;
-      lucide.createIcons();
-      btn.disabled = false;
-    }
+      showToast("已儲存");
+    } catch (e) { alert("失敗：" + e.message); } 
+    finally { btn.innerHTML = originalHtml; lucide.createIcons(); btn.disabled = false; }
   }
 
   // ==========================================
@@ -817,16 +596,10 @@
 
   function copyTextToClipboard(text, successMsg) {
     if (!text) return;
-    navigator.clipboard.writeText(text).then(() => {
-      showToast(successMsg || "已複製");
-    }).catch(() => {
+    navigator.clipboard.writeText(text).then(() => { showToast(successMsg || "已複製"); })
+    .catch(() => {
       const textarea = document.createElement("textarea");
-      textarea.value = text;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand("copy");
-      document.body.removeChild(textarea);
-      showToast(successMsg || "已複製");
+      textarea.value = text; document.body.appendChild(textarea); textarea.select(); document.execCommand("copy"); document.body.removeChild(textarea); showToast(successMsg || "已複製");
     });
   }
 
@@ -853,17 +626,11 @@
     cameraZoom = (cameraZoom === 1.0) ? 0.5 : 1.0;
     document.getElementById('btnZoom').innerText = cameraZoom === 1.0 ? "1x" : ".5";
     document.getElementById('btnZoom').classList.toggle('active', cameraZoom === 0.5);
-    
-    
     if (currentStream && currentStream.getVideoTracks().length > 0) {
       const track = currentStream.getVideoTracks()[0];
       const capabilities = track.getCapabilities ? track.getCapabilities() : {};
-      if (capabilities.zoom) {
-        track.applyConstraints({ advanced: [{ zoom: cameraZoom }] }).catch(e => log("> 設備不支援即時縮放"));
-      } else {
-        log("> 嘗試重啟相機以套用廣角設定...");
-        acquireStream();
-      }
+      if (capabilities.zoom) { track.applyConstraints({ advanced: [{ zoom: cameraZoom }] }).catch(e => log("> 設備不支援即時縮放")); } 
+      else { log("> 重啟相機套用廣角..."); acquireStream(); }
     }
   }
 
@@ -871,7 +638,7 @@
     cameraFps = (cameraFps === 30) ? 60 : 30;
     document.getElementById('btnFps').innerText = cameraFps;
     document.getElementById('btnFps').classList.toggle('active', cameraFps === 60);
-    log(`> 嘗試切換至 ${cameraFps} FPS...`);
+    log(`> 切換至 ${cameraFps} FPS...`);
     if (currentStream) acquireStream();
   }
 
@@ -884,7 +651,7 @@
       document.getElementById('btnCloseCamera').style.display = 'flex';
       document.getElementById('cameraGrid').style.display = 'block'; 
       wakeControls();
-      log("> 設備就緒，可點擊錄影。");
+      log("> 設備就緒。");
     }
   }
 
@@ -896,17 +663,14 @@
     document.getElementById('controlsIsland').style.display = 'none';
     document.getElementById('statusBadge').style.display = 'none';
     document.getElementById('cameraGrid').style.display = 'none';
-    log("> 相機已關閉，返回待命。");
+    log("> 相機已關閉。");
   }
 
   function updateSourceIcon() {
     const icon = document.getElementById('iconSource');
     if (!icon) return;
-    if (isMobile) {
-      icon.setAttribute('data-lucide', 'switch-camera');
-    } else {
-      icon.setAttribute('data-lucide', currentSourceType === "camera" ? "monitor-up" : "camera");
-    }
+    if (isMobile) icon.setAttribute('data-lucide', 'switch-camera');
+    else icon.setAttribute('data-lucide', currentSourceType === "camera" ? "monitor-up" : "camera");
     lucide.createIcons();
   }
 
@@ -918,80 +682,47 @@
 
     try {
       if (!isMobile && currentSourceType === "screen") {
-        const screenStream = await navigator.mediaDevices.getDisplayMedia({
-          video: { frameRate: { ideal: cameraFps } },
-          audio: true
-        });
-
+        const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: { ideal: cameraFps } }, audio: true });
         let micStream = null;
         try { micStream = await navigator.mediaDevices.getUserMedia({ audio: audioConstraints }); } 
-        catch (e) { log("> 未獲取麥克風，僅錄製系統音。"); }
+        catch (e) { log("> 無麥克風，僅系統音。"); }
 
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
         mixedAudioDest = audioContext.createMediaStreamDestination();
 
-        if (screenStream.getAudioTracks().length > 0) {
-          const screenAudioSource = audioContext.createMediaStreamSource(screenStream);
-          screenAudioSource.connect(mixedAudioDest);
-        }
-        if (micStream && micStream.getAudioTracks().length > 0) {
-          const micSource = audioContext.createMediaStreamSource(micStream);
-          micSource.connect(mixedAudioDest);
-        }
+        if (screenStream.getAudioTracks().length > 0) { const screenAudioSource = audioContext.createMediaStreamSource(screenStream); screenAudioSource.connect(mixedAudioDest); }
+        if (micStream && micStream.getAudioTracks().length > 0) { const micSource = audioContext.createMediaStreamSource(micStream); micSource.connect(mixedAudioDest); }
 
-        currentStream = new MediaStream([
-          screenStream.getVideoTracks()[0],
-          mixedAudioDest.stream.getAudioTracks()[0]
-        ]);
-
-        screenStream.getVideoTracks()[0].onended = async () => {
-          if (currentSourceType === "screen") { log("> 螢幕共用停止，切回鏡頭..."); await switchMediaSource(); }
-        };
+        currentStream = new MediaStream([ screenStream.getVideoTracks()[0], mixedAudioDest.stream.getAudioTracks()[0] ]);
+        screenStream.getVideoTracks()[0].onended = async () => { if (currentSourceType === "screen") { log("> 共用停止，切回鏡頭..."); await switchMediaSource(); } };
       } else {
         const isPortrait = window.innerHeight > window.innerWidth;
         let videoConstraints;
         if (isMobile) {
-          videoConstraints = { 
-            facingMode: mobileFacingMode, 
-            width: { ideal: isPortrait ? 720 : 1280 },
-            height: { ideal: isPortrait ? 1280 : 720 },
-            frameRate: { ideal: cameraFps }
-          };
-          if (cameraZoom === 0.5) {
-             videoConstraints.advanced = [{ zoom: 0.5 }];
-          }
+          videoConstraints = { facingMode: mobileFacingMode, width: { ideal: isPortrait ? 720 : 1280 }, height: { ideal: isPortrait ? 1280 : 720 }, frameRate: { ideal: cameraFps } };
+          if (cameraZoom === 0.5) videoConstraints.advanced = [{ zoom: 0.5 }];
         } else {
           videoConstraints = { width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: cameraFps } };
         }
 
         currentStream = await navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: audioConstraints });
-        
-        
         const track = currentStream.getVideoTracks()[0];
         const capabilities = track.getCapabilities ? track.getCapabilities() : {};
-        if (capabilities.zoom && cameraZoom !== 1.0) {
-           track.applyConstraints({ advanced: [{ zoom: cameraZoom }] }).catch(e=>console.log(e));
-        }
+        if (capabilities.zoom && cameraZoom !== 1.0) { track.applyConstraints({ advanced: [{ zoom: cameraZoom }] }).catch(e=>console.log(e)); }
       }
 
       document.getElementById('mediaPlayer').srcObject = currentStream;
       const vTrack = currentStream.getVideoTracks()[0];
       if (vTrack) vTrack.enabled = isVideoEnabled;
-
       updateSourceIcon();
-      log(`> 載入完成：[${isMobile ? mobileFacingMode : currentSourceType}] ${cameraFps}fps`);
+      log(`> 載入：[${isMobile ? mobileFacingMode : currentSourceType}] ${cameraFps}fps`);
       return true;
-    } catch (err) {
-      log("> 硬體存取失敗：" + err.message);
-      return false;
-    }
+    } catch (err) { log("> 失敗：" + err.message); return false; }
   }
 
   function toggleVideoTrack() {
     isVideoEnabled = !isVideoEnabled;
-    if (currentStream && currentStream.getVideoTracks().length > 0) {
-      currentStream.getVideoTracks()[0].enabled = isVideoEnabled;
-    }
+    if (currentStream && currentStream.getVideoTracks().length > 0) currentStream.getVideoTracks()[0].enabled = isVideoEnabled;
     const icon = document.getElementById('iconVideo');
     if (icon) icon.setAttribute('data-lucide', isVideoEnabled ? 'video' : 'video-off');
     document.getElementById('btnVideoTrack').classList.toggle('active', !isVideoEnabled);
@@ -1005,32 +736,18 @@
     const prevSourceType = currentSourceType;
     const prevFacingMode = mobileFacingMode;
 
-    if (isMobile) {
-      mobileFacingMode = (mobileFacingMode === "user") ? "environment" : "user";
-    } else {
-      currentSourceType = (currentSourceType === "camera") ? "screen" : "camera";
-    }
+    if (isMobile) mobileFacingMode = (mobileFacingMode === "user") ? "environment" : "user";
+    else currentSourceType = (currentSourceType === "camera") ? "screen" : "camera";
 
     if (wasRecording && mediaRecorder && mediaRecorder.state === "recording") {
-      log(`[系統] 設備切換，切片處理中...`);
-      clearTimeout(chunkTimer);
-      await stopMediaRecorderAsync();
+      log(`[系統] 設備切換，切片中...`); clearTimeout(chunkTimer); await stopMediaRecorderAsync();
     }
 
     log(`> 切換至 [${isMobile ? mobileFacingMode : currentSourceType}]...`);
     const success = await acquireStream();
 
-    if (!success) {
-      log("> 切換取消，恢復設備...");
-      currentSourceType = prevSourceType;
-      mobileFacingMode = prevFacingMode;
-      await acquireStream();
-    }
-
-    if (wasRecording && !isPaused && currentStream) {
-      startChunkRecording();
-      log("> 切換完成，繼續錄影！");
-    }
+    if (!success) { log("> 取消，恢復..."); currentSourceType = prevSourceType; mobileFacingMode = prevFacingMode; await acquireStream(); }
+    if (wasRecording && !isPaused && currentStream) { startChunkRecording(); log("> 切換完成！"); }
     wakeControls();
   }
 
@@ -1049,15 +766,12 @@
       if (!ok) { document.getElementById('btnStart').disabled = false; return; }
     }
 
-    log("> 雲端建立中...");
+    log("> 建立中...");
 
     try {
       const res = await api({ action: "initLog", email: email });
       logSession = res;
-      isRecording = true;
-      isPaused = false;
-      chunkIndex = 1;
-      secondsElapsed = 0;
+      isRecording = true; isPaused = false; chunkIndex = 1; secondsElapsed = 0;
 
       document.getElementById('btnStart').style.display = 'none';
       document.getElementById('btnCloseCamera').style.display = 'none'; 
@@ -1065,72 +779,46 @@
       document.getElementById('btnStop').style.display = 'flex';
       document.getElementById('statusBadge').style.display = 'flex';
 
-      startTimer();
-      startChunkRecording();
-      wakeControls();
+      startTimer(); startChunkRecording(); wakeControls();
       log("🟢 雙軌錄製中！");
-    } catch (e) {
-      log("> 錯誤：" + e.message);
-      document.getElementById('btnStart').disabled = false;
-    }
+    } catch (e) { log("> 錯誤：" + e.message); document.getElementById('btnStart').disabled = false; }
   }
 
   function startChunkRecording() {
     if (!isRecording || !currentStream || isPaused) return;
-
     recordedChunks = [];
     const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
     mediaRecorder = new MediaRecorder(currentStream, { mimeType: mime });
-
     mediaRecorder.ondataavailable = e => { if (e.data && e.data.size > 0) recordedChunks.push(e.data); };
-
     mediaRecorder.onstop = () => {
       if (recordedChunks.length > 0) {
         const chunkBlob = new Blob(recordedChunks, { type: mime });
-        processChunk(chunkBlob, mime, chunkIndex++);
-        recordedChunks = [];
+        processChunk(chunkBlob, mime, chunkIndex++); recordedChunks = [];
       }
-      if (isRecording && !isPaused && mediaRecorder && mediaRecorder.state === "inactive") {
-        startChunkRecording(); 
-      }
+      if (isRecording && !isPaused && mediaRecorder && mediaRecorder.state === "inactive") startChunkRecording(); 
     };
-
     mediaRecorder.start();
-
     chunkTimer = setTimeout(() => {
-      if (mediaRecorder && mediaRecorder.state === "recording") {
-        log(`[系統] 第 ${chunkIndex} 段影音切片中...`);
-        mediaRecorder.stop();
-      }
+      if (mediaRecorder && mediaRecorder.state === "recording") { log(`[系統] 第 ${chunkIndex} 段切片...`); mediaRecorder.stop(); }
     }, 60000);
   }
 
   function processChunk(blob, mime, index) {
-    log(`> [排隊] 區段 ${index} 準備上傳...`);
+    log(`> [排隊] ${index} 上傳...`);
     const task = new Promise(resolve => {
       const reader = new FileReader();
       reader.readAsDataURL(blob);
       reader.onloadend = async () => {
         const base64 = reader.result.split(',')[1];
-        log(`> [處理] 區段 ${index} 背景寫入中...`);
+        log(`> [處理] ${index} 寫入中...`);
         try {
-          await api({
-            action: "processChunkRealtime",
-            base64Data: base64,
-            mimeType: mime,
-            folderId: logSession.folderId,
-            rowIndex: logSession.rowIndex,
-            chunkIndex: index
-          });
-          log(`> [✅] 區段 ${index} 寫入完成！`);
-        } catch (e) {
-          log(`> [❌] 區段 ${index} 失敗: ${e.message}`);
-        }
+          await api({ action: "processChunkRealtime", base64Data: base64, mimeType: mime, folderId: logSession.folderId, rowIndex: logSession.rowIndex, chunkIndex: index });
+          log(`> [✅] ${index} 完成！`);
+        } catch (e) { log(`> [❌] ${index} 失敗: ${e.message}`); }
         resolve();
       };
     });
-    activeUploadTasks.add(task);
-    task.then(() => activeUploadTasks.delete(task));
+    activeUploadTasks.add(task); task.then(() => activeUploadTasks.delete(task));
   }
 
   function togglePause() {
@@ -1138,51 +826,38 @@
     const pauseIcon = document.getElementById('iconPause');
     if (!isPaused) {
       isPaused = true;
-      if (mediaRecorder && mediaRecorder.state === "recording") {
-        log(`[系統] 暫停指令，切片處理中...`);
-        mediaRecorder.stop();
-      }
-      clearTimeout(chunkTimer);
-      clearInterval(timerInterval);
+      if (mediaRecorder && mediaRecorder.state === "recording") { log(`[系統] 暫停，切片中...`); mediaRecorder.stop(); }
+      clearTimeout(chunkTimer); clearInterval(timerInterval);
       if (pauseIcon) pauseIcon.setAttribute('data-lucide', 'play');
       log("> 已暫停。");
     } else {
-      isPaused = false;
-      startTimer();
-      startChunkRecording();
+      isPaused = false; startTimer(); startChunkRecording();
       if (pauseIcon) pauseIcon.setAttribute('data-lucide', 'pause');
       log("> 已恢復。");
     }
-    lucide.createIcons();
-    wakeControls();
+    lucide.createIcons(); wakeControls();
   }
 
   function stopMediaRecorderAsync() {
     return new Promise((resolve) => {
       if (!mediaRecorder || mediaRecorder.state === "inactive") { resolve(); return; }
       const originalOnStop = mediaRecorder.onstop;
-      mediaRecorder.onstop = (e) => {
-        if (originalOnStop) originalOnStop(e);
-        resolve();
-      };
+      mediaRecorder.onstop = (e) => { if (originalOnStop) originalOnStop(e); resolve(); };
       mediaRecorder.stop();
     });
   }
 
   async function stopRecording() {
     const email = localStorage.getItem('bvlog_user_email');
-    isRecording = false;
-    isPaused = false;
-    clearTimeout(chunkTimer);
-    clearInterval(timerInterval);
+    isRecording = false; isPaused = false; clearTimeout(chunkTimer); clearInterval(timerInterval);
 
-    if (mediaRecorder && mediaRecorder.state === "recording") log(`[系統] 結束指令，最後切片傳送中...`);
+    if (mediaRecorder && mediaRecorder.state === "recording") log(`[系統] 結束，傳送中...`);
     await stopMediaRecorderAsync();
 
     if (currentStream) { currentStream.getTracks().forEach(t => t.stop()); currentStream = null; }
     if (document.getElementById('mediaPlayer')) document.getElementById('mediaPlayer').srcObject = null;
     if (audioContext) { audioContext.close(); audioContext = null; }
-    log("> 設備已關閉，等待背景寫入...");
+    log("> 設備已關閉，等待寫入...");
 
     document.getElementById('cameraPrompt').style.display = 'flex';
     document.getElementById('controlsIsland').style.display = 'none';
@@ -1194,23 +869,13 @@
     document.getElementById('btnCloseCamera').style.display = 'flex'; 
 
     while (activeUploadTasks.size > 0) { await Promise.all(Array.from(activeUploadTasks)); }
-
-    log("> 提煉全局摘要中...");
+    log("> 提煉摘要中...");
 
     try {
-      const res = await api({
-        action: "finalizeLog",
-        rowIndex: logSession.rowIndex,
-        email: email 
-      });
-
+      const res = await api({ action: "finalizeLog", rowIndex: logSession.rowIndex, email: email });
       log("> 歸檔完成！");
-
       const urls = res.urls || [];
-      document.getElementById('archiveLinks').innerHTML = urls
-        .map((u, i) => `<a href="${u}" target="_blank" class="file-chip"><i data-lucide="film" style="width:13px; height:13px;"></i> 片段 ${i+1}</a>`)
-        .join('');
-
+      document.getElementById('archiveLinks').innerHTML = urls.map((u, i) => `<a href="${u}" target="_blank" class="file-chip"><i data-lucide="film" style="width:13px; height:13px;"></i> ${i+1}</a>`).join('');
       document.getElementById('archiveSummary').innerHTML = renderMarkdown(res.summary);
       document.getElementById('archiveContent').innerHTML = formatTranscriptContent(res.content, urls);
       document.getElementById('archiveView').style.display = 'block';
@@ -1220,9 +885,7 @@
       document.getElementById('btnStart').style.display = 'flex';
       document.getElementById('btnStart').disabled = false;
       lucide.createIcons();
-    } catch (e) {
-      log("> 歸檔失敗：" + e.message);
-    }
+    } catch (e) { log("> 歸檔失敗：" + e.message); }
   }
 
   function startTimer() {
@@ -1257,9 +920,7 @@
     return `<pre style="white-space:pre-wrap;">${escapeHtml(md)}</pre>`;
   }
 
-  function escapeHtml(str) {
-    return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-  }
+  function escapeHtml(str) { return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
 
   function formatTranscriptContent(rawText, urls) {
     if (!rawText || !rawText.trim()) return '<div style="color:var(--text-muted); font-size:14px; padding:12px 0;">尚無紀錄</div>';
@@ -1267,15 +928,13 @@
     if (!/【第\s*\d+\s*(?:分鐘|段影音|段)】/.test(rawText)) return `<div class="markdown-body">${renderMarkdown(rawText)}</div>`;
 
     const parts = rawText.split(/(【第\s*\d+\s*(?:分鐘|段影音|段)】)/);
-    let html = '';
-    let currentTitle = '';
+    let html = ''; let currentTitle = '';
 
     for (let i = 0; i < parts.length; i++) {
       const part = parts[i].trim();
       if (!part) continue;
-      if (/^【第\s*\d+\s*(?:分鐘|段影音|段)】$/.test(part)) {
-        currentTitle = part;
-      } else {
+      if (/^【第\s*\d+\s*(?:分鐘|段影音|段)】$/.test(part)) { currentTitle = part; } 
+      else {
         const numMatch = currentTitle.match(/\d+/);
         const chunkNum = numMatch ? parseInt(numMatch[0], 10) : (Math.floor(i / 2) + 1);
         const videoUrl = urlList[chunkNum - 1] || '';
@@ -1297,8 +956,7 @@
               ${screenDesc ? `<div class="sub-section desc-section"><div class="sub-section-title"><i data-lucide="eye" style="width: 13px; height: 13px;"></i> 畫面描述</div><div class="markdown-body">${renderMarkdown(screenDesc)}</div></div>` : ''}
               ${voiceText ? `<div class="sub-section voice-section"><div class="sub-section-title"><i data-lucide="mic" style="width: 13px; height: 13px;"></i> 逐字稿</div><div class="voice-body">${escapeHtml(voiceText)}</div></div>` : ''}
             </div>
-          </div>
-        `;
+          </div>`;
         currentTitle = '';
       }
     }
@@ -1374,14 +1032,14 @@
               </summary>
               <div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border);">
                 <video id="player-${item.logId}" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block;"></video>
-                <div id="player-status-${item.logId}" style="padding: 12px 16px; background: #0f172a; color: #f8fafc; font-size: 14px; text-align: center;">等待載入中... (請點擊右上方「啟動」按鈕)</div>
+                <div id="player-status-${item.logId}" style="padding: 12px 16px; background: #0f172a; color: #f8fafc; font-size: 14px; text-align: center;">等待載入中... (點擊右上方啟動)</div>
               </div>
             </details>
             ` : ''}
 
             <details class="history-accordion">
               <summary>
-                <span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>短影音提案</span>
+                <span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>提案</span>
                 <div class="flex-wrap-gap">
                   <button type="button" id="btn-edit-summary-${item.logId}" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); toggleEditMode('${item.logId}', 'summary')" title="編輯"><i data-lucide="edit-3" style="width: 16px; height: 16px;"></i></button>
                   <button type="button" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute('data-text'))" data-text="${escapeHtml(safeSummaryRaw)}" title="複製"><i data-lucide="copy" style="width: 16px; height: 16px;"></i></button>
@@ -1402,7 +1060,7 @@
 
             <details class="history-accordion">
               <summary>
-                <span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="file-text" style="width: 15px; height: 15px; color: var(--text-muted);"></i>詳細逐字稿</span>
+                <span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="file-text" style="width: 15px; height: 15px; color: var(--text-muted);"></i>內容</span>
                 <div class="flex-wrap-gap">
                   <button type="button" id="btn-edit-content-${item.logId}" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); toggleEditMode('${item.logId}', 'content')" title="編輯"><i data-lucide="edit-3" style="width: 16px; height: 16px;"></i></button>
                   <button type="button" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute('data-text'))" data-text="${escapeHtml(safeContentRaw)}" title="複製"><i data-lucide="copy" style="width: 16px; height: 16px;"></i></button>
@@ -1447,7 +1105,7 @@
           fetch(`data:${res.mimeType};base64,${res.base64}`).then(r => r.blob()).then(blob => {
             window.blobBuffers[logItem.logId][0] = URL.createObjectURL(blob);
             const previewStatus = document.getElementById('preview-player-status');
-            if (previewStatus) previewStatus.innerText = "✅ 影片已就緒，可秒開播放";
+            if (previewStatus) previewStatus.innerText = "✅ 影片就緒，可秒開";
           }).catch(e => console.log(e));
         }).catch(e => console.log(e));
       }
@@ -1457,7 +1115,7 @@
       window.currentSelectedFullMd = logItem.articleFull;
       renderBlogPreview(logItem.articleFull);
     } else {
-      document.getElementById('fullArticlePreview').innerHTML = `<div style="border: 1px dashed var(--border); border-radius: 4px; padding: 32px; text-align: center;"><p style="color: var(--text-muted); font-size: 13px;">點擊右上方「整合」即可渲染完整高質感部落格預覽畫面。</p></div>`;
+      document.getElementById('fullArticlePreview').innerHTML = `<div style="border: 1px dashed var(--border); border-radius: 4px; padding: 32px; text-align: center;"><p style="color: var(--text-muted); font-size: 13px;">點擊上方整合，渲染預覽。</p></div>`;
     }
 
     switchTab('tab-article');
@@ -1508,7 +1166,7 @@
     if (!title) { alert("請先確認標題！"); return; }
     const email = localStorage.getItem('bvlog_user_email');
     const hookInput = document.getElementById('finalArticleHook');
-    hookInput.value = "提煉 EEAT 與痛點 Hook，請稍候...";
+    hookInput.value = "提煉中...";
     try {
       const res = await api({ action: "generateArticleStep", step: 2, title: title, content: window.currentSelectedLog.content, email: email });
       hookInput.value = res.hook || "";
@@ -1524,7 +1182,7 @@
     if (!title) { alert("請先完成標題！"); return; }
     const email = localStorage.getItem('bvlog_user_email');
     const bodyInput = document.getElementById('finalArticleBody');
-    bodyInput.value = "重構內容與排版中...";
+    bodyInput.value = "重構中...";
     try {
       const res = await api({ action: "generateArticleStep", step: 3, title: title, hook: hook, content: window.currentSelectedLog.content, email: email });
       bodyInput.value = res.body || "";
@@ -1537,7 +1195,7 @@
     const title = document.getElementById('finalArticleTitle').value.trim();
     const email = localStorage.getItem('bvlog_user_email');
     const endingInput = document.getElementById('finalArticleEnding');
-    endingInput.value = "撰寫 Slogan 與 CTA...";
+    endingInput.value = "撰寫中...";
     try {
       const res = await api({ action: "generateArticleStep", step: 4, title: title, email: email });
       endingInput.value = res.ending || "";
@@ -1559,7 +1217,7 @@
     let videoHtml = '';
     if (urls && urls.length > 0) {
       const isPreloaded = window.blobBuffers[logId] && window.blobBuffers[logId][0];
-      const statusText = isPreloaded ? "✅ 影片已就緒，可秒開播放" : "⚡ 背景預載中，點擊可強制啟動";
+      const statusText = isPreloaded ? "✅ 影片就緒，可秒開" : "⚡ 背景預載中...";
       videoHtml = `
         <div style="background: #000; border-radius: 8px; overflow: hidden; margin-bottom: 32px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
           <video id="preview-player" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block;"></video>
@@ -1632,7 +1290,7 @@
         const blobUrl = URL.createObjectURL(blob);
         buffer[index] = blobUrl;
         return blobUrl;
-      } catch (err) { statusEl.innerText = `❌ 第 ${index + 1} 段失敗`; return null; }
+      } catch (err) { statusEl.innerText = `❌ 第 ${index + 1} 段失敗: ${err.message}`; return null; }
     };
 
     const playNext = async () => {
