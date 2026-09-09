@@ -103,7 +103,6 @@
       border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
       transition: aspect-ratio 0.3s ease;
     }
-    @media (orientation: portrait) { .viewport-container { aspect-ratio: 9 / 16; max-height: 75vh; } }
     .camera-grid {
       position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 5;
       background-image: 
@@ -149,6 +148,19 @@
     .ctrl-btn.record-btn { color: var(--danger); border-color: var(--danger); }
     .ctrl-btn.stop-btn { color: var(--danger); }
     .ctrl-btn.pause-btn { color: var(--warning); }
+    .controls-divider { width: 1px; height: 24px; background: var(--border); margin: 0 4px; }
+
+     
+    @media (orientation: portrait) {
+      .viewport-container { aspect-ratio: 3 / 4; max-height: 80vh; border-radius: 8px; }
+      .controls-island {
+        bottom: 50%; left: auto; right: 12px; transform: translateY(50%);
+        flex-direction: column; width: auto; max-width: 60px; padding: 12px 8px;
+        border-radius: 12px; gap: 10px;
+      }
+      .controls-divider { width: 24px; height: 1px; margin: 4px 0; }
+      .ctrl-btn { width: 36px; height: 36px; font-size: 11px; }
+    }
 
     .terminal-log {
       width: 100%; height: 100px; background: #ffffff; border: 1px solid var(--border); border-radius: 4px;
@@ -371,9 +383,9 @@
       <div id="controlsIsland" class="controls-island" style="display: none;">
         <button class="ctrl-btn" id="btnSource" onclick="switchMediaSource()" title="鏡頭"><i data-lucide="switch-camera" id="iconSource"></i></button>
         <button class="ctrl-btn" id="btnVideoTrack" onclick="toggleVideoTrack()" title="畫面"><i data-lucide="video" id="iconVideo"></i></button>
-        <button class="ctrl-btn" id="btnZoom" onclick="toggleZoom()" title="廣角">1x</button>
+        <button class="ctrl-btn" id="btnZoom" onclick="toggleZoom()" title="焦距">1x</button>
         <button class="ctrl-btn" id="btnFps" onclick="toggleFps()" title="幀率">30</button>
-        <div style="width: 1px; height: 24px; background: var(--border); margin: 0 4px;"></div>
+        <div class="controls-divider"></div>
         <button class="ctrl-btn record-btn" id="btnStart" onclick="startRecording()" title="錄影"><i data-lucide="circle-dot"></i></button>
         <button class="ctrl-btn pause-btn" id="btnPause" onclick="togglePause()" style="display: none;" title="暫停"><i data-lucide="pause" id="iconPause"></i></button>
         <button class="ctrl-btn stop-btn" id="btnStop" onclick="stopRecording()" style="display: none;" title="結束"><i data-lucide="square"></i></button>
@@ -488,7 +500,7 @@
         <div style="display: flex; align-items: center; gap: 12px;">
           <span class="step-badge">3</span><div style="font-weight: 700; font-size: 15px;">內文</div>
         </div>
-        <button class="action-btn-sm action-btn-primary" onclick="generateStepBody()"><i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> 重構</button>
+        <button class="action-btn-sm action-btn-primary" onclick="generateStepBody()"><i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> 內文</button>
       </div>
       <div><textarea id="finalArticleBody" class="workshop-textarea" style="min-height: 300px;" placeholder="內文..."></textarea></div>
       <div style="display: flex; justify-content: flex-end;">
@@ -722,6 +734,7 @@
       document.getElementById('loginOverlay').style.display = 'none';
       document.getElementById('mainAppShell').style.display = 'flex';
       document.getElementById('currentUserEmail').innerText = email;
+      
       
       loadUserAccountInfo(email);
       loadPrompts(email);
@@ -991,11 +1004,11 @@
 
     try {
       const res = await api({ action: "getPrompts", email: email });
-      const p = (res && res.prompts) ? res.prompts : fallback;
-      document.getElementById('promptStep1').value = p.step1 || fallback.step1;
-      document.getElementById('promptStep2').value = p.step2 || fallback.step2;
-      document.getElementById('promptStep3').value = p.step3 || fallback.step3;
-      document.getElementById('promptStep4').value = p.step4 || fallback.step4;
+      
+      document.getElementById('promptStep1').value = (res && res.prompts && res.prompts.step1) ? res.prompts.step1 : fallback.step1;
+      document.getElementById('promptStep2').value = (res && res.prompts && res.prompts.step2) ? res.prompts.step2 : fallback.step2;
+      document.getElementById('promptStep3').value = (res && res.prompts && res.prompts.step3) ? res.prompts.step3 : fallback.step3;
+      document.getElementById('promptStep4').value = (res && res.prompts && res.prompts.step4) ? res.prompts.step4 : fallback.step4;
     } catch (e) {
       console.log("提示詞載入異常，啟動防呆備援：", e.message);
       document.getElementById('promptStep1').value = fallback.step1;
@@ -1151,10 +1164,10 @@
         currentStream = new MediaStream([ screenStream.getVideoTracks()[0], mixedAudioDest.stream.getAudioTracks()[0] ]);
         screenStream.getVideoTracks()[0].onended = async () => { if (currentSourceType === "screen") { log("> 共用停止，切回鏡頭..."); await switchMediaSource(); } };
       } else {
-        const isPortrait = window.innerHeight > window.innerWidth;
+        
         let videoConstraints;
         if (isMobile) {
-          videoConstraints = { facingMode: mobileFacingMode, width: { ideal: isPortrait ? 720 : 1280 }, height: { ideal: isPortrait ? 1280 : 720 }, frameRate: { ideal: cameraFps } };
+          videoConstraints = { facingMode: mobileFacingMode, frameRate: { ideal: cameraFps } };
           if (cameraZoom === 0.5) videoConstraints.advanced = [{ zoom: 0.5 }];
         } else {
           videoConstraints = { width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: cameraFps } };
@@ -1548,7 +1561,7 @@
     if (logItem.coverUrl) {
       coverPreview.src = logItem.coverUrl;
       coverPreview.style.display = 'block';
-      statusText.innerText = "已設定封面圖 (如需更換請重新擷取或上傳)。";
+      statusText.innerHTML = '<span style="color: var(--success);"><i data-lucide="check-circle" style="width:14px; height:14px; vertical-align:middle;"></i> 已安全存入雲端硬碟！</span>';
     } else {
       coverPreview.src = '';
       coverPreview.style.display = 'none';
@@ -1558,7 +1571,7 @@
     const urls = window.logPlaylists[logItem.logId];
     const btnCapture = document.getElementById('btnCaptureCover');
     btnCapture.disabled = true; 
-    btnCapture.title = "需等待整合預覽載入影片";
+    btnCapture.title = "需等待整合載入影片";
 
     if (urls && urls.length > 0) {
       if (!window.blobBuffers[logItem.logId]) window.blobBuffers[logItem.logId] = [];
@@ -1570,12 +1583,12 @@
             if (previewStatus) previewStatus.innerText = "✅ 影片就緒，可秒開";
             
             btnCapture.disabled = false;
-            btnCapture.title = "擷取當前播放畫面";
+            btnCapture.title = "擷取";
           }).catch(e => console.log(e));
         }).catch(e => console.log(e));
       } else {
          btnCapture.disabled = false;
-         btnCapture.title = "擷取當前播放畫面";
+         btnCapture.title = "擷取";
       }
     }
 
@@ -1632,7 +1645,7 @@
     
     api({ action: 'uploadImage', data: base64Clean, mimeType: 'image/jpeg', logId: window.currentSelectedLog.logId })
       .then(res => {
-         statusText.innerHTML = '<span style="color: var(--success);"><i data-lucide="check" style="width:12px; height:12px;"></i> 已成功上傳並設定為封面圖！</span>';
+         statusText.innerHTML = '<span style="color: var(--success);"><i data-lucide="check-circle" style="width:14px; height:14px; vertical-align:middle;"></i> 已安全存入雲端硬碟！</span>';
          lucide.createIcons();
          
          if(window.currentSelectedLog) window.currentSelectedLog.coverUrl = res.url;
@@ -1794,7 +1807,7 @@
         if (currentIndex + 1 < urls.length) loadChunk(currentIndex + 1).catch(e => console.log('背景預載失敗', e));
         
         document.getElementById('btnCaptureCover').disabled = false;
-        document.getElementById('btnCaptureCover').title = "擷取當前播放畫面";
+        document.getElementById('btnCaptureCover').title = "擷取";
 
       } else { currentIndex++; playNext(); }
     };
@@ -1892,10 +1905,10 @@
     const textarea = document.getElementById('input-' + field + '-' + logId);
     const newText = textarea.value;
     const originalBtnText = btnElement.innerHTML;
-    btnElement.innerHTML = "儲存中..."; btnElement.disabled = true; btnElement.style.opacity = "0.7";
+    btnElement.innerHTML = "儲存..."; btnElement.disabled = true; btnElement.style.opacity = "0.7";
     try {
       await api({ action: "updateLog", logId: logId, field: field, newText: newText });
-      showToast("更新已儲存"); loadHistoryLogs();
+      showToast("已儲存"); loadHistoryLogs();
     } catch (e) {
       alert("儲存失敗：" + e.message); btnElement.innerHTML = originalBtnText; btnElement.disabled = false; btnElement.style.opacity = "1";
     }
