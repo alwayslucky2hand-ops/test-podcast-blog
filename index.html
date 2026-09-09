@@ -8,8 +8,6 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
      
     :root {
@@ -58,12 +56,19 @@
     .login-box {
       width: 100%; max-width: 360px; border: 1px solid var(--border);
       border-radius: 4px; padding: 32px 24px; text-align: center; background: #ffffff;
+      animation: fadeIn 0.3s ease;
     }
     .login-input {
       width: 100%; padding: 12px; border: 1px solid var(--border);
       border-radius: 4px; font-size: 14px; margin-bottom: 16px; outline: none;
+      font-family: inherit; color: var(--text);
     }
     .login-input:focus { border-color: var(--accent); }
+    .auth-switch {
+      margin-top: 16px; font-size: 13px; color: var(--text-muted); 
+      cursor: pointer; display: inline-block; transition: color 0.2s;
+    }
+    .auth-switch:hover { color: var(--accent); }
 
      
     .tab-nav {
@@ -162,16 +167,22 @@
     .file-chip:hover { color: var(--accent); border-color: var(--accent); }
 
     .action-btn-sm { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 6px 10px; background: #ffffff; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; font-weight: 600; color: var(--text); cursor: pointer; transition: all 0.2s ease; white-space: nowrap; }
-    .action-btn-sm:hover { border-color: var(--accent); color: var(--accent); }
+    .action-btn-sm:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+    .action-btn-sm:disabled { opacity: 0.6; cursor: not-allowed; }
     .action-btn-primary { color: var(--accent) !important; border: 1px solid var(--accent) !important; background: #ffffff !important; }
-    .action-btn-primary:hover { background: var(--accent) !important; color: #ffffff !important; }
+    .action-btn-primary:hover:not(:disabled) { background: var(--accent) !important; color: #ffffff !important; }
+
     .action-btn-icon { padding: 6px; color: var(--text-muted); border: 1px solid transparent; }
     .action-btn-icon:hover { border-color: var(--border); color: var(--accent); }
     .action-btn-icon.danger:hover { color: var(--danger); border-color: var(--danger); }
 
      
     details.history-accordion { border: 1px solid var(--border); border-radius: 4px; overflow: hidden; background: var(--card-bg); }
-    details.history-accordion summary { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--text); background: var(--bg); user-select: none; list-style: none; outline: none; transition: background 0.15s ease; }
+    details.history-accordion summary {
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;
+      padding: 14px 16px; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--text);
+      background: var(--bg); user-select: none; list-style: none; outline: none; transition: background 0.15s ease;
+    }
     details.history-accordion summary::-webkit-details-marker { display: none; }
     details.history-accordion summary:hover { background: var(--border-subtle); }
     .accordion-toggle-icon { display: inline-flex; align-items: center; color: var(--text-muted); transition: transform 0.2s ease; }
@@ -204,9 +215,16 @@
     .markdown-body blockquote { border-left: 3px solid var(--accent); padding: 16px 20px; background: rgba(49, 117, 181, 0.04); border-radius: 0 6px 6px 0; margin-bottom: 24px; color: #334155; font-style: normal; }
     .markdown-body hr { border: 0; height: 1px; background: var(--border); margin: 40px 0; }
 
-     
-    .workshop-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 4px; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
-    .workshop-step-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+    .minute-chunk-card { border: 1px solid var(--border); border-radius: 4px; background: #ffffff; margin-bottom: 16px; overflow: hidden; }
+    .minute-chunk-header { padding: 12px 16px; background: var(--bg); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
+    .minute-chunk-title { font-size: 14px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .minute-chunk-content { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+    .sub-section { border-left: 2px solid var(--border); padding-left: 16px; }
+    .sub-section-title { font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; letter-spacing: 0.5px; }
+    .voice-body { font-size: 14.5px; line-height: 2; color: #334155; white-space: pre-wrap; }
+
+    .workshop-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 4px; padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+    .workshop-step-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 16px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
     .step-badge { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--accent); color: var(--accent); background: #ffffff; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
     .workshop-textarea { width: 100%; min-height: 140px; padding: 16px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; font-size: 15px; line-height: 1.8; color: var(--text); background: #ffffff; resize: vertical; transition: border-color 0.2s; }
     .workshop-textarea:focus { outline: none; border-color: var(--accent); }
@@ -225,22 +243,36 @@
 
 
 <div id="loginOverlay">
-  <div class="login-box">
+  
+  <div class="login-box" id="loginView">
     <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">BVlog-錄誌</h2>
     <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">登入以存取專屬日誌與提示詞</p>
     
-    <div id="g_id_onload"
-         data-client_id="YOUR_GOOGLE_CLIENT_ID_HERE"
-         data-context="signin"
-         data-ux_mode="popup"
-         data-callback="handleCredentialResponse"
-         data-auto_prompt="false">
+    <input type="email" id="loginEmail" class="login-input" placeholder="註冊信箱">
+    <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+      <input type="text" id="loginOtp" class="login-input" placeholder="6 碼驗證碼" style="margin-bottom: 0;" maxlength="6">
+      <button id="btnSendLoginOtp" class="action-btn-sm" style="height: 42px; white-space: nowrap;" onclick="requestOtp('login')">發送</button>
     </div>
-    <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline" data-text="signin_with" data-size="large" data-logo_alignment="left" style="margin-bottom: 16px;"></div>
+    <button class="action-btn-sm action-btn-primary" style="width: 100%; padding: 10px; height: 42px;" onclick="submitLogin()">登入</button>
     
-    <div style="font-size: 12px; color: var(--border); margin-bottom: 16px;">─ 測試登入 ─</div>
-    <input type="email" id="mockEmailInput" class="login-input" placeholder="輸入信箱...">
-    <button class="action-btn-sm action-btn-primary" style="width: 100%; padding: 10px; height: 42px;" onclick="mockLogin()">登入</button>
+    <div class="auth-switch" onclick="toggleAuthView('register')">無帳號？點此註冊</div>
+  </div>
+
+  
+  <div class="login-box" id="registerView" style="display: none;">
+    <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">註冊會員</h2>
+    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">建立您的 BVlog 專屬帳號</p>
+    
+    <input type="text" id="regName" class="login-input" placeholder="真實姓名 (必填)">
+    <input type="date" id="regBirth" class="login-input" placeholder="生日 (西元)">
+    <input type="email" id="regEmail" class="login-input" placeholder="註冊信箱">
+    <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+      <input type="text" id="regOtp" class="login-input" placeholder="6 碼驗證碼" style="margin-bottom: 0;" maxlength="6">
+      <button id="btnSendRegOtp" class="action-btn-sm" style="height: 42px; white-space: nowrap;" onclick="requestOtp('register')">發送</button>
+    </div>
+    <button class="action-btn-sm action-btn-primary" style="width: 100%; padding: 10px; height: 42px;" onclick="submitRegister()">註冊</button>
+    
+    <div class="auth-switch" onclick="toggleAuthView('login')">已有帳號？點此登入</div>
   </div>
 </div>
 
@@ -500,6 +532,16 @@
   
   
   
+  function toggleAuthView(view) {
+    if (view === 'register') {
+      document.getElementById('loginView').style.display = 'none';
+      document.getElementById('registerView').style.display = 'block';
+    } else {
+      document.getElementById('registerView').style.display = 'none';
+      document.getElementById('loginView').style.display = 'block';
+    }
+  }
+
   function checkLoginStatus() {
     const email = localStorage.getItem('bvlog_user_email');
     if (email) {
@@ -510,24 +552,111 @@
     } else {
       document.getElementById('loginOverlay').style.display = 'flex';
       document.getElementById('mainAppShell').style.display = 'none';
+      toggleAuthView('login');
     }
   }
 
-  function mockLogin() {
-    const email = document.getElementById('mockEmailInput').value.trim();
-    if (!email || !email.includes('@')) { alert("無效信箱"); return; }
-    localStorage.setItem('bvlog_user_email', email);
-    checkLoginStatus();
+  function startOtpTimer(btnElement) {
+    let timeLeft = 60;
+    btnElement.disabled = true;
+    const originalText = btnElement.innerText;
+    
+    const timerId = setInterval(() => {
+      btnElement.innerText = `${timeLeft}s`;
+      timeLeft--;
+      if (timeLeft < 0) {
+        clearInterval(timerId);
+        btnElement.disabled = false;
+        btnElement.innerText = "發送";
+      }
+    }, 1000);
+  }
+
+  async function requestOtp(type) {
+    const isLogin = type === 'login';
+    const emailInput = isLogin ? document.getElementById('loginEmail') : document.getElementById('regEmail');
+    const email = emailInput.value.trim();
+    const btn = isLogin ? document.getElementById('btnSendLoginOtp') : document.getElementById('btnSendRegOtp');
+
+    if (!email || !email.includes('@')) { alert("請輸入有效的信箱"); return; }
+    
+    let name = "", birth = "";
+    if (!isLogin) {
+      name = document.getElementById('regName').value.trim();
+      birth = document.getElementById('regBirth').value;
+      if (!name || !birth) { alert("姓名與生日為必填欄位"); return; }
+    }
+
+    btn.disabled = true;
+    btn.innerText = "發送中";
+
+    try {
+      await api({ action: "sendOtp", email: email, type: type });
+      showToast("驗證碼已寄出");
+      startOtpTimer(btn);
+    } catch (e) {
+      alert(e.message);
+      btn.disabled = false;
+      btn.innerText = "發送";
+    }
+  }
+
+  async function submitLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const otp = document.getElementById('loginOtp').value.trim();
+    if (!email || !otp) { alert("請填寫信箱與驗證碼"); return; }
+
+    const btn = event.currentTarget;
+    const oldText = btn.innerText;
+    btn.innerText = "驗證中..."; btn.disabled = true;
+
+    try {
+      const res = await api({ action: "verifyAndLogin", email: email, otp: otp });
+      if (res && res.success) {
+        localStorage.setItem('bvlog_user_email', email);
+        showToast("登入成功");
+        checkLoginStatus();
+      }
+    } catch (e) {
+      alert(e.message);
+      btn.innerText = oldText; btn.disabled = false;
+    }
+  }
+
+  async function submitRegister() {
+    const email = document.getElementById('regEmail').value.trim();
+    const otp = document.getElementById('regOtp').value.trim();
+    const name = document.getElementById('regName').value.trim();
+    const birth = document.getElementById('regBirth').value;
+    
+    if (!email || !otp || !name || !birth) { alert("請填寫完整資料"); return; }
+
+    const btn = event.currentTarget;
+    const oldText = btn.innerText;
+    btn.innerText = "驗證中..."; btn.disabled = true;
+
+    try {
+      const res = await api({ action: "verifyAndRegister", email: email, otp: otp, name: name, birth: birth });
+      if (res && res.success) {
+        localStorage.setItem('bvlog_user_email', email);
+        showToast("註冊成功");
+        checkLoginStatus();
+      }
+    } catch (e) {
+      alert(e.message);
+      btn.innerText = oldText; btn.disabled = false;
+    }
   }
 
   function logout() {
     localStorage.removeItem('bvlog_user_email');
+    document.getElementById('loginEmail').value = '';
+    document.getElementById('loginOtp').value = '';
+    document.getElementById('regName').value = '';
+    document.getElementById('regBirth').value = '';
+    document.getElementById('regEmail').value = '';
+    document.getElementById('regOtp').value = '';
     checkLoginStatus();
-  }
-
-  function handleCredentialResponse(response) {
-    console.log("Token: " + response.credential);
-    alert("收到 Google Token，請使用手動測試登入確保流程。");
   }
 
   window.addEventListener('DOMContentLoaded', () => {
