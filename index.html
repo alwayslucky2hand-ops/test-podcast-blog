@@ -449,7 +449,6 @@
       <div id="workshopActiveLogBadge" style="font-size: 12px; font-weight: 600; color: var(--text-muted); padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px;">未選</div>
     </div>
 
-    
     <div class="workshop-card" id="stepCard1">
       <div class="workshop-step-header">
         <div style="display: flex; align-items: center; gap: 12px;">
@@ -722,7 +721,6 @@
   function startOtpTimer(btnElement) {
     let timeLeft = 60;
     btnElement.disabled = true;
-    const originalText = btnElement.innerText;
     
     const timerId = setInterval(() => {
       btnElement.innerText = `${timeLeft}s`;
@@ -754,7 +752,7 @@
     btn.innerText = "發送中";
 
     try {
-      const res = await api({ action: "sendOtp", email: email, type: type });
+      await api({ action: "sendOtp", email: email, type: type });
       showToast("驗證碼已寄出");
       startOtpTimer(btn);
     } catch (e) {
@@ -856,7 +854,6 @@
   
   
   let tempAvatarBase64 = null;
-  let tempCoverBase64 = null;
 
   async function loadAuthorProfile(email) {
     try {
@@ -1505,7 +1502,7 @@
 
     container.innerHTML = dashboardItems.map(item => {
       const cleanTime = sanitizeTimestamp(item.timestamp);
-      const isPublished = item.status && item.status.includes('已發布'); // 可視後端未來擴充而定
+      const isPublished = item.status && item.status.includes('已發布'); 
       const coverHtml = item.coverUrl 
         ? `<div class="vocus-cover" style="background-image: url('${item.coverUrl}')"></div>`
         : `<div class="vocus-cover"><div class="vocus-cover-placeholder"><i data-lucide="image" style="width: 24px; height: 24px;"></i> 無封面圖</div></div>`;
@@ -1567,7 +1564,7 @@
 
     const urls = window.logPlaylists[logItem.logId];
     const btnCapture = document.getElementById('btnCaptureCover');
-    btnCapture.disabled = true; // 預設禁用，等影片載入
+    btnCapture.disabled = true; 
     btnCapture.title = "需等待整合預覽載入影片";
 
     if (urls && urls.length > 0) {
@@ -1739,7 +1736,7 @@
     const dateStr = today.getFullYear() + '/' + String(today.getMonth() + 1).padStart(2, '0') + '/' + String(today.getDate()).padStart(2, '0');
     const logId = window.currentSelectedLog.logId;
     const urls = window.logPlaylists[logId];
-    const profile = window.currentAuthorProfile || {}; // 拿取作者資料
+    const profile = window.currentAuthorProfile || {}; 
 
     const titleMatch = fullMd.match(/^#\s+(.+)\n/);
     const displayTitle = titleMatch ? titleMatch[1] : document.getElementById('finalArticleTitle').value;
@@ -1838,7 +1835,6 @@
         videoEl.play().catch(e => { statusEl.innerText = `⏸ 準備就緒 (請點擊畫面播放)`; });
         if (currentIndex + 1 < urls.length) loadChunk(currentIndex + 1).catch(e => console.log('背景預載失敗', e));
         
-        // 如果截圖按鈕原本是被 disabled 的，確保它在影片可播時解開
         document.getElementById('btnCaptureCover').disabled = false;
         document.getElementById('btnCaptureCover').title = "擷取當前播放畫面";
 
@@ -1876,7 +1872,6 @@
       await api({ action: "saveArticleSection", logId: window.currentSelectedLog.logId, field: field, content: content });
       showToast(`儲存成功`);
       
-      // 更新快取
       if(field === 'full') {
          window.currentSelectedLog.articleFull = content;
          window.currentSelectedLog.articleTitle = document.getElementById('finalArticleTitle').value;
@@ -1917,7 +1912,6 @@
       showToast("刪除中..."); 
       await api({ action: "deleteLog", logId: logId }); 
       showToast("已刪除"); 
-      // 重新載入快取與畫面
       globalLogsCache = globalLogsCache.filter(l => l.logId !== logId);
       if(document.getElementById('tab-history').classList.contains('active')) loadHistoryLogs();
       if(document.getElementById('tab-dashboard').classList.contains('active')) loadDashboardLogs();
