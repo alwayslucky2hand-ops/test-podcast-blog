@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>BVlog-錄誌</title>
+  <title>VBLOG-錄誌</title>
   
   <script src="https://unpkg.com/lucide@latest"></script>
   
@@ -61,9 +61,11 @@
     .login-input {
       width: 100%; padding: 12px; border: 1px solid var(--border);
       border-radius: 4px; font-size: 14px; margin-bottom: 16px; outline: none;
-      font-family: inherit; color: var(--text);
+      font-family: inherit; color: var(--text); transition: border-color 0.2s;
     }
     .login-input:focus { border-color: var(--accent); }
+    .login-input:disabled { background: var(--bg); color: var(--text-muted); cursor: not-allowed; }
+    
     .auth-switch {
       margin-top: 16px; font-size: 13px; color: var(--text-muted); 
       cursor: pointer; display: inline-block; transition: color 0.2s;
@@ -162,6 +164,8 @@
 
     .badge { padding: 4px 10px; border-radius: 2px; font-size: 12px; font-weight: 600; background: transparent; color: var(--accent-green); border: 1px solid var(--accent-green); }
     .badge.recording { color: var(--warning); border-color: var(--warning); }
+    .badge.draft { color: var(--text-muted); border-color: var(--border); }
+    .badge.published { color: var(--accent); border-color: var(--accent); }
 
     .file-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: transparent; border: 1px solid var(--border); border-radius: 4px; font-size: 12.5px; font-weight: 500; color: var(--text-muted); text-decoration: none; transition: all 0.15s ease; }
     .file-chip:hover { color: var(--accent); border-color: var(--accent); }
@@ -191,17 +195,69 @@
     .accordion-body { padding: 16px; background: #ffffff; }
 
      
+    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .vocus-card {
+      display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 6px;
+      background: #ffffff; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; cursor: default;
+    }
+    .vocus-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); border-color: var(--border-subtle); }
+    .vocus-cover {
+      width: 100%; aspect-ratio: 16 / 9; background-color: var(--bg); background-size: cover; background-position: center;
+      border-bottom: 1px solid var(--border-subtle); position: relative;
+    }
+    .vocus-cover-placeholder {
+      display: flex; align-items: center; justify-content: center; height: 100%;
+      color: var(--border); flex-direction: column; gap: 8px; font-size: 12px;
+    }
+    .vocus-content { padding: 16px; display: flex; flex-direction: column; flex: 1; gap: 12px; }
+    .vocus-title { font-size: 16px; font-weight: 800; color: var(--text); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .vocus-meta { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+    .vocus-actions { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; }
+
+     
+    .settings-section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-bottom: 20px; }
+    .settings-title { font-size: 16px; font-weight: 800; margin-bottom: 20px; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
+    .input-row { display: flex; gap: 16px; flex-wrap: wrap; }
+    .input-col { flex: 1; min-width: 200px; }
+    
+    .avatar-upload-zone {
+      display: flex; align-items: center; gap: 16px; margin-bottom: 24px;
+    }
+    .avatar-preview {
+      width: 72px; height: 72px; border-radius: 50%; background: var(--bg); border: 1px dashed var(--border);
+      display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;
+      background-size: cover; background-position: center;
+    }
+    .avatar-preview i { color: var(--border); }
+    .avatar-upload-btn { position: relative; overflow: hidden; }
+    .avatar-upload-btn input[type="file"] { position: absolute; top: 0; right: 0; min-width: 100%; min-height: 100%; font-size: 100px; text-align: right; filter: alpha(opacity=0); opacity: 0; outline: none; background: white; cursor: pointer; display: block; }
+    
+    .input-group { display: flex; align-items: center; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; transition: border-color 0.2s; }
+    .input-group:focus-within { border-color: var(--accent); }
+    .input-group-addon { background: var(--bg); padding: 10px 12px; font-size: 13px; color: var(--text-muted); border-right: 1px solid var(--border); font-weight: 500; display: flex; align-items: center; justify-content: center; }
+    .input-group .login-input { border: none; margin-bottom: 0; border-radius: 0; }
+
+     
     .blog-preview-wrapper { border: 1px solid var(--border); border-radius: 8px; background: #ffffff; padding: 32px 24px; margin-top: 16px; }
     .preview-main-title { font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 16px; line-height: 1.4; }
     .blog-meta-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 16px; margin-bottom: 24px; gap: 16px; }
     .blog-author-info { display: flex; align-items: center; gap: 12px; }
-    .blog-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; }
+    .blog-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; background-size: cover; background-position: center; }
     .blog-stats { display: flex; gap: 16px; font-size: 13px; color: var(--text-muted); }
     .blog-stats span { display: flex; align-items: center; gap: 4px; }
     .blog-footer-cta { margin-top: 40px; border-top: 1px solid var(--border-subtle); padding-top: 32px; display: flex; flex-direction: column; gap: 24px; }
     .newsletter-box { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 20px; }
     .chat-action-btn { display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--text); color: #ffffff; padding: 16px; border-radius: 6px; font-weight: 700; font-size: 15px; text-decoration: none; transition: background 0.2s; }
     .chat-action-btn:hover { background: var(--accent); color: #ffffff; }
+
+     
+    .cover-capture-box {
+      border: 1px dashed var(--border); border-radius: 6px; background: var(--bg); padding: 16px;
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+    }
+    .cover-preview-img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 4px; border: 1px solid var(--border); display: none; background: #000; }
 
      
     .markdown-body { font-size: 16px; line-height: 2.1; color: #1e293b; letter-spacing: 0.5px; }
@@ -245,8 +301,8 @@
 <div id="loginOverlay">
   
   <div class="login-box" id="loginView">
-    <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">BVlog-錄誌</h2>
-    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">登入以存取專屬日誌與提示詞</p>
+    <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">VBLOG-錄誌</h2>
+    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">登入以存取專屬日誌與設定</p>
     
     <input type="email" id="loginEmail" class="login-input" placeholder="註冊信箱">
     <div style="display: flex; gap: 8px; margin-bottom: 16px;">
@@ -261,7 +317,7 @@
   
   <div class="login-box" id="registerView" style="display: none;">
     <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">註冊會員</h2>
-    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">建立您的 BVlog 專屬帳號</p>
+    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">建立您的 VBLOG 專屬帳號</p>
     
     <input type="text" id="regName" class="login-input" placeholder="真實姓名 (必填)">
     <input type="date" id="regBirth" class="login-input" placeholder="生日 (西元)">
@@ -280,7 +336,7 @@
 
   
   <div style="padding: 4px 4px 0px 4px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;">
-    <h2 style="font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: 0.5px;">BVlog<span style="font-weight: 400; color: var(--accent); font-size: 18px; margin-left: 2px;">-錄誌</span></h2>
+    <h2 style="font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: 0.5px;">VBLOG<span style="font-weight: 400; color: var(--accent); font-size: 18px; margin-left: 2px;">-錄誌</span></h2>
     <div style="font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
       <i data-lucide="user" style="width: 14px; height: 14px;"></i> <span id="currentUserEmail"></span>
       <button class="action-btn-sm action-btn-icon" onclick="logout()" title="登出"><i data-lucide="log-out" style="width: 14px; height: 14px;"></i></button>
@@ -289,7 +345,8 @@
 
   <div class="tab-nav">
     <button class="tab-btn active" onclick="switchTab('tab-live', this)"><i data-lucide="video" style="width: 16px; height: 16px;"></i> 錄製</button>
-    <button class="tab-btn" onclick="switchTab('tab-history', this)"><i data-lucide="history" style="width: 16px; height: 16px;"></i> 日誌</button>
+    <button class="tab-btn" onclick="switchTab('tab-history', this)"><i data-lucide="list-video" style="width: 16px; height: 16px;"></i> 日誌</button>
+    <button class="tab-btn" onclick="switchTab('tab-dashboard', this)"><i data-lucide="layout-grid" style="width: 16px; height: 16px;"></i> 總覽</button>
     <button class="tab-btn" onclick="switchTab('tab-article', this)"><i data-lucide="file-edit" style="width: 16px; height: 16px;"></i> 工坊</button>
     <button class="tab-btn" onclick="switchTab('tab-settings', this)"><i data-lucide="settings" style="width: 16px; height: 16px;"></i> 設定</button>
   </div>
@@ -354,8 +411,8 @@
   <div id="tab-history" class="tab-content">
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;">
       <div>
-        <h3 style="font-size: 18px; font-weight: 700;">歷史</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">點選產文。</p>
+        <h3 style="font-size: 18px; font-weight: 700;">日誌素材庫</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">原始影音紀錄，點選產文進入工坊。</p>
       </div>
       <button onclick="loadHistoryLogs()" class="action-btn-sm" title="重整"><i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> 重整</button>
     </div>
@@ -365,15 +422,34 @@
   </div>
 
   
+  <div id="tab-dashboard" class="tab-content">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px;">
+      <div>
+        <h3 style="font-size: 18px; font-weight: 700;">發布總覽</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">已編輯完成的草稿與已發布文章。</p>
+      </div>
+      <div class="flex-wrap-gap">
+        <a id="authorGitHubLink" href="#" target="_blank" class="action-btn-sm" style="display:none; color:var(--text); border-color:var(--text);"><i data-lucide="external-link" style="width:14px; height:14px;"></i> 前往沙龍首頁</a>
+        <button onclick="loadDashboardLogs()" class="action-btn-sm" title="重整"><i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> 重整</button>
+      </div>
+    </div>
+    <div id="dashboardContainer" class="dashboard-grid">
+      
+      <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 40px 0;">載入中...</div>
+    </div>
+  </div>
+
+  
   <div id="tab-article" class="tab-content">
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;">
       <div>
         <h3 style="font-size: 18px; font-weight: 700;">工坊</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">解構重組。</p>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">解構重組與封面設定。</p>
       </div>
       <div id="workshopActiveLogBadge" style="font-size: 12px; font-weight: 600; color: var(--text-muted); padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px;">未選</div>
     </div>
 
+    
     <div class="workshop-card" id="stepCard1">
       <div class="workshop-step-header">
         <div style="display: flex; align-items: center; gap: 12px;">
@@ -434,24 +510,40 @@
       </div>
     </div>
 
+    
     <div class="workshop-card" id="stepCard5">
       <div class="workshop-step-header">
         <div style="display: flex; align-items: center; gap: 12px;">
-          <span class="step-badge">5</span><div style="font-weight: 700; font-size: 15px;">預覽</div>
+          <span class="step-badge">5</span><div style="font-weight: 700; font-size: 15px;">封面與預覽</div>
         </div>
         <div class="flex-wrap-gap">
-          <button class="action-btn-sm action-btn-primary" onclick="assembleFullArticle()"><i data-lucide="layers" style="width: 14px; height: 14px;"></i> 整合</button>
-          <button class="action-btn-sm action-btn-icon" onclick="copyFullArticle()" title="複製"><i data-lucide="copy" style="width: 16px; height: 16px;"></i></button>
+          <button class="action-btn-sm action-btn-primary" onclick="assembleFullArticle()"><i data-lucide="layers" style="width: 14px; height: 14px;"></i> 整合渲染</button>
         </div>
       </div>
-      <div id="fullArticlePreview" style="min-height: 150px;">
+      
+      
+      <div class="cover-capture-box">
+        <div style="font-size: 13px; font-weight: 700; color: var(--text); width: 100%; text-align: left;">文章封面圖設定</div>
+        <img id="workshopCoverPreview" class="cover-preview-img" src="" alt="封面預覽">
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <button class="action-btn-sm" onclick="captureFrameFromVideo()" id="btnCaptureCover" disabled title="需等待整合預覽載入影片"><i data-lucide="camera" style="width: 14px; height: 14px;"></i> 從影片擷取畫面</button>
+          <label class="action-btn-sm" style="cursor: pointer;">
+            <i data-lucide="upload" style="width: 14px; height: 14px;"></i> 上傳圖片
+            <input type="file" id="coverImageUpload" accept="image/*" style="display: none;" onchange="handleCoverUpload(event)">
+          </label>
+        </div>
+        <div style="font-size: 12px; color: var(--text-muted);" id="coverStatusText">尚未設定封面圖。</div>
+      </div>
+
+      <div id="fullArticlePreview" style="min-height: 150px; margin-top: 8px;">
         <div style="border: 1px dashed var(--border); border-radius: 4px; padding: 32px; text-align: center;"><p style="color: var(--text-muted); font-size: 13px;">點擊整合，渲染預覽。</p></div>
       </div>
+      
       <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-top: 8px;">
-        <div style="font-size: 12px; color: var(--text-muted);">* 同步寫入資料庫。</div>
+        <div style="font-size: 12px; color: var(--text-muted);">* 同步寫入資料庫，並準備推送至 GitHub。</div>
         <div class="flex-wrap-gap">
-          <button class="action-btn-sm" onclick="saveCurrentStepData('full')"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 同步</button>
-          <button class="action-btn-sm" style="color: var(--text); border-color: var(--text);" onclick="publishArticleToWeb()"><i data-lucide="globe" style="width: 14px; height: 14px;"></i> 發布</button>
+          <button class="action-btn-sm" onclick="saveCurrentStepData('full')"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存草稿</button>
+          <button class="action-btn-sm" style="color: #ffffff; border-color: var(--text); background: var(--text);" onclick="publishArticleToWeb()"><i data-lucide="globe" style="width: 14px; height: 14px;"></i> 一鍵發布</button>
         </div>
       </div>
     </div>
@@ -459,35 +551,103 @@
 
   
   <div id="tab-settings" class="tab-content">
-    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px;">
       <div>
         <h3 style="font-size: 18px; font-weight: 700;">設定</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">自訂指令</p>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">會員資訊、作者設定與 AI 提示詞</p>
       </div>
-      <button class="action-btn-sm action-btn-primary" onclick="saveAllPrompts()">
-        <i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存
-      </button>
     </div>
 
-    <div class="workshop-card">
-      <label style="font-size: 14px; font-weight: 700;">提案</label>
-      <textarea id="promptStep1" class="workshop-textarea" style="min-height: 160px; font-size: 13.5px;"></textarea>
+    
+    <div class="settings-section">
+      <div class="settings-title"><i data-lucide="shield-check" style="width: 18px; height: 18px; color: var(--success);"></i> 帳號資訊</div>
+      <div class="input-row">
+        <div class="input-col form-group">
+          <label class="form-label">註冊信箱 (不可更改)</label>
+          <input type="text" id="infoEmail" class="login-input" disabled>
+        </div>
+        <div class="input-col form-group">
+          <label class="form-label">會員姓名 (不可更改)</label>
+          <input type="text" id="infoName" class="login-input" disabled>
+        </div>
+      </div>
     </div>
-    <div class="workshop-card">
-      <label style="font-size: 14px; font-weight: 700;">開頭</label>
-      <textarea id="promptStep2" class="workshop-textarea" style="min-height: 160px; font-size: 13.5px;"></textarea>
+
+    
+    <div class="settings-section">
+      <div class="settings-title"><i data-lucide="user-circle" style="width: 18px; height: 18px; color: var(--accent);"></i> 專屬作者簡介 (供沙龍與文章底部使用)</div>
+      
+      <div class="avatar-upload-zone">
+        <div class="avatar-preview" id="authorAvatarPreview"><i data-lucide="image" style="width: 24px; height: 24px;"></i></div>
+        <div>
+          <label class="action-btn-sm avatar-upload-btn" style="margin-bottom: 6px;">
+            <i data-lucide="upload-cloud" style="width: 14px; height: 14px;"></i> 上傳大頭貼
+            <input type="file" id="authorAvatarInput" accept="image/*" onchange="handleAvatarUpload(event)">
+          </label>
+          <div style="font-size: 12px; color: var(--text-muted);">建議尺寸 400x400，將存至雲端。</div>
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="input-col form-group">
+          <label class="form-label">個人網址代號 (Handle)</label>
+          <div class="input-group">
+            <span class="input-group-addon">vblog.com/</span>
+            <input type="text" id="authorHandle" class="login-input" placeholder="例如: troy-ai (限英數與減號)">
+          </div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">*發布 GitHub 首頁與文章的專屬目錄名稱。</div>
+        </div>
+        <div class="input-col form-group">
+          <label class="form-label">筆名 / 顯示名稱</label>
+          <input type="text" id="authorDisplayName" class="login-input" placeholder="例如: 特洛伊AI賦能師">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">一小段簡介 (顯示於文章底部，限 300 字)</label>
+        <textarea id="authorBio" class="workshop-textarea" style="min-height: 80px;" maxlength="300" placeholder="嗨！我是特洛伊，專注於微型創業與 AI 應用..."></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">沙龍詳細介紹 (顯示於首頁，限 2000 字)</label>
+        <textarea id="authorSalonIntro" class="workshop-textarea" style="min-height: 120px;" maxlength="2000" placeholder="歡迎來到我的 AI 賦能沙龍..."></textarea>
+      </div>
+
+      <div class="form-label" style="margin-top: 24px;">社群連結 (選填，發布時會顯示 Icon)</div>
+      <div class="input-row">
+        <div class="input-col form-group"><input type="email" id="socialEmail" class="login-input" placeholder="聯繫 Email"></div>
+        <div class="input-col form-group"><input type="url" id="socialIG" class="login-input" placeholder="Instagram 網址"></div>
+      </div>
+      <div class="input-row">
+        <div class="input-col form-group"><input type="url" id="socialFB" class="login-input" placeholder="Facebook 網址"></div>
+        <div class="input-col form-group"><input type="url" id="socialYT" class="login-input" placeholder="YouTube 網址"></div>
+      </div>
+      <div class="input-row">
+        <div class="input-col form-group"><input type="url" id="socialPodcast" class="login-input" placeholder="Podcast 網址"></div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
+        <button class="action-btn-sm action-btn-primary" onclick="saveAuthorProfile(this)"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存作者設定</button>
+      </div>
     </div>
-    <div class="workshop-card">
-      <label style="font-size: 14px; font-weight: 700;">內文</label>
-      <textarea id="promptStep3" class="workshop-textarea" style="min-height: 160px; font-size: 13.5px;"></textarea>
-    </div>
-    <div class="workshop-card">
-      <label style="font-size: 14px; font-weight: 700;">結尾</label>
-      <textarea id="promptStep4" class="workshop-textarea" style="min-height: 160px; font-size: 13.5px;"></textarea>
+
+    
+    <div class="settings-section">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div class="settings-title" style="margin-bottom: 0;"><i data-lucide="bot" style="width: 18px; height: 18px; color: var(--accent);"></i> 自訂 AI 提示詞</div>
+        <button class="action-btn-sm action-btn-primary" onclick="saveAllPrompts(this)"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存提示詞</button>
+      </div>
+      <div class="form-group"><label class="form-label">提案</label><textarea id="promptStep1" class="workshop-textarea" style="min-height: 120px; font-size: 13.5px;"></textarea></div>
+      <div class="form-group"><label class="form-label">開頭</label><textarea id="promptStep2" class="workshop-textarea" style="min-height: 120px; font-size: 13.5px;"></textarea></div>
+      <div class="form-group"><label class="form-label">內文</label><textarea id="promptStep3" class="workshop-textarea" style="min-height: 120px; font-size: 13.5px;"></textarea></div>
+      <div class="form-group"><label class="form-label">結尾</label><textarea id="promptStep4" class="workshop-textarea" style="min-height: 120px; font-size: 13.5px;"></textarea></div>
     </div>
   </div>
 
 </div>
+
+
+<canvas id="captureCanvas" style="display: none;"></canvas>
 
 
 <div id="toast" class="toast-box">
@@ -528,6 +688,7 @@
   window.logPlaylists = {};
   window.blobBuffers = {};
   window.currentSelectedLog = null; 
+  window.currentAuthorProfile = null; 
 
   
   
@@ -548,7 +709,9 @@
       document.getElementById('loginOverlay').style.display = 'none';
       document.getElementById('mainAppShell').style.display = 'flex';
       document.getElementById('currentUserEmail').innerText = email;
+      document.getElementById('infoEmail').value = email;
       loadPrompts(email);
+      loadAuthorProfile(email);
     } else {
       document.getElementById('loginOverlay').style.display = 'flex';
       document.getElementById('mainAppShell').style.display = 'none';
@@ -591,7 +754,7 @@
     btn.innerText = "發送中";
 
     try {
-      await api({ action: "sendOtp", email: email, type: type });
+      const res = await api({ action: "sendOtp", email: email, type: type });
       showToast("驗證碼已寄出");
       startOtpTimer(btn);
     } catch (e) {
@@ -612,8 +775,9 @@
 
     try {
       const res = await api({ action: "verifyAndLogin", email: email, otp: otp });
-      if (res && res.success) {
+      if (res) {
         localStorage.setItem('bvlog_user_email', email);
+        document.getElementById('infoName').value = res.name || "一般會員";
         showToast("登入成功");
         checkLoginStatus();
       }
@@ -637,8 +801,9 @@
 
     try {
       const res = await api({ action: "verifyAndRegister", email: email, otp: otp, name: name, birth: birth });
-      if (res && res.success) {
+      if (res) {
         localStorage.setItem('bvlog_user_email', email);
+        document.getElementById('infoName').value = name;
         showToast("註冊成功");
         checkLoginStatus();
       }
@@ -667,6 +832,125 @@
   
   
   
+  async function api(payload) {
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      return new Promise((resolve, reject) => {
+        google.script.run
+          .withSuccessHandler(res => {
+            if (!res) { reject(new Error("後端無回應")); return; }
+            if (res.status === 'success') resolve(res.data);
+            else reject(new Error(res.message || "發生錯誤"));
+          })
+          .withFailureHandler(err => reject(err))
+          .handleClientRequest(payload);
+      });
+    } else {
+      const res = await fetch(GAS_WEB_URL, { method: 'POST', body: JSON.stringify(payload) });
+      const json = await res.json();
+      if (json.status === 'success') return json.data;
+      throw new Error(json.message);
+    }
+  }
+
+  
+  
+  
+  let tempAvatarBase64 = null;
+  let tempCoverBase64 = null;
+
+  async function loadAuthorProfile(email) {
+    try {
+      const res = await api({ action: "getAuthorProfile", email: email });
+      if (res) {
+        window.currentAuthorProfile = res;
+        document.getElementById('authorHandle').value = res.handle || "";
+        document.getElementById('authorDisplayName').value = res.authorName || "";
+        document.getElementById('authorBio').value = res.bio || "";
+        document.getElementById('authorSalonIntro').value = res.salonIntro || "";
+        document.getElementById('socialEmail').value = res.socialEmail || "";
+        document.getElementById('socialIG').value = res.socialIG || "";
+        document.getElementById('socialFB').value = res.socialFB || "";
+        document.getElementById('socialYT').value = res.socialYT || "";
+        document.getElementById('socialPodcast').value = res.socialPodcast || "";
+        
+        if (res.avatarUrl) {
+          const preview = document.getElementById('authorAvatarPreview');
+          preview.style.backgroundImage = `url('${res.avatarUrl}')`;
+          preview.innerHTML = ''; 
+        }
+        
+        if(res.handle) {
+          const ghLink = document.getElementById('authorGitHubLink');
+          ghLink.href = `https:
+          ghLink.style.display = 'inline-flex';
+        }
+      }
+    } catch (e) { console.log("載入作者資料失敗：", e.message); }
+  }
+
+  function handleAvatarUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const base64 = e.target.result;
+      tempAvatarBase64 = base64;
+      const preview = document.getElementById('authorAvatarPreview');
+      preview.style.backgroundImage = `url('${base64}')`;
+      preview.innerHTML = '';
+      showToast("圖片已讀取，請記得儲存設定");
+    };
+    reader.readAsDataURL(file);
+  }
+
+  async function saveAuthorProfile(btn) {
+    const email = localStorage.getItem('bvlog_user_email');
+    if (!email) return;
+
+    const profile = {
+      handle: document.getElementById('authorHandle').value.trim(),
+      authorName: document.getElementById('authorDisplayName').value.trim(),
+      bio: document.getElementById('authorBio').value.trim(),
+      salonIntro: document.getElementById('authorSalonIntro').value.trim(),
+      socialEmail: document.getElementById('socialEmail').value.trim(),
+      socialIG: document.getElementById('socialIG').value.trim(),
+      socialFB: document.getElementById('socialFB').value.trim(),
+      socialYT: document.getElementById('socialYT').value.trim(),
+      socialPodcast: document.getElementById('socialPodcast').value.trim(),
+      avatarBase64: tempAvatarBase64 ? tempAvatarBase64.split(',')[1] : null
+    };
+
+    if(profile.handle && !/^[a-zA-Z0-9-]+$/.test(profile.handle)) {
+      alert("個人網址代號 (Handle) 只能包含英文字母、數字與減號 (-)");
+      return;
+    }
+
+    const originalHtml = btn.innerHTML;
+    btn.innerHTML = `<i data-lucide="loader" class="spin" style="width:14px; height:14px;"></i> 儲存中...`;
+    lucide.createIcons();
+    btn.disabled = true;
+
+    try {
+      const res = await api({ action: "saveAuthorProfile", email: email, profile: profile });
+      showToast("作者設定已更新！");
+      tempAvatarBase64 = null; // 清空暫存，後端已經有了
+      if(res.handle) {
+          const ghLink = document.getElementById('authorGitHubLink');
+          ghLink.href = `https:
+          ghLink.style.display = 'inline-flex';
+      }
+    } catch (e) {
+      alert("儲存失敗：" + e.message);
+    } finally {
+      btn.innerHTML = originalHtml;
+      lucide.createIcons();
+      btn.disabled = false;
+    }
+  }
+
+  
+  
+  
   async function loadPrompts(email) {
     try {
       const res = await api({ action: "getPrompts", email: email });
@@ -679,11 +963,10 @@
     } catch (e) { console.log("載入失敗：", e.message); }
   }
 
-  async function saveAllPrompts() {
+  async function saveAllPrompts(btn) {
     const email = localStorage.getItem('bvlog_user_email');
     if (!email) return;
 
-    const btn = event.currentTarget;
     const originalHtml = btn.innerHTML;
     btn.innerHTML = `<i data-lucide="loader" class="spin" style="width:14px; height:14px;"></i> 儲存中`;
     lucide.createIcons();
@@ -698,7 +981,7 @@
 
     try {
       await api({ action: "savePrompts", email: email, prompts: prompts });
-      showToast("已儲存");
+      showToast("提示詞已儲存");
     } catch (e) { alert("失敗：" + e.message); } 
     finally { btn.innerHTML = originalHtml; lucide.createIcons(); btn.disabled = false; }
   }
@@ -746,6 +1029,7 @@
     if (btn) btn.classList.add('active');
     document.getElementById(tabId).classList.add('active');
     if (tabId === 'tab-history') loadHistoryLogs();
+    if (tabId === 'tab-dashboard') loadDashboardLogs();
   }
 
   
@@ -1095,6 +1379,8 @@
   // ==========================================
   
   
+  let globalLogsCache = [];
+
   async function loadHistoryLogs() {
     const email = localStorage.getItem('bvlog_user_email');
     if (!email) return;
@@ -1105,6 +1391,8 @@
 
     try {
       const logs = await api({ action: "getHistoryLogs", email: email });
+      globalLogsCache = logs;
+      
       if (!logs || logs.length === 0) {
         container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px;">目前尚無歷史錄影紀錄。</div>`;
         return;
@@ -1119,7 +1407,6 @@
         const urls = Array.isArray(item.urls) ? item.urls : [];
         const safeSummaryRaw = item.summary || "";
         const safeContentRaw = item.content || "";
-
         window.logPlaylists[item.logId] = urls;
 
         return `
@@ -1133,8 +1420,8 @@
               </div>
               <div class="flex-wrap-gap">
                 <span class="badge ${isRec ? 'recording' : ''}">${item.status}</span>
-                <button type="button" class="action-btn-sm action-btn-primary" onclick="openArticleWorkshop(${JSON.stringify(item).replace(/"/g, '&quot;')})">
-                  <i data-lucide="file-text" style="width: 14px; height: 14px;"></i> 產文
+                <button type="button" class="action-btn-sm action-btn-primary" onclick="openArticleWorkshop('${item.logId}')">
+                  <i data-lucide="file-text" style="width: 14px; height: 14px;"></i> 進入工坊
                 </button>
                 <button type="button" class="action-btn-sm action-btn-icon danger" onclick="deleteHistoryLog('${item.logId}')" title="刪除">
                   <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
@@ -1143,13 +1430,9 @@
             </div>
 
             <div>
-              <div style="font-size: 12.5px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px;">
-                雲端切片 (${urls.length})
-              </div>
+              <div style="font-size: 12.5px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px;">雲端切片 (${urls.length})</div>
               <div class="flex-wrap-gap">
-                ${urls.length > 0 
-                  ? urls.map((u, i) => `<a href="${u}" target="_blank" class="file-chip"><i data-lucide="film" style="width: 13px; height: 13px;"></i> ${i+1}</a>`).join('')
-                  : '<span style="font-size:12.5px; color:var(--text-muted);">無</span>'}
+                ${urls.length > 0 ? urls.map((u, i) => `<a href="${u}" target="_blank" class="file-chip"><i data-lucide="film" style="width: 13px; height: 13px;"></i> ${i+1}</a>`).join('') : '<span style="font-size:12.5px; color:var(--text-muted);">無</span>'}
               </div>
             </div>
 
@@ -1186,27 +1469,6 @@
                 </div>
               </div>
             </details>
-
-            <details class="history-accordion">
-              <summary>
-                <span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="file-text" style="width: 15px; height: 15px; color: var(--text-muted);"></i>內容</span>
-                <div class="flex-wrap-gap">
-                  <button type="button" id="btn-edit-content-${item.logId}" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); toggleEditMode('${item.logId}', 'content')" title="編輯"><i data-lucide="edit-3" style="width: 16px; height: 16px;"></i></button>
-                  <button type="button" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute('data-text'))" data-text="${escapeHtml(safeContentRaw)}" title="複製"><i data-lucide="copy" style="width: 16px; height: 16px;"></i></button>
-                  <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
-                </div>
-              </summary>
-              <div class="accordion-body">
-                <div id="view-content-${item.logId}">${formatTranscriptContent(safeContentRaw, urls)}</div>
-                <div id="edit-content-${item.logId}" style="display: none; flex-direction: column; gap: 12px;">
-                  <textarea id="input-content-${item.logId}" class="workshop-textarea" style="min-height: 250px;">${escapeHtml(safeContentRaw)}</textarea>
-                  <div style="display: flex; justify-content: flex-end; gap: 8px;">
-                    <button class="action-btn-sm action-btn-icon" onclick="toggleEditMode('${item.logId}', 'content')" title="取消"><i data-lucide="x" style="width: 16px; height: 16px;"></i></button>
-                    <button class="action-btn-sm action-btn-primary" onclick="saveHistoryLog('${item.logId}', 'content', this)"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button>
-                  </div>
-                </div>
-              </div>
-            </details>
           </div>
         `;
       }).join('');
@@ -1217,7 +1479,71 @@
     }
   }
 
-  function openArticleWorkshop(logItem) {
+  // ==========================================
+  // 總覽頁 (Dashboard - Vocus Style)
+  // ==========================================
+  async function loadDashboardLogs() {
+    const container = document.getElementById('dashboardContainer');
+    container.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> 載入總覽中...</div>`;
+    lucide.createIcons();
+    
+    // 如果快取為空，先去要資料
+    if(globalLogsCache.length === 0) {
+      const email = localStorage.getItem('bvlog_user_email');
+      if(email) {
+        try { globalLogsCache = await api({ action: "getHistoryLogs", email: email }); }
+        catch(e) { container.innerHTML = `載入失敗: ${e.message}`; return; }
+      }
+    }
+
+    const dashboardItems = globalLogsCache.filter(item => item.articleFull || item.articleTitle);
+    
+    if(dashboardItems.length === 0) {
+      container.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px;">目前尚無已產出之文章草稿或成品，請先至日誌工坊產文。</div>`;
+      return;
+    }
+
+    container.innerHTML = dashboardItems.map(item => {
+      const cleanTime = sanitizeTimestamp(item.timestamp);
+      const isPublished = item.status && item.status.includes('已發布'); // 可視後端未來擴充而定
+      const coverHtml = item.coverUrl 
+        ? `<div class="vocus-cover" style="background-image: url('${item.coverUrl}')"></div>`
+        : `<div class="vocus-cover"><div class="vocus-cover-placeholder"><i data-lucide="image" style="width: 24px; height: 24px;"></i> 無封面圖</div></div>`;
+      
+      const displayTitle = item.articleTitle || "未命名草稿 (ID: " + item.logId + ")";
+
+      return `
+        <div class="vocus-card">
+          ${coverHtml}
+          <div class="vocus-content">
+            <div class="vocus-title">${escapeHtml(displayTitle)}</div>
+            <div class="vocus-meta">
+              <span>${cleanTime}</span> • 
+              <span class="badge ${isPublished ? 'published' : 'draft'}">${isPublished ? '已發布' : '草稿'}</span>
+            </div>
+            <div class="vocus-actions">
+              <button class="action-btn-sm action-btn-icon danger" onclick="deleteHistoryLog('${item.logId}')" title="刪除">
+                <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+              </button>
+              <div style="display:flex; gap:6px;">
+                <button class="action-btn-sm" onclick="openArticleWorkshop('${item.logId}')"><i data-lucide="edit-3" style="width: 14px; height: 14px;"></i> 編輯</button>
+                <button class="action-btn-sm action-btn-primary" onclick="triggerGithubPublish('${item.logId}')"><i data-lucide="globe" style="width: 14px; height: 14px;"></i> 發布</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+    lucide.createIcons();
+  }
+
+  // ==========================================
+  // 工坊系統 (Workshop)
+  // ==========================================
+  function openArticleWorkshop(logId) {
+    const logItem = globalLogsCache.find(l => l.logId === logId);
+    if (!logItem) return;
+
     window.currentSelectedLog = logItem;
     document.getElementById('workshopActiveLogBadge').innerText = `已選: ${logItem.logId}`;
 
@@ -1226,7 +1552,24 @@
     document.getElementById('finalArticleBody').value = logItem.articleBody || '';
     document.getElementById('finalArticleEnding').value = logItem.articleEnding || '';
 
+    // 封面預覽還原
+    const coverPreview = document.getElementById('workshopCoverPreview');
+    const statusText = document.getElementById('coverStatusText');
+    if (logItem.coverUrl) {
+      coverPreview.src = logItem.coverUrl;
+      coverPreview.style.display = 'block';
+      statusText.innerText = "已設定封面圖 (如需更換請重新擷取或上傳)。";
+    } else {
+      coverPreview.src = '';
+      coverPreview.style.display = 'none';
+      statusText.innerText = "尚未設定封面圖。";
+    }
+
     const urls = window.logPlaylists[logItem.logId];
+    const btnCapture = document.getElementById('btnCaptureCover');
+    btnCapture.disabled = true; // 預設禁用，等影片載入
+    btnCapture.title = "需等待整合預覽載入影片";
+
     if (urls && urls.length > 0) {
       if (!window.blobBuffers[logItem.logId]) window.blobBuffers[logItem.logId] = [];
       if (!window.blobBuffers[logItem.logId][0]) {
@@ -1235,8 +1578,14 @@
             window.blobBuffers[logItem.logId][0] = URL.createObjectURL(blob);
             const previewStatus = document.getElementById('preview-player-status');
             if (previewStatus) previewStatus.innerText = "✅ 影片就緒，可秒開";
+            // 啟用截圖按鈕
+            btnCapture.disabled = false;
+            btnCapture.title = "擷取當前播放畫面";
           }).catch(e => console.log(e));
         }).catch(e => console.log(e));
+      } else {
+         btnCapture.disabled = false;
+         btnCapture.title = "擷取當前播放畫面";
       }
     }
 
@@ -1249,6 +1598,58 @@
 
     switchTab('tab-article');
     showToast(`已載入 ${logItem.logId}`);
+  }
+
+  // 擷取影片畫面 (樂觀 UI + 背景上傳)
+  function captureFrameFromVideo() {
+    const videoEl = document.getElementById('preview-player');
+    if (!videoEl || !videoEl.src) { alert("請先點擊預覽區的播放按鈕載入影片！"); return; }
+    
+    const canvas = document.getElementById('captureCanvas');
+    canvas.width = videoEl.videoWidth || 1280;
+    canvas.height = videoEl.videoHeight || 720;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+    
+    const base64DataUrl = canvas.toDataURL('image/jpeg', 0.8);
+    const base64Clean = base64DataUrl.split(',')[1];
+    
+    updateCoverOptimistically(base64DataUrl, base64Clean);
+  }
+
+  // 本地上傳圖片 (樂觀 UI + 背景上傳)
+  function handleCoverUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const base64DataUrl = e.target.result;
+      const base64Clean = base64DataUrl.split(',')[1];
+      updateCoverOptimistically(base64DataUrl, base64Clean);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function updateCoverOptimistically(dataUrl, base64Clean) {
+    // 1. 樂觀 UI 更新
+    const coverPreview = document.getElementById('workshopCoverPreview');
+    const statusText = document.getElementById('coverStatusText');
+    coverPreview.src = dataUrl;
+    coverPreview.style.display = 'block';
+    statusText.innerHTML = `<i data-lucide="loader" class="spin" style="width:12px; height:12px;"></i> 正在將圖片同步至雲端...`;
+    lucide.createIcons();
+
+    // 2. 呼叫 API 在背景上傳至 Drive VBLOG_Assets
+    api({ action: 'uploadImage', data: base64Clean, mimeType: 'image/jpeg', logId: window.currentSelectedLog.logId })
+      .then(res => {
+         statusText.innerHTML = `<span style="color: var(--success);"><i data-lucide="check" style="width:12px; height:12px;"></i> 已成功上傳並設定為封面圖！</span>`;
+         lucide.createIcons();
+         // 更新快取
+         if(window.currentSelectedLog) window.currentSelectedLog.coverUrl = res.url;
+      })
+      .catch(err => {
+         statusText.innerHTML = `<span style="color: var(--danger);">上傳失敗：${err.message}</span>`;
+      });
   }
 
   async function generateStepTitles() {
@@ -1338,10 +1739,18 @@
     const dateStr = today.getFullYear() + '/' + String(today.getMonth() + 1).padStart(2, '0') + '/' + String(today.getDate()).padStart(2, '0');
     const logId = window.currentSelectedLog.logId;
     const urls = window.logPlaylists[logId];
+    const profile = window.currentAuthorProfile || {}; // 拿取作者資料
 
     const titleMatch = fullMd.match(/^#\s+(.+)\n/);
     const displayTitle = titleMatch ? titleMatch[1] : document.getElementById('finalArticleTitle').value;
     const bodyMd = fullMd.replace(/^#\s+.+\n/, '');
+
+    const avatarHtml = profile.avatarUrl 
+      ? `<div class="blog-avatar" style="background-image:url('${profile.avatarUrl}')"></div>` 
+      : `<div class="blog-avatar">${profile.authorName ? profile.authorName.charAt(0) : 'T'}</div>`;
+    
+    const authorNameText = profile.authorName || '特洛伊AI賦能師';
+    const authorBioText = profile.bio || '這是一篇寫給身兼數職、渴望用 AI 解放時間的微型創業者的陪伴成長指南。';
 
     let videoHtml = '';
     if (urls && urls.length > 0) {
@@ -1365,27 +1774,24 @@
         <h1 class="preview-main-title">${escapeHtml(displayTitle)}</h1>
         <div class="blog-meta-header">
           <div class="blog-author-info">
-            <div class="blog-avatar">T</div>
-            <div><div style="font-weight: 700; color: var(--text); font-size: 15px;">特洛伊AI賦能師</div><div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">${dateStr} 發布</div></div>
+            ${avatarHtml}
+            <div><div style="font-weight: 700; color: var(--text); font-size: 15px;">${escapeHtml(authorNameText)}</div><div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">${dateStr} 發布</div></div>
           </div>
           <div class="blog-stats">
-            <span><i data-lucide="eye" style="width: 15px; height: 15px;"></i> 1,208</span>
-            <span><i data-lucide="book-open" style="width: 15px; height: 15px;"></i> 85%</span>
-            <span><i data-lucide="message-circle" style="width: 15px; height: 15px;"></i> 12</span>
+            <span><i data-lucide="eye" style="width: 15px; height: 15px;"></i> 預覽</span>
           </div>
         </div>
         ${videoHtml}
         <div class="markdown-body">${renderMarkdown(bodyMd)}</div>
         <div class="blog-footer-cta">
           <div class="newsletter-box">
-            <div style="font-weight: 800; font-size: 16px; margin-bottom: 8px;">訂閱 特洛伊AI賦能師 電子報</div>
-            <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">獲取第一手微型創業與 AI 實戰指南，每週為您的思維充能。</p>
+            <div style="font-weight: 800; font-size: 16px; margin-bottom: 8px;">訂閱 ${escapeHtml(authorNameText)} 電子報</div>
+            <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">${escapeHtml(authorBioText)}</p>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
               <input type="email" placeholder="請輸入您的 Email..." style="flex: 1; min-width: 200px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; font-size: 14px; outline: none;">
               <button class="action-btn-sm action-btn-primary" style="padding: 12px 24px; border-radius: 4px; white-space: nowrap; height: 42px;">訂閱</button>
             </div>
           </div>
-          <a href="https:
         </div>
       </div>
     `;
@@ -1431,6 +1837,11 @@
         videoEl.src = blobUrl;
         videoEl.play().catch(e => { statusEl.innerText = `⏸ 準備就緒 (請點擊畫面播放)`; });
         if (currentIndex + 1 < urls.length) loadChunk(currentIndex + 1).catch(e => console.log('背景預載失敗', e));
+        
+        // 如果截圖按鈕原本是被 disabled 的，確保它在影片可播時解開
+        document.getElementById('btnCaptureCover').disabled = false;
+        document.getElementById('btnCaptureCover').title = "擷取當前播放畫面";
+
       } else { currentIndex++; playNext(); }
     };
 
@@ -1445,16 +1856,11 @@
     const ending = document.getElementById('finalArticleEnding').value.trim();
     if (!title || !body) { alert("請確保已完成標題與內文！"); return; }
 
-    const fullMd = `# ${title}\n\n> **閱讀提醒**：這是一篇寫給身兼數職、渴望用 AI 解放時間的微型創業者的陪伴成長指南。\n\n${hook}\n\n---\n\n${body}\n\n---\n\n${ending}`;
+    const fullMd = `# ${title}\n\n${hook}\n\n---\n\n${body}\n\n---\n\n${ending}`;
     window.currentSelectedFullMd = fullMd;
     renderBlogPreview(fullMd);
     saveCurrentStepData('full');
     showToast("已整合定稿");
-  }
-
-  function copyFullArticle() {
-    if (!window.currentSelectedFullMd) { alert("請先點擊「整合」生成文章！"); return; }
-    copyTextToClipboard(window.currentSelectedFullMd);
   }
 
   async function saveCurrentStepData(field) {
@@ -1469,34 +1875,53 @@
     try {
       await api({ action: "saveArticleSection", logId: window.currentSelectedLog.logId, field: field, content: content });
       showToast(`儲存成功`);
+      
+      // 更新快取
+      if(field === 'full') {
+         window.currentSelectedLog.articleFull = content;
+         window.currentSelectedLog.articleTitle = document.getElementById('finalArticleTitle').value;
+      }
     } catch (e) { alert("儲存失敗: " + e.message); }
   }
 
-  function publishArticleToWeb() { alert("【預留接口】文章已準備就緒！接下來只要串接 API 或 GitHub Pages 即可一鍵推送。"); }
+  // GitHub 一鍵發布 (由工坊內或 Dashboard 觸發)
+  async function triggerGithubPublish(logId) {
+    const email = localStorage.getItem('bvlog_user_email');
+    if(!email) return;
+    const btn = event.currentTarget;
+    const oldHtml = btn.innerHTML;
+    btn.innerHTML = `<i data-lucide="loader" class="spin" style="width:14px; height:14px;"></i> 發布中`;
+    lucide.createIcons();
+    btn.disabled = true;
 
-  async function api(payload) {
-    if (typeof google !== 'undefined' && google.script && google.script.run) {
-      return new Promise((resolve, reject) => {
-        google.script.run
-          .withSuccessHandler(res => {
-            if (!res) { reject(new Error("後端無回應")); return; }
-            if (res.status === 'success') resolve(res.data);
-            else reject(new Error(res.message || "發生錯誤"));
-          })
-          .withFailureHandler(err => reject(err))
-          .handleClientRequest(payload);
-      });
-    } else {
-      const res = await fetch(GAS_WEB_URL, { method: 'POST', body: JSON.stringify(payload) });
-      const json = await res.json();
-      if (json.status === 'success') return json.data;
-      throw new Error(json.message);
+    try {
+      const res = await api({ action: "pushToGithub", email: email, logId: logId });
+      showToast(`發布成功！已部署至 ${res.handle} 目錄`);
+    } catch(e) {
+      alert("發布失敗：" + e.message);
+    } finally {
+      btn.innerHTML = oldHtml;
+      lucide.createIcons();
+      btn.disabled = false;
     }
+  }
+
+  function publishArticleToWeb() { 
+    if(!window.currentSelectedLog) return;
+    triggerGithubPublish(window.currentSelectedLog.logId);
   }
 
   async function deleteHistoryLog(logId) {
     if (!confirm("確定要刪除這筆日誌嗎？")) return;
-    try { showToast("刪除中..."); await api({ action: "deleteLog", logId: logId }); showToast("已刪除"); loadHistoryLogs(); } 
+    try { 
+      showToast("刪除中..."); 
+      await api({ action: "deleteLog", logId: logId }); 
+      showToast("已刪除"); 
+      // 重新載入快取與畫面
+      globalLogsCache = globalLogsCache.filter(l => l.logId !== logId);
+      if(document.getElementById('tab-history').classList.contains('active')) loadHistoryLogs();
+      if(document.getElementById('tab-dashboard').classList.contains('active')) loadDashboardLogs();
+    } 
     catch (e) { alert("刪除失敗：" + e.message); }
   }
 
@@ -1524,24 +1949,6 @@
     }
   }
 
-  function toggleFullscreen() {
-    const viewport = document.getElementById('videoWrapper');
-    if (!document.fullscreenElement) {
-      if (viewport.requestFullscreen) viewport.requestFullscreen();
-      else if (viewport.webkitRequestFullscreen) viewport.webkitRequestFullscreen();
-    } else {
-      if (document.exitFullscreen) document.exitFullscreen();
-      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-    }
-  }
-
-  document.addEventListener('fullscreenchange', () => {
-    const icon = document.getElementById('iconFullscreen');
-    if (!icon) return;
-    if (document.fullscreenElement) icon.setAttribute('data-lucide', 'minimize');
-    else icon.setAttribute('data-lucide', 'maximize');
-    lucide.createIcons();
-  });
 </script>
 
 </body>
