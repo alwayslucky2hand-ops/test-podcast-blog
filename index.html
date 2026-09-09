@@ -429,7 +429,7 @@
         <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">已編輯完成的草稿與已發布文章。</p>
       </div>
       <div class="flex-wrap-gap">
-        <a id="authorGitHubLink" href="#" target="_blank" class="action-btn-sm" style="display:none; color:var(--text); border-color:var(--text);"><i data-lucide="external-link" style="width:14px; height:14px;"></i> 前往沙龍首頁</a>
+        <a id="authorGitHubLink" href="#" target="_blank" class="action-btn-sm" style="display:none; color:var(--text); border-color:var(--text);"><i data-lucide="external-link" style="width:14px; height:14px;"></i> 沙龍</a>
         <button onclick="loadDashboardLogs()" class="action-btn-sm" title="重整"><i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> 重整</button>
       </div>
     </div>
@@ -516,7 +516,7 @@
           <span class="step-badge">5</span><div style="font-weight: 700; font-size: 15px;">封面與預覽</div>
         </div>
         <div class="flex-wrap-gap">
-          <button class="action-btn-sm action-btn-primary" onclick="assembleFullArticle()"><i data-lucide="layers" style="width: 14px; height: 14px;"></i> 整合渲染</button>
+          <button class="action-btn-sm action-btn-primary" onclick="assembleFullArticle()"><i data-lucide="layers" style="width: 14px; height: 14px;"></i> 整合</button>
         </div>
       </div>
       
@@ -525,9 +525,9 @@
         <div style="font-size: 13px; font-weight: 700; color: var(--text); width: 100%; text-align: left;">文章封面圖設定</div>
         <img id="workshopCoverPreview" class="cover-preview-img" src="" alt="封面預覽">
         <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-          <button class="action-btn-sm" onclick="captureFrameFromVideo()" id="btnCaptureCover" disabled title="需等待整合預覽載入影片"><i data-lucide="camera" style="width: 14px; height: 14px;"></i> 從影片擷取畫面</button>
+          <button class="action-btn-sm" onclick="captureFrameFromVideo()" id="btnCaptureCover" disabled title="需等待整合載入影片"><i data-lucide="camera" style="width: 14px; height: 14px;"></i> 擷取</button>
           <label class="action-btn-sm" style="cursor: pointer;">
-            <i data-lucide="upload" style="width: 14px; height: 14px;"></i> 上傳圖片
+            <i data-lucide="upload" style="width: 14px; height: 14px;"></i> 上傳
             <input type="file" id="coverImageUpload" accept="image/*" style="display: none;" onchange="handleCoverUpload(event)">
           </label>
         </div>
@@ -541,8 +541,8 @@
       <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-top: 8px;">
         <div style="font-size: 12px; color: var(--text-muted);">* 同步寫入資料庫，並準備推送至 GitHub。</div>
         <div class="flex-wrap-gap">
-          <button class="action-btn-sm" onclick="saveCurrentStepData('full')"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存草稿</button>
-          <button class="action-btn-sm" style="color: #ffffff; border-color: var(--text); background: var(--text);" onclick="publishArticleToWeb()"><i data-lucide="globe" style="width: 14px; height: 14px;"></i> 一鍵發布</button>
+          <button class="action-btn-sm" onclick="saveCurrentStepData('full')"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button>
+          <button class="action-btn-sm" style="color: #ffffff; border-color: var(--text); background: var(--text);" onclick="publishArticleToWeb()"><i data-lucide="globe" style="width: 14px; height: 14px;"></i> 發布</button>
         </div>
       </div>
     </div>
@@ -562,12 +562,26 @@
       <div class="settings-title"><i data-lucide="shield-check" style="width: 18px; height: 18px; color: var(--success);"></i> 帳號資訊</div>
       <div class="input-row">
         <div class="input-col form-group">
-          <label class="form-label">註冊信箱 (不可更改)</label>
-          <input type="text" id="infoEmail" class="login-input" disabled>
+          <label class="form-label">註冊信箱</label>
+          <input type="text" id="infoEmail" class="login-input" disabled value="載入中...">
         </div>
         <div class="input-col form-group">
-          <label class="form-label">會員姓名 (不可更改)</label>
-          <input type="text" id="infoName" class="login-input" disabled>
+          <label class="form-label">真實姓名</label>
+          <input type="text" id="infoName" class="login-input" disabled value="載入中...">
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="input-col form-group">
+          <label class="form-label">生日</label>
+          <input type="text" id="infoBirth" class="login-input" disabled value="載入中...">
+        </div>
+        <div class="input-col form-group">
+          <label class="form-label">註冊時間</label>
+          <input type="text" id="infoReg" class="login-input" disabled value="載入中...">
+        </div>
+        <div class="input-col form-group">
+          <label class="form-label">會員等級</label>
+          <input type="text" id="infoTier" class="login-input" disabled value="載入中...">
         </div>
       </div>
     </div>
@@ -580,10 +594,10 @@
         <div class="avatar-preview" id="authorAvatarPreview"><i data-lucide="image" style="width: 24px; height: 24px;"></i></div>
         <div>
           <label class="action-btn-sm avatar-upload-btn" style="margin-bottom: 6px;">
-            <i data-lucide="upload-cloud" style="width: 14px; height: 14px;"></i> 上傳大頭貼
+            <i data-lucide="upload-cloud" style="width: 14px; height: 14px;"></i> 上傳
             <input type="file" id="authorAvatarInput" accept="image/*" onchange="handleAvatarUpload(event)">
           </label>
-          <div style="font-size: 12px; color: var(--text-muted);">建議尺寸 400x400，將存至雲端。</div>
+          <div style="font-size: 12px; color: var(--text-muted);">建議 400x400。</div>
         </div>
       </div>
 
@@ -626,7 +640,7 @@
       </div>
 
       <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
-        <button class="action-btn-sm action-btn-primary" onclick="saveAuthorProfile(this)"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存作者設定</button>
+        <button class="action-btn-sm action-btn-primary" onclick="saveAuthorProfile(this)"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button>
       </div>
     </div>
 
@@ -634,12 +648,12 @@
     <div class="settings-section">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <div class="settings-title" style="margin-bottom: 0;"><i data-lucide="bot" style="width: 18px; height: 18px; color: var(--accent);"></i> 自訂 AI 提示詞</div>
-        <button class="action-btn-sm action-btn-primary" onclick="saveAllPrompts(this)"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存提示詞</button>
+        <button class="action-btn-sm action-btn-primary" onclick="saveAllPrompts(this)"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button>
       </div>
-      <div class="form-group"><label class="form-label">提案</label><textarea id="promptStep1" class="workshop-textarea" style="min-height: 120px; font-size: 13.5px;"></textarea></div>
-      <div class="form-group"><label class="form-label">開頭</label><textarea id="promptStep2" class="workshop-textarea" style="min-height: 120px; font-size: 13.5px;"></textarea></div>
-      <div class="form-group"><label class="form-label">內文</label><textarea id="promptStep3" class="workshop-textarea" style="min-height: 120px; font-size: 13.5px;"></textarea></div>
-      <div class="form-group"><label class="form-label">結尾</label><textarea id="promptStep4" class="workshop-textarea" style="min-height: 120px; font-size: 13.5px;"></textarea></div>
+      <div class="form-group"><label class="form-label">提案</label><textarea id="promptStep1" class="workshop-textarea" style="min-height: 120px; font-size: 13.5px;" placeholder="載入中..."></textarea></div>
+      <div class="form-group"><label class="form-label">開頭</label><textarea id="promptStep2" class="workshop-textarea" style="min-height: 120px; font-size: 13.5px;" placeholder="載入中..."></textarea></div>
+      <div class="form-group"><label class="form-label">內文</label><textarea id="promptStep3" class="workshop-textarea" style="min-height: 120px; font-size: 13.5px;" placeholder="載入中..."></textarea></div>
+      <div class="form-group"><label class="form-label">結尾</label><textarea id="promptStep4" class="workshop-textarea" style="min-height: 120px; font-size: 13.5px;" placeholder="載入中..."></textarea></div>
     </div>
   </div>
 
@@ -708,7 +722,8 @@
       document.getElementById('loginOverlay').style.display = 'none';
       document.getElementById('mainAppShell').style.display = 'flex';
       document.getElementById('currentUserEmail').innerText = email;
-      document.getElementById('infoEmail').value = email;
+      
+      loadUserAccountInfo(email);
       loadPrompts(email);
       loadAuthorProfile(email);
     } else {
@@ -723,7 +738,7 @@
     btnElement.disabled = true;
     
     const timerId = setInterval(() => {
-      btnElement.innerText = `${timeLeft}s`;
+      btnElement.innerText = timeLeft + "s";
       timeLeft--;
       if (timeLeft < 0) {
         clearInterval(timerId);
@@ -775,7 +790,6 @@
       const res = await api({ action: "verifyAndLogin", email: email, otp: otp });
       if (res) {
         localStorage.setItem('bvlog_user_email', email);
-        document.getElementById('infoName').value = res.name || "一般會員";
         showToast("登入成功");
         checkLoginStatus();
       }
@@ -801,7 +815,6 @@
       const res = await api({ action: "verifyAndRegister", email: email, otp: otp, name: name, birth: birth });
       if (res) {
         localStorage.setItem('bvlog_user_email', email);
-        document.getElementById('infoName').value = name;
         showToast("註冊成功");
         checkLoginStatus();
       }
@@ -847,6 +860,25 @@
       const json = await res.json();
       if (json.status === 'success') return json.data;
       throw new Error(json.message);
+    }
+  }
+
+  
+  
+  
+  async function loadUserAccountInfo(email) {
+    try {
+      const res = await api({ action: "getUserAccountInfo", email: email });
+      if (res) {
+        document.getElementById('infoEmail').value = res.email || email;
+        document.getElementById('infoName').value = res.name || "未設定";
+        document.getElementById('infoBirth').value = res.birth || "未設定";
+        document.getElementById('infoReg').value = res.regTime || "未設定";
+        document.getElementById('infoTier').value = res.tier || "一般會員";
+      }
+    } catch (e) {
+      console.log("帳號資訊載入失敗：", e.message);
+      document.getElementById('infoEmail').value = email;
     }
   }
 
@@ -923,7 +955,7 @@
     }
 
     const originalHtml = btn.innerHTML;
-    btn.innerHTML = '<i data-lucide="loader" class="spin" style="width:14px; height:14px;"></i> 儲存中...';
+    btn.innerHTML = '<i data-lucide="loader" class="spin" style="width:14px; height:14px;"></i> 儲存...';
     lucide.createIcons();
     btn.disabled = true;
 
@@ -949,15 +981,28 @@
   
   
   async function loadPrompts(email) {
+    
+    const fallback = {
+      step1: "你是一位深諳短影音變現、爆款內容心理學與商業雜誌的資深總編輯。\n請針對以下【語音逐字稿與畫面描述內容】，為微型創業者設計 20 組極具吸引力的爆款文章策略與標題提案。\n格式必須嚴格依照：「你的吸睛標題｜特洛伊AI賦能師|||[標題類型] 戰略切入點說明」",
+      step2: "你是一位專業的商業雜誌首席特約作家與 VBLOG 品牌顧問，深諳 Google E-E-A-T。\n請根據確定的【文章標題】與【原始內容】，寫一段兼具價值與黃金3秒Hook的文章開頭。\n首段必備：50-80 字精煉「實戰經驗價值」。\n第二段開始：直擊微型創業者痛點，極致閱讀呼吸感。",
+      step3: "你是一位頂尖商業雜誌特約主筆，也是陪伴微型創業者的特洛伊導師。\n請將下方的內容重構整理：\n1. 原汁原味保留口語精髓與案例。\n2. 「小學生都能懂」的白話文。\n3. 極致閱讀呼吸感，零 Emoji。\n4. 分為 3 到 5 個明確的子標題（###），中間加分隔線（---）。\n5. 開門見山，不要重複寫標題與開頭。",
+      step4: "你是一位溫暖而堅定的商業導師。請根據以下長文章的脈絡，寫一段充滿力量的結尾祝福與行動呼籲（CTA）。\n1. 結尾昇華金句。\n2. 互動呼籲。\n3. 在最後一字不漏加上：「讓ＡＩ為你效勞，讓創業不再過勞\n我是特洛伊，一起用ＡＩ守住光陰」。\n4. 零 Emoji，大量換行與留白。"
+    };
+
     try {
       const res = await api({ action: "getPrompts", email: email });
-      if (res && res.prompts) {
-        document.getElementById('promptStep1').value = res.prompts.step1 || "";
-        document.getElementById('promptStep2').value = res.prompts.step2 || "";
-        document.getElementById('promptStep3').value = res.prompts.step3 || "";
-        document.getElementById('promptStep4').value = res.prompts.step4 || "";
-      }
-    } catch (e) { console.log("載入失敗：", e.message); }
+      const p = (res && res.prompts) ? res.prompts : fallback;
+      document.getElementById('promptStep1').value = p.step1 || fallback.step1;
+      document.getElementById('promptStep2').value = p.step2 || fallback.step2;
+      document.getElementById('promptStep3').value = p.step3 || fallback.step3;
+      document.getElementById('promptStep4').value = p.step4 || fallback.step4;
+    } catch (e) {
+      console.log("提示詞載入異常，啟動防呆備援：", e.message);
+      document.getElementById('promptStep1').value = fallback.step1;
+      document.getElementById('promptStep2').value = fallback.step2;
+      document.getElementById('promptStep3').value = fallback.step3;
+      document.getElementById('promptStep4').value = fallback.step4;
+    }
   }
 
   async function saveAllPrompts(btn) {
@@ -965,7 +1010,7 @@
     if (!email) return;
 
     const originalHtml = btn.innerHTML;
-    btn.innerHTML = '<i data-lucide="loader" class="spin" style="width:14px; height:14px;"></i> 儲存中';
+    btn.innerHTML = '<i data-lucide="loader" class="spin" style="width:14px; height:14px;"></i> 儲存...';
     lucide.createIcons();
     btn.disabled = true;
 
@@ -1430,7 +1475,7 @@
 
         let contentBlock = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="file-text" style="width: 15px; height: 15px; color: var(--text-muted);"></i>內容</span><div class="flex-wrap-gap"><button type="button" id="btn-edit-content-' + item.logId + '" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); toggleEditMode(\'' + item.logId + '\', \'content\')" title="編輯"><i data-lucide="edit-3" style="width: 16px; height: 16px;"></i></button><button type="button" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute(\'data-text\'))" data-text="' + escapeHtml(safeContentRaw) + '" title="複製"><i data-lucide="copy" style="width: 16px; height: 16px;"></i></button><span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span></div></summary><div class="accordion-body"><div id="view-content-' + item.logId + '">' + formatTranscriptContent(safeContentRaw, urls) + '</div><div id="edit-content-' + item.logId + '" style="display: none; flex-direction: column; gap: 12px;"><textarea id="input-content-' + item.logId + '" class="workshop-textarea" style="min-height: 250px;">' + escapeHtml(safeContentRaw) + '</textarea><div style="display: flex; justify-content: flex-end; gap: 8px;"><button class="action-btn-sm action-btn-icon" onclick="toggleEditMode(\'' + item.logId + '\', \'content\')" title="取消"><i data-lucide="x" style="width: 16px; height: 16px;"></i></button><button class="action-btn-sm action-btn-primary" onclick="saveHistoryLog(\'' + item.logId + '\', \'content\', this)"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button></div></div></div></details>';
 
-        listHtml += '<div class="history-card" data-row-id="' + item.logId + '"><div class="history-header"><div><div style="font-weight: 700; font-size: 16px; color: var(--text);">ID: ' + item.logId + '</div><div style="font-size: 13px; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; gap: 6px;"><i data-lucide="clock" style="width: 14px; height: 14px;"></i> ' + cleanTime + '</div></div><div class="flex-wrap-gap"><span class="badge ' + (isRec ? 'recording' : '') + '">' + item.status + '</span><button type="button" class="action-btn-sm action-btn-primary" onclick="openArticleWorkshop(\'' + item.logId + '\')"><i data-lucide="file-text" style="width: 14px; height: 14px;"></i> 進入工坊</button><button type="button" class="action-btn-sm action-btn-icon danger" onclick="deleteHistoryLog(\'' + item.logId + '\')" title="刪除"><i data-lucide="trash-2" style="width: 16px; height: 16px;"></i></button></div></div><div><div style="font-size: 12.5px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px;">雲端切片 (' + urls.length + ')</div><div class="flex-wrap-gap">' + urlsHtml + '</div></div>' + playerHtml + summaryBlock + contentBlock + '</div>';
+        listHtml += '<div class="history-card" data-row-id="' + item.logId + '"><div class="history-header"><div><div style="font-weight: 700; font-size: 16px; color: var(--text);">ID: ' + item.logId + '</div><div style="font-size: 13px; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; gap: 6px;"><i data-lucide="clock" style="width: 14px; height: 14px;"></i> ' + cleanTime + '</div></div><div class="flex-wrap-gap"><span class="badge ' + (isRec ? 'recording' : '') + '">' + item.status + '</span><button type="button" class="action-btn-sm action-btn-primary" onclick="openArticleWorkshop(\'' + item.logId + '\')"><i data-lucide="file-text" style="width: 14px; height: 14px;"></i> 工坊</button><button type="button" class="action-btn-sm action-btn-icon danger" onclick="deleteHistoryLog(\'' + item.logId + '\')" title="刪除"><i data-lucide="trash-2" style="width: 16px; height: 16px;"></i></button></div></div><div><div style="font-size: 12.5px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px;">雲端切片 (' + urls.length + ')</div><div class="flex-wrap-gap">' + urlsHtml + '</div></div>' + playerHtml + summaryBlock + contentBlock + '</div>';
       }
       
       container.innerHTML = listHtml;
@@ -1538,7 +1583,7 @@
       window.currentSelectedFullMd = logItem.articleFull;
       renderBlogPreview(logItem.articleFull);
     } else {
-      document.getElementById('fullArticlePreview').innerHTML = '<div style="border: 1px dashed var(--border); border-radius: 4px; padding: 32px; text-align: center;"><p style="color: var(--text-muted); font-size: 13px;">點擊上方整合，渲染預覽。</p></div>';
+      document.getElementById('fullArticlePreview').innerHTML = '<div style="border: 1px dashed var(--border); border-radius: 4px; padding: 32px; text-align: center;"><p style="color: var(--text-muted); font-size: 13px;">點擊整合，渲染預覽。</p></div>';
     }
 
     switchTab('tab-article');
