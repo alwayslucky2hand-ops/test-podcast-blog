@@ -1157,7 +1157,7 @@
     lucide.createIcons();
   }
 
-  async function acquireStream() {
+async function acquireStream() {
     if (currentStream) { currentStream.getTracks().forEach(t => t.stop()); currentStream = null; }
     if (audioContext) { audioContext.close(); audioContext = null; }
 
@@ -1181,12 +1181,14 @@
       } else {
         const isPortrait = window.innerHeight > window.innerWidth;
         
+        
+        
         let videoConstraints;
         if (isMobile) {
           videoConstraints = {
             facingMode: mobileFacingMode,
-            width: { ideal: isPortrait ? 1080 : 1920 },
-            height: { ideal: isPortrait ? 1920 : 1080 },
+            width: { ideal: isPortrait ? 1440 : 1920 },
+            height: { ideal: isPortrait ? 1920 : 1440 },
             frameRate: { ideal: cameraFps }
           };
           if (cameraZoom === 0.5) videoConstraints.advanced = [{ zoom: 0.5 }];
