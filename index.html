@@ -103,6 +103,10 @@
       border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
       transition: aspect-ratio 0.3s ease;
     }
+     
+    .viewport-container:fullscreen {
+      background-color: #000000;
+    }
     .camera-grid {
       position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 5;
       background-image: 
@@ -389,7 +393,8 @@
       <div id="controlsIsland" class="controls-island" style="display: none;">
         <button class="ctrl-btn" id="btnSource" onclick="switchMediaSource()" title="鏡頭"><i data-lucide="switch-camera" id="iconSource"></i></button>
         <button class="ctrl-btn" id="btnVideoTrack" onclick="toggleVideoTrack()" title="畫面"><i data-lucide="video" id="iconVideo"></i></button>
-        <button class="ctrl-btn" id="btnZoom" onclick="toggleZoom()" title="焦距">1x</button>
+        
+        <button class="ctrl-btn" id="btnFullscreen" onclick="toggleFullscreen()" title="全螢幕"><i data-lucide="maximize" id="iconFullscreen"></i></button>
         <button class="ctrl-btn" id="btnFps" onclick="toggleFps()" title="幀率">30</button>
         <div class="controls-divider"></div>
         <button class="ctrl-btn record-btn" id="btnStart" onclick="startRecording()" title="錄影"><i data-lucide="circle-dot"></i></button>
@@ -700,7 +705,7 @@
   let currentSourceType = "camera";
   let mobileFacingMode = "user";
   
-  let cameraZoom = 1.0;
+  
   let cameraFps = 30;
 
   let chunkIndex = 1;
@@ -857,6 +862,42 @@
     lucide.createIcons();
     checkLoginStatus();
   });
+
+  
+  
+  
+  function toggleFullscreen() {
+    const elem = document.getElementById('videoWrapper');
+    
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) {  
+        elem.webkitRequestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {  
+        document.webkitExitFullscreen();
+      }
+    }
+  }
+
+  
+  document.addEventListener('fullscreenchange', updateFullscreenIcon);
+  document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
+
+  function updateFullscreenIcon() {
+    const icon = document.getElementById('iconFullscreen');
+    if (!icon) return;
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      icon.setAttribute('data-lucide', 'minimize');
+    } else {
+      icon.setAttribute('data-lucide', 'maximize');
+    }
+    lucide.createIcons();
+  }
 
   
   
@@ -1105,17 +1146,6 @@
   
   
   
-  function toggleZoom() {
-    cameraZoom = (cameraZoom === 1.0) ? 0.5 : 1.0;
-    document.getElementById('btnZoom').innerText = cameraZoom === 1.0 ? "1x" : ".5";
-    document.getElementById('btnZoom').classList.toggle('active', cameraZoom === 0.5);
-    if (currentStream && currentStream.getVideoTracks().length > 0) {
-      const track = currentStream.getVideoTracks()[0];
-      const capabilities = track.getCapabilities ? track.getCapabilities() : {};
-      if (capabilities.zoom) { track.applyConstraints({ advanced: [{ zoom: cameraZoom }] }).catch(e => log("> 設備不支援即時縮放")); } 
-      else { log("> 重啟相機套用廣角..."); acquireStream(); }
-    }
-  }
 
   function toggleFps() {
     cameraFps = (cameraFps === 30) ? 60 : 30;
