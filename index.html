@@ -103,7 +103,6 @@
       border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
       transition: aspect-ratio 0.3s ease;
     }
-     
     .viewport-container:fullscreen {
       background-color: #000000;
     }
@@ -393,7 +392,6 @@
       <div id="controlsIsland" class="controls-island" style="display: none;">
         <button class="ctrl-btn" id="btnSource" onclick="switchMediaSource()" title="鏡頭"><i data-lucide="switch-camera" id="iconSource"></i></button>
         <button class="ctrl-btn" id="btnVideoTrack" onclick="toggleVideoTrack()" title="畫面"><i data-lucide="video" id="iconVideo"></i></button>
-        
         <button class="ctrl-btn" id="btnFullscreen" onclick="toggleFullscreen()" title="全螢幕"><i data-lucide="maximize" id="iconFullscreen"></i></button>
         <button class="ctrl-btn" id="btnFps" onclick="toggleFps()" title="幀率">30</button>
         <div class="controls-divider"></div>
@@ -705,7 +703,6 @@
   let currentSourceType = "camera";
   let mobileFacingMode = "user";
   
-  
   let cameraFps = 30;
 
   let chunkIndex = 1;
@@ -744,7 +741,6 @@
       document.getElementById('loginOverlay').style.display = 'none';
       document.getElementById('mainAppShell').style.display = 'flex';
       document.getElementById('currentUserEmail').innerText = email;
-      
       
       loadUserAccountInfo(email);
       loadPrompts(email);
@@ -867,14 +863,12 @@
   
   
   function toggleFullscreen() {
-    
     const elem = isMobile ? document.getElementById('mediaPlayer') : document.getElementById('videoWrapper');
     
     if (!document.fullscreenElement && !document.webkitFullscreenElement) {
       if (elem.requestFullscreen) {
         elem.requestFullscreen().catch(err => log("> 全螢幕無法啟動：" + err.message));
       } else if (elem.webkitEnterFullscreen) {
-        
         elem.webkitEnterFullscreen();
       } else if (elem.webkitRequestFullscreen) {
         elem.webkitRequestFullscreen();
@@ -888,7 +882,6 @@
     }
   }
 
-  
   document.addEventListener('fullscreenchange', updateFullscreenIcon);
   document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
 
@@ -923,7 +916,7 @@
         try {
           const res = await fetch(GAS_WEB_URL, { 
               method: 'POST', 
-              headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
               body: JSON.stringify(payload) 
           });
           const json = await res.json();
@@ -1150,7 +1143,6 @@
   
   
   
-
   function toggleFps() {
     cameraFps = (cameraFps === 30) ? 60 : 30;
     document.getElementById('btnFps').innerText = cameraFps;
@@ -1191,7 +1183,7 @@
     lucide.createIcons();
   }
 
-async function acquireStream() {
+  async function acquireStream() {
     if (currentStream) { currentStream.getTracks().forEach(t => t.stop()); currentStream = null; }
     if (audioContext) { audioContext.close(); audioContext = null; }
 
@@ -1214,14 +1206,10 @@ async function acquireStream() {
         screenStream.getVideoTracks()[0].onended = async () => { if (currentSourceType === "screen") { log("> 共用停止，切回鏡頭..."); await switchMediaSource(); } };
       } else {
         
-        
-        
-        
-        
         let videoConstraints = {
           facingMode: mobileFacingMode,
-          width: { ideal: 1920 },  
-          height: { ideal: 1080 }, 
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
           frameRate: { ideal: cameraFps }
         };
 
@@ -1288,11 +1276,6 @@ async function acquireStream() {
     try {
       const res = await api({ action: "initLog", email: email });
       logSession = res;
-      
-      
-      window.sessionUrls = [];
-      window.sessionTranscripts = [];
-      
       isRecording = true; isPaused = false; chunkIndex = 1; secondsElapsed = 0;
 
       document.getElementById('btnStart').style.display = 'none';
@@ -1302,7 +1285,7 @@ async function acquireStream() {
       document.getElementById('statusBadge').style.display = 'flex';
 
       startTimer(); startChunkRecording(); wakeControls();
-      log("🟢 雙軌錄製中！");
+      log("🟢 雙軌錄製中！每 1 分鐘自動建檔並寫入試算表。");
     } catch (e) { log("> 錯誤：" + e.message); document.getElementById('btnStart').disabled = false; }
   }
 
@@ -1310,7 +1293,19 @@ async function acquireStream() {
     if (!isRecording || !currentStream || isPaused) return;
     recordedChunks = [];
     const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
-    mediaRecorder = new MediaRecorder(currentStream, { mimeType: mime });
+    
+    
+    const recorderOptions = {
+      mimeType: mime,
+      videoBitsPerSecond: 1200000
+    };
+
+    try {
+      mediaRecorder = new MediaRecorder(currentStream, recorderOptions);
+    } catch(e) {
+      mediaRecorder = new MediaRecorder(currentStream, { mimeType: mime });
+    }
+
     mediaRecorder.ondataavailable = e => { if (e.data && e.data.size > 0) recordedChunks.push(e.data); };
     mediaRecorder.onstop = () => {
       if (recordedChunks.length > 0) {
@@ -1324,14 +1319,14 @@ async function acquireStream() {
     
     chunkTimer = setTimeout(() => {
       if (mediaRecorder && mediaRecorder.state === "recording") { 
-        log("[系統] 擷取 1 分鐘片段，雙軌發送至雲端與 AI..."); 
+        log("[系統] 第 " + chunkIndex + " 段 1 分鐘已滿，打包建檔寫入試算表..."); 
         mediaRecorder.stop(); 
       }
     }, 60000);
   }
 
   function processChunk(blob, mime, index) {
-    log("> [排隊] 準備傳送第 " + index + " 段 (1分鐘) 影片...");
+    log("> [排隊] 傳送第 " + index + " 段影片 (1分鐘)...");
     const task = new Promise(resolve => {
       const reader = new FileReader();
       reader.readAsDataURL(blob);
@@ -1341,24 +1336,18 @@ async function acquireStream() {
           resolve(); return;
         }
         const base64 = reader.result.split(',')[1];
-        log("> [處理] 第 " + index + " 段 AI 解析中，請稍候...");
+        log("> [處理] 第 " + index + " 段雲端建檔與 AI 解析中...");
         try {
           
-          const res = await api({ action: "processChunkRealtime", base64Data: base64, mimeType: mime, folderId: logSession.folderId, rowIndex: logSession.rowIndex, chunkIndex: index });
-          
-          
-          window.sessionUrls.push(res.url);
-          window.sessionTranscripts.push({ index: res.chunkIndex, text: res.transcript });
-          window.sessionTranscripts.sort((a, b) => a.index - b.index);
-          
-          
-          const fullTranscript = window.sessionTranscripts.map(t => '【第 ' + t.index + ' 段影音】\n' + t.text).join('\n\n');
-          const fullUrls = window.sessionUrls.join('\n');
-
-          
-          await api({ action: "syncSheetRealtime", rowIndex: logSession.rowIndex, fullTrans: fullTranscript, fullUrls: fullUrls });
-          
-          log("> [✅] 第 " + index + " 段 AI 辨識並同步試算表成功！");
+          await api({ 
+            action: "processChunkRealtime", 
+            base64Data: base64, 
+            mimeType: mime, 
+            folderId: logSession.folderId, 
+            rowIndex: logSession.rowIndex, 
+            chunkIndex: index 
+          });
+          log("> [✅] 第 " + index + " 段已建檔並成功寫入試算表！");
         } catch (e) { log("> [❌] 第 " + index + " 段失敗: " + e.message); }
         resolve();
       };
@@ -1366,7 +1355,6 @@ async function acquireStream() {
     activeUploadTasks.add(task); 
     task.then(() => activeUploadTasks.delete(task));
   }
-
 
   function togglePause() {
     if (!isRecording) return;
@@ -1405,28 +1393,28 @@ async function acquireStream() {
     if (document.getElementById('mediaPlayer')) document.getElementById('mediaPlayer').srcObject = null;
     if (audioContext) { audioContext.close(); audioContext = null; }
     
-    log("> 設備已關閉，準備歸檔...");
+    log("> 設備已關閉，等待所有切片寫入...");
 
     document.getElementById('cameraPrompt').style.display = 'flex';
     document.getElementById('controlsIsland').style.display = 'none';
     document.getElementById('statusBadge').style.display = 'none';
     document.getElementById('cameraGrid').style.display = 'none';
 
-    
     const stopBtn = document.getElementById('btnStop');
     stopBtn.disabled = true;
     document.getElementById('btnPause').style.display = 'none';
     document.getElementById('btnCloseCamera').style.display = 'flex'; 
 
     if (activeUploadTasks.size > 0) {
-      log("> ⏳ 請勿關閉網頁！正在等待 AI 處理最後的 " + activeUploadTasks.size + " 個 1 分鐘片段...");
+      log("> ⏳ 正在等待最後 " + activeUploadTasks.size + " 個切片完成寫入試算表...");
     }
 
     
     while (activeUploadTasks.size > 0) { await Promise.all(Array.from(activeUploadTasks)); }
-    log("> AI 辨識全數完成，產出總結摘要中...");
+    log("> 所有片段已入庫，開始進行 AI 全局重點提煉...");
 
     try {
+      
       const res = await api({ action: "finalizeLog", rowIndex: logSession.rowIndex, email: email });
       log("> ✅ 歸檔大功告成！");
       const urls = res.urls || [];
@@ -1593,7 +1581,6 @@ async function acquireStream() {
     container.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> 載入中...</div>';
     lucide.createIcons();
     
-    
     if(globalLogsCache.length === 0) {
       const email = localStorage.getItem('bvlog_user_email');
       if(email) {
@@ -1642,7 +1629,6 @@ async function acquireStream() {
     document.getElementById('finalArticleBody').value = logItem.articleBody || '';
     document.getElementById('finalArticleEnding').value = logItem.articleEnding || '';
 
-    
     const coverPreview = document.getElementById('workshopCoverPreview');
     const statusText = document.getElementById('coverStatusText');
     if (logItem.coverUrl) {
@@ -1668,7 +1654,6 @@ async function acquireStream() {
             window.blobBuffers[logItem.logId][0] = URL.createObjectURL(blob);
             const previewStatus = document.getElementById('preview-player-status');
             if (previewStatus) previewStatus.innerText = "✅ 影片就緒，可秒開";
-            
             btnCapture.disabled = false;
             btnCapture.title = "擷取";
           }).catch(e => console.log(e));
@@ -1690,7 +1675,6 @@ async function acquireStream() {
     showToast("已載入 " + logItem.logId);
   }
 
-  
   function captureFrameFromVideo() {
     const videoEl = document.getElementById('preview-player');
     if (!videoEl || !videoEl.src) { alert("請先點擊預覽區的播放按鈕載入影片！"); return; }
@@ -1707,7 +1691,6 @@ async function acquireStream() {
     updateCoverOptimistically(base64DataUrl, base64Clean);
   }
 
-  
   function handleCoverUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -1721,7 +1704,6 @@ async function acquireStream() {
   }
 
   function updateCoverOptimistically(dataUrl, base64Clean) {
-    
     const coverPreview = document.getElementById('workshopCoverPreview');
     const statusText = document.getElementById('coverStatusText');
     coverPreview.src = dataUrl;
@@ -1729,12 +1711,10 @@ async function acquireStream() {
     statusText.innerHTML = '<i data-lucide="loader" class="spin" style="width:12px; height:12px;"></i> 同步至雲端...';
     lucide.createIcons();
 
-    
     api({ action: 'uploadImage', data: base64Clean, mimeType: 'image/jpeg', logId: window.currentSelectedLog.logId })
       .then(res => {
          statusText.innerHTML = '<span style="color: var(--success);"><i data-lucide="check-circle" style="width:14px; height:14px; vertical-align:middle;"></i> 已存入雲端硬碟 (ID: ' + res.fileId.substring(0,8) + '...)</span>';
          lucide.createIcons();
-         
          if(window.currentSelectedLog) window.currentSelectedLog.coverUrl = res.url + "&t=" + new Date().getTime();
       })
       .catch(err => {
