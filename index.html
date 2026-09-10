@@ -153,8 +153,8 @@
      
     @media (orientation: portrait) {
       .viewport-container { 
-        aspect-ratio: 3 / 4 !important; 
-        max-height: 82vh; 
+        aspect-ratio: 9 / 16 !important; 
+        max-height: 85vh; 
         border-radius: 12px; 
       }
       .controls-island {
@@ -1187,21 +1187,16 @@ async function acquireStream() {
         if (isMobile) {
           videoConstraints = {
             facingMode: mobileFacingMode,
-            
-            aspectRatio: { ideal: isPortrait ? 0.75 : 1.333333 }, 
-            width: { ideal: isPortrait ? 1080 : 1440 },
-            height: { ideal: isPortrait ? 1440 : 1080 },
+            aspectRatio: { ideal: isPortrait ? 0.5625 : 1.777777 }, 
+            width: { ideal: isPortrait ? 720 : 1280 },
+            height: { ideal: isPortrait ? 1280 : 720 },
             frameRate: { ideal: cameraFps }
           };
-          if (cameraZoom === 0.5) videoConstraints.advanced = [{ zoom: 0.5 }];
         } else {
           videoConstraints = { width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: cameraFps } };
         }
 
         currentStream = await navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: audioConstraints });
-        const track = currentStream.getVideoTracks()[0];
-        const capabilities = track.getCapabilities ? track.getCapabilities() : {};
-        if (capabilities.zoom && cameraZoom !== 1.0) { track.applyConstraints({ advanced: [{ zoom: cameraZoom }] }).catch(e=>console.log(e)); }
       }
 
       document.getElementById('mediaPlayer').srcObject = currentStream;
