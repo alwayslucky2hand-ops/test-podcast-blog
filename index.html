@@ -61,7 +61,7 @@
     }
     .login-input:focus { border-color: var(--accent); }
     .login-input:disabled { background: var(--bg); color: var(--text-muted); cursor: not-allowed; }
-    
+
     .auth-switch {
       margin-top: 16px; font-size: 13px; color: var(--text-muted); 
       cursor: pointer; display: inline-block; transition: color 0.2s;
@@ -97,7 +97,7 @@
       border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
       transition: aspect-ratio 0.3s ease;
     }
-    
+
     .css-fullscreen {
       position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
       width: 100vw !important; height: 100vh !important; max-height: none !important;
@@ -112,7 +112,7 @@
         linear-gradient(to bottom, transparent calc(33.33% - 0.5px), rgba(255,255,255,0.15) calc(33.33% - 0.5px), rgba(255,255,255,0.15) calc(33.33% + 0.5px), transparent calc(33.33% + 0.5px)),
         linear-gradient(to bottom, transparent calc(66.66% - 0.5px), rgba(255,255,255,0.15) calc(66.66% - 0.5px), rgba(255,255,255,0.15) calc(66.66% + 0.5px), transparent calc(66.66% + 0.5px));
     }
-    
+
     #mediaPlayer { width: 100%; height: 100%; object-fit: cover; display: block; background: #000; }
     #preview-player, video[id^="player-"] { width: 100%; height: 100%; object-fit: contain; display: block; background: #000; }
 
@@ -219,7 +219,7 @@
     .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
     .input-row { display: flex; gap: 16px; flex-wrap: wrap; }
     .input-col { flex: 1; min-width: 200px; }
-    
+
     .avatar-upload-zone {
       display: flex; align-items: center; gap: 16px; margin-bottom: 24px;
     }
@@ -231,7 +231,7 @@
     .avatar-preview i { color: var(--border); }
     .avatar-upload-btn { position: relative; overflow: hidden; }
     .avatar-upload-btn input[type="file"] { position: absolute; top: 0; right: 0; min-width: 100%; min-height: 100%; font-size: 100px; text-align: right; filter: alpha(opacity=0); opacity: 0; outline: none; background: white; cursor: pointer; display: block; }
-    
+
     .input-group { display: flex; align-items: center; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; transition: border-color 0.2s; }
     .input-group:focus-within { border-color: var(--accent); }
     .input-group-addon { background: var(--bg); padding: 10px 12px; font-size: 13px; color: var(--text-muted); border-right: 1px solid var(--border); font-weight: 500; display: flex; align-items: center; justify-content: center; }
@@ -293,13 +293,13 @@
 
      
     .mobile-menu-btn { display: none; background: transparent; border: none; color: var(--text); cursor: pointer; padding: 4px; border-radius: 4px; transition: background 0.2s; }
-    
+
     #mobileMenuOverlay {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0,0,0,0.4); z-index: 1999; display: none;
       backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
     }
-    
+
     .mobile-close-btn { display: none; }
     .desktop-user-info { display: flex; align-items: center; gap: 6px; }
     .mobile-user-info { display: none; }
@@ -307,12 +307,12 @@
     @media (max-width: 768px) {
       .desktop-user-info { display: none !important; }
       .mobile-menu-btn { display: inline-flex; align-items: center; justify-content: center; }
-      
+
       .mobile-close-btn { 
         display: flex; align-self: flex-end; background: transparent; border: none; 
         color: var(--text-muted); cursor: pointer; padding: 4px; margin-bottom: 8px;
       }
-      
+
       .mobile-user-info { 
         display: flex; flex-direction: column; gap: 12px; margin-top: auto; 
         padding-top: 16px; border-top: 1px solid var(--border); 
@@ -394,21 +394,21 @@
   <div class="login-box" id="loginView">
     <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">VBLOG</h2>
     <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">登入</p>
-    
+
     <input type="email" id="loginEmail" class="login-input" placeholder="信箱">
     <div style="display: flex; gap: 8px; margin-bottom: 16px;">
       <input type="text" id="loginOtp" class="login-input" placeholder="驗證碼" style="margin-bottom: 0;" maxlength="6">
       <button id="btnSendLoginOtp" class="action-btn-sm" style="height: 42px; white-space: nowrap;" onclick="requestOtp('login')"><i data-lucide="send" style="width:14px; height:14px;"></i> 發送</button>
     </div>
     <button class="action-btn-sm action-btn-primary" style="width: 100%; padding: 10px; height: 42px;" onclick="submitLogin()"><i data-lucide="log-in" style="width:14px; height:14px;"></i> 登入</button>
-    
+
     <div class="auth-switch" onclick="toggleAuthView('register')">註冊</div>
   </div>
 
   <div class="login-box" id="registerView" style="display: none;">
     <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">VBLOG</h2>
     <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">註冊</p>
-    
+
     <input type="text" id="regName" class="login-input" placeholder="姓名">
     <input type="date" id="regBirth" class="login-input" placeholder="生日">
     <input type="email" id="regEmail" class="login-input" placeholder="信箱">
@@ -417,7 +417,7 @@
       <button id="btnSendRegOtp" class="action-btn-sm" style="height: 42px; white-space: nowrap;" onclick="requestOtp('register')"><i data-lucide="send" style="width:14px; height:14px;"></i> 發送</button>
     </div>
     <button class="action-btn-sm action-btn-primary" style="width: 100%; padding: 10px; height: 42px;" onclick="submitRegister()"><i data-lucide="user-plus" style="width:14px; height:14px;"></i> 註冊</button>
-    
+
     <div class="auth-switch" onclick="toggleAuthView('login')">登入</div>
   </div>
 </div>
@@ -439,13 +439,13 @@
 
     <div class="tab-nav">
       <button class="mobile-close-btn" onclick="toggleMobileMenu()"><i data-lucide="x" style="width: 20px; height: 20px;"></i></button>
-      
+
       <button class="tab-btn active" onclick="switchTab('tab-live', this)"><i data-lucide="video" style="width: 16px; height: 16px;"></i> 錄製</button>
       <button class="tab-btn" onclick="switchTab('tab-history', this)"><i data-lucide="list-video" style="width: 16px; height: 16px;"></i> 日誌</button>
       <button class="tab-btn" onclick="switchTab('tab-dashboard', this)"><i data-lucide="layout-grid" style="width: 16px; height: 16px;"></i> 文章</button>
       <button class="tab-btn" onclick="switchTab('tab-article', this)"><i data-lucide="file-edit" style="width: 16px; height: 16px;"></i> 工坊</button>
       <button class="tab-btn" onclick="switchTab('tab-settings', this)"><i data-lucide="settings" style="width: 16px; height: 16px;"></i> 設定</button>
-      
+
       <div class="mobile-user-info">
         <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px; word-break: break-all;">
           <i data-lucide="user" style="width: 12px; height: 12px;"></i> <span id="mobileUserEmail"></span>
@@ -454,7 +454,7 @@
       </div>
     </div>
   </header>
-  
+
   <div id="mobileMenuOverlay" onclick="toggleMobileMenu()"></div>
 
   
@@ -471,7 +471,7 @@
         <div class="pulse-dot"></div>
         <span id="recordTimer">00:00</span>
       </div>
-      
+
       <video id="mediaPlayer" autoplay muted playsinline></video>
 
       <div id="controlsIsland" class="controls-island" style="display: none;">
@@ -619,7 +619,7 @@
           <button class="action-btn-sm action-btn-primary" onclick="assembleFullArticle()"><i data-lucide="layers" style="width: 14px; height: 14px;"></i> 整合</button>
         </div>
       </div>
-      
+
       <div class="cover-capture-box">
         <img id="workshopCoverPreview" class="cover-preview-img" src="" alt="封面">
         <div style="display: flex; gap: 12px; flex-wrap: wrap;">
@@ -635,7 +635,7 @@
       <div id="fullArticlePreview" style="min-height: 150px; margin-top: 8px;">
         <div style="border: 1px dashed var(--border); border-radius: 4px; padding: 32px; text-align: center;"><p style="color: var(--text-muted); font-size: 13px;">點擊整合</p></div>
       </div>
-      
+
       <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-top: 8px;">
         <div class="flex-wrap-gap" style="margin-left: auto;">
           <button class="action-btn-sm" onclick="saveCurrentStepData('full')"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button>
@@ -683,7 +683,7 @@
 
     <div class="settings-section">
       <div class="settings-title"><i data-lucide="user-circle" style="width: 18px; height: 18px; color: var(--accent);"></i> 作者</div>
-      
+
       <div class="avatar-upload-zone">
         <div class="avatar-preview" id="authorAvatarPreview"><i data-lucide="image" style="width: 24px; height: 24px;"></i></div>
         <div>
@@ -712,7 +712,7 @@
         <label class="form-label">簡介</label>
         <textarea id="authorBio" class="workshop-textarea" style="min-height: 80px;" maxlength="300" placeholder="簡介"></textarea>
       </div>
-      
+
       <div class="form-group">
         <label class="form-label">介紹</label>
         <textarea id="authorSalonIntro" class="workshop-textarea" style="min-height: 120px;" maxlength="2000" placeholder="介紹"></textarea>
@@ -771,7 +771,7 @@
   let isVideoEnabled = true;
   let currentSourceType = "camera";
   let mobileFacingMode = "user";
-  
+
   let cameraFps = 30;
 
   let chunkIndex = 1;
@@ -790,8 +790,36 @@
   window.blobBuffers = {};
   window.currentSelectedLog = null; 
   window.currentAuthorProfile = null; 
-  
+
   let globalLogsCache = [];
+
+  
+  
+  
+  function compressImage(file, maxWidth, callback) {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function(event) {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = function() {
+        let width = img.width;
+        let height = img.height;
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.75);
+        callback(compressedDataUrl);
+      };
+    };
+  }
 
   function toggleAuthView(view) {
     if (view === 'register') {
@@ -810,15 +838,15 @@
       document.getElementById('mainAppShell').style.display = 'flex';
       document.getElementById('currentUserEmail').innerText = email;
       document.getElementById('mobileUserEmail').innerText = email;
-      
+
       loadUserAccountInfo(email);
       loadPrompts(email);
       loadAuthorProfile(email);
-      
+
       api({ action: "getHistoryLogs", email: email })
         .then(logs => { globalLogsCache = logs || []; })
         .catch(e => console.log(e));
-        
+
     } else {
       document.getElementById('loginOverlay').style.display = 'flex';
       document.getElementById('mainAppShell').style.display = 'none';
@@ -829,7 +857,7 @@
   function startOtpTimer(btnElement) {
     let timeLeft = 60;
     btnElement.disabled = true;
-    
+
     const timerId = setInterval(() => {
       btnElement.innerText = timeLeft + "s";
       timeLeft--;
@@ -849,7 +877,7 @@
     const btn = isLogin ? document.getElementById('btnSendLoginOtp') : document.getElementById('btnSendRegOtp');
 
     if (!email || !email.includes('@')) { alert("信箱無效"); return; }
-    
+
     let name = "", birth = "";
     if (!isLogin) {
       name = document.getElementById('regName').value.trim();
@@ -900,7 +928,7 @@
     const otp = document.getElementById('regOtp').value.trim();
     const name = document.getElementById('regName').value.trim();
     const birth = document.getElementById('regBirth').value;
-    
+
     if (!email || !otp || !name || !birth) { alert("必填缺漏"); return; }
 
     const btn = event.currentTarget;
@@ -941,7 +969,7 @@
   function toggleFullscreen() {
     const wrapper = document.getElementById('videoWrapper');
     wrapper.classList.toggle('css-fullscreen');
-    
+
     const icon = document.getElementById('iconFullscreen');
     if (icon) {
       if (wrapper.classList.contains('css-fullscreen')) {
@@ -1015,13 +1043,13 @@
         document.getElementById('socialFB').value = res.socialFB || "";
         document.getElementById('socialYT').value = res.socialYT || "";
         document.getElementById('socialPodcast').value = res.socialPodcast || "";
-        
+
         if (res.avatarUrl) {
           const preview = document.getElementById('authorAvatarPreview');
           preview.style.backgroundImage = "url('" + res.avatarUrl + "')";
           preview.innerHTML = ''; 
         }
-        
+
         if(res.handle) {
           const ghLink = document.getElementById('authorGitHubLink');
           ghLink.href = "https://alwayslucky2hand-ops.github.io/test-podcast-blog/" + res.handle + "/";
@@ -1186,7 +1214,7 @@
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     if (btn) btn.classList.add('active');
     document.getElementById(tabId).classList.add('active');
-    
+
     const nav = document.querySelector('.tab-nav');
     const overlay = document.getElementById('mobileMenuOverlay');
     if (nav && nav.classList.contains('show')) {
@@ -1345,7 +1373,7 @@
     if (!isRecording || !currentStream || isPaused) return;
     recordedChunks = [];
     const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
-    
+
     const recorderOptions = {
       mimeType: mime,
       videoBitsPerSecond: 1200000
@@ -1366,7 +1394,7 @@
       if (isRecording && !isPaused && mediaRecorder && mediaRecorder.state === "inactive") startChunkRecording(); 
     };
     mediaRecorder.start();
-    
+
     chunkTimer = setTimeout(() => {
       if (mediaRecorder && mediaRecorder.state === "recording") { 
         log("[排隊] 第 " + chunkIndex + " 段切片"); 
@@ -1462,12 +1490,12 @@
       const res = await api({ action: "finalizeLog", rowIndex: logSession.rowIndex, email: email });
       log("[成功] 完成");
       const urls = res.urls || [];
-      
+
       let linksHtml = '';
       for (let i = 0; i < urls.length; i++) {
         linksHtml += '<a href="' + urls[i] + '" target="_blank" class="file-chip"><i data-lucide="film" style="width:13px; height:13px;"></i> ' + (i+1) + '</a>';
       }
-      
+
       document.getElementById('archiveLinks').innerHTML = linksHtml;
       document.getElementById('archiveSummary').innerHTML = renderMarkdown(res.summary);
       document.getElementById('archiveContent').innerHTML = formatTranscriptContent(res.content, urls);
@@ -1546,7 +1574,7 @@
         if(screenDesc) chunkHtml += '<div class="sub-section desc-section"><div class="sub-section-title"><i data-lucide="eye" style="width: 13px; height: 13px;"></i> 畫面</div><div class="markdown-body">' + renderMarkdown(screenDesc) + '</div></div>';
         if(voiceText) chunkHtml += '<div class="sub-section voice-section"><div class="sub-section-title"><i data-lucide="mic" style="width: 13px; height: 13px;"></i> 語音</div><div class="voice-body">' + escapeHtml(voiceText) + '</div></div>';
         chunkHtml += '</div></div>';
-        
+
         html += chunkHtml;
         currentTitle = '';
       }
@@ -1559,7 +1587,7 @@
     if (!email) return;
 
     const container = document.getElementById('historyContainer');
-    
+
     if (forceRefresh || globalLogsCache.length === 0) {
       container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> ...</div>';
       lucide.createIcons();
@@ -1580,7 +1608,7 @@
 
     window.logPlaylists = {};
     window.blobBuffers = {};
-    
+
     let listHtml = '';
     for(let i=0; i<globalLogsCache.length; i++) {
       const item = globalLogsCache[i];
@@ -1611,14 +1639,14 @@
 
       listHtml += '<div class="history-card" data-row-id="' + item.logId + '"><div class="history-header"><div><div style="font-weight: 700; font-size: 16px; color: var(--text);">ID: ' + item.logId + '</div><div style="font-size: 13px; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; gap: 6px;"><i data-lucide="clock" style="width: 14px; height: 14px;"></i> ' + cleanTime + '</div></div><div class="flex-wrap-gap"><span class="badge ' + (isRec ? 'recording' : '') + '">' + item.status + '</span><button type="button" class="action-btn-sm action-btn-primary" onclick="openArticleWorkshop(\'' + item.logId + '\')"><i data-lucide="file-text" style="width: 14px; height: 14px;"></i> 工坊</button><button type="button" class="action-btn-sm action-btn-icon danger" onclick="deleteHistoryLog(\'' + item.logId + '\')" title="刪除"><i data-lucide="trash-2" style="width: 16px; height: 16px;"></i></button></div></div><div><div style="font-size: 12.5px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px;">切片 (' + urls.length + ')</div><div class="flex-wrap-gap">' + urlsHtml + '</div></div>' + playerHtml + summaryBlock + contentBlock + '</div>';
     }
-    
+
     container.innerHTML = listHtml;
     lucide.createIcons();
   }
 
   async function loadDashboardLogs(forceRefresh = false) {
     const container = document.getElementById('dashboardContainer');
-    
+
     if(forceRefresh || globalLogsCache.length === 0) {
       container.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> ...</div>';
       lucide.createIcons();
@@ -1630,7 +1658,7 @@
     }
 
     const dashboardItems = globalLogsCache.filter(item => item.articleFull || item.articleTitle);
-    
+
     if(dashboardItems.length === 0) {
       container.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px;">無文章</div>';
       return;
@@ -1644,12 +1672,12 @@
       const coverHtml = item.coverUrl 
         ? '<div class="vocus-cover" style="background-image: url(\'' + item.coverUrl + '\')"></div>'
         : '<div class="vocus-cover"><div class="vocus-cover-placeholder"><i data-lucide="image" style="width: 24px; height: 24px;"></i> 無圖</div></div>';
-      
+
       const displayTitle = item.articleTitle || "草稿 (" + item.logId + ")";
 
       cardsHtml += '<div class="vocus-card">' + coverHtml + '<div class="vocus-content"><div class="vocus-title">' + escapeHtml(displayTitle) + '</div><div class="vocus-meta"><span>' + cleanTime + '</span> • <span class="badge ' + (isPublished ? 'published' : 'draft') + '">' + (isPublished ? '發布' : '草稿') + '</span></div><div class="vocus-actions"><button class="action-btn-sm action-btn-icon danger" onclick="deleteHistoryLog(\'' + item.logId + '\')" title="刪除"><i data-lucide="trash-2" style="width: 16px; height: 16px;"></i></button><div style="display:flex; gap:6px;"><button class="action-btn-sm" onclick="openArticleWorkshop(\'' + item.logId + '\')"><i data-lucide="edit-3" style="width: 14px; height: 14px;"></i> 編輯</button><button class="action-btn-sm action-btn-primary" onclick="triggerGithubPublish(\'' + item.logId + '\')"><i data-lucide="globe" style="width: 14px; height: 14px;"></i> 發布</button></div></div></div></div>';
     }
-    
+
     container.innerHTML = cardsHtml;
     lucide.createIcons();
   }
@@ -1669,7 +1697,7 @@
       let idx = insertIndex++;
       return `${p1}\n\n<div class="inline-insert-zone" title="插入" onclick="triggerInlineUpload(${idx})"><div class="inline-insert-btn"><i data-lucide="image-plus" style="width:14px;height:14px;"></i></div></div>\n\n`;
     });
-    
+
     let finalIdx = insertIndex;
     mdWithButtons += `\n\n<div class="inline-insert-zone" title="插入" onclick="triggerInlineUpload(${finalIdx})"><div class="inline-insert-btn"><i data-lucide="image-plus" style="width:14px;height:14px;"></i></div></div>`;
 
@@ -1680,7 +1708,7 @@
     const avatarHtml = profile.avatarUrl 
       ? '<div class="blog-avatar" style="background-image:url(\'' + profile.avatarUrl + '\')"></div>' 
       : '<div class="blog-avatar">' + (profile.authorName ? profile.authorName.charAt(0) : 'T') + '</div>';
-    
+
     const authorNameText = profile.authorName || '作者';
     const authorBioText = profile.bio || '簡介';
 
@@ -1690,7 +1718,7 @@
       const statusText = isPreloaded ? "[就緒]" : "[載入]";
       videoHtml = '<div style="background: #000; border-radius: 8px; overflow: hidden; margin-bottom: 32px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05);"><video id="preview-player" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block; object-fit: contain;"></video><div style="display:flex; flex-wrap:wrap; justify-content: space-between; align-items: center; padding: 12px 16px; background: #0f172a; gap:12px;"><span id="preview-player-status" style="color: #f8fafc; font-size: 13px;">' + statusText + '</span><button class="action-btn-sm" onclick="window.initPreviewPlayer(\'' + logId + '\')" style="background: var(--accent); color: #fff; border: none; padding: 6px 16px;"><i data-lucide="play" style="width: 14px; height: 14px;"></i> 啟動</button></div></div>';
     }
-    
+
     const previewHtml = '<div class="blog-preview-wrapper"><h1 class="preview-main-title">' + escapeHtml(displayTitle) + '</h1><div class="blog-meta-header"><div class="blog-author-info">' + avatarHtml + '<div><div style="font-weight: 700; color: var(--text); font-size: 15px;">' + escapeHtml(authorNameText) + '</div><div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">' + dateStr + '</div></div></div><div class="blog-stats"><span><i data-lucide="eye" style="width: 15px; height: 15px;"></i> 預覽</span></div></div>' + videoHtml + '<div id="markdown-render-zone" class="markdown-body">' + marked.parse(bodyMd) + '</div><div class="blog-footer-cta"><div class="newsletter-box"><div style="font-weight: 800; font-size: 16px; margin-bottom: 8px;">訂閱</div><p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">' + escapeHtml(authorBioText) + '</p><div style="display: flex; gap: 8px; flex-wrap: wrap;"><input type="email" placeholder="信箱" style="flex: 1; min-width: 200px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; font-size: 14px; outline: none;"><button class="action-btn-sm action-btn-primary" style="padding: 12px 24px; border-radius: 4px; white-space: nowrap; height: 42px;">訂閱</button></div></div></div></div>';
 
     document.getElementById('fullArticlePreview').innerHTML = previewHtml;
@@ -1744,14 +1772,15 @@
     document.getElementById('inlineImageUpload').click();
   };
 
+  
+  
+  
   window.executeInlineImageUpload = function(event) {
     const file = event.target.files[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const base64DataUrl = e.target.result;
-      const base64Clean = base64DataUrl.replace(/^data:image\/\w+;base64,/, '');
+    compressImage(file, 1280, function(compressedDataUrl) {
+      const base64Clean = compressedDataUrl.replace(/^data:image\/\w+;base64,/, '');
       const targetIndex = window.currentInlineInsertIndex;
 
       let counter = 0;
@@ -1760,38 +1789,116 @@
         if (counter === targetIndex) {
           counter++;
           replaced = true;
-          return `${p1}\n\n![插圖](${base64DataUrl})\n\n`;
+          return `${p1}\n\n![插圖](${compressedDataUrl})\n\n`;
         }
         counter++;
         return match;
       });
 
       if (!replaced && targetIndex === counter) {
-        window.currentSelectedFullMd += `\n\n![插圖](${base64DataUrl})\n\n`;
+        window.currentSelectedFullMd += `\n\n![插圖](${compressedDataUrl})\n\n`;
       }
 
       renderBlogPreview(window.currentSelectedFullMd);
-      showToast("[上傳]");
+      showToast("[壓縮完成...上傳雲端]");
 
       api({
         action: 'uploadImage',
         data: base64Clean,
-        mimeType: file.type || 'image/jpeg',
-        logId: null
+        mimeType: 'image/jpeg',
+        logId: window.currentSelectedLog ? window.currentSelectedLog.logId : null
       })
       .then(res => {
         const realUrl = res.url + "&t=" + new Date().getTime();
-        window.currentSelectedFullMd = window.currentSelectedFullMd.replace(base64DataUrl, realUrl);
+        window.currentSelectedFullMd = window.currentSelectedFullMd.replace(compressedDataUrl, realUrl);
         saveCurrentStepData('full');
-        showToast("[成功]");
+        showToast("[成功上傳]");
+        renderBlogPreview(window.currentSelectedFullMd); 
       })
       .catch(err => {
-        showToast("[失敗]");
+        showToast("[上傳失敗，請重試]");
       });
 
       event.target.value = '';
-    };
-    reader.readAsDataURL(file);
+    });
+  };
+
+  
+  
+  
+  window.handleCoverUpload = function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    if (!window.currentSelectedLog) { alert("請先選取日誌"); return; }
+
+    const statusText = document.getElementById('coverStatusText');
+    statusText.innerHTML = '<i data-lucide="loader" class="spin" style="width:14px; height:14px; vertical-align:middle;"></i> 處理中...';
+    lucide.createIcons();
+
+    compressImage(file, 1280, function(compressedDataUrl) {
+      const base64Clean = compressedDataUrl.replace(/^data:image\/\w+;base64,/, '');
+
+      api({
+        action: 'uploadImage',
+        data: base64Clean,
+        mimeType: 'image/jpeg',
+        logId: window.currentSelectedLog.logId
+      })
+      .then(res => {
+        document.getElementById('workshopCoverPreview').src = res.url;
+        document.getElementById('workshopCoverPreview').style.display = 'block';
+        window.currentSelectedLog.coverUrl = res.url;
+        statusText.innerHTML = '<span style="color: var(--success);"><i data-lucide="check-circle" style="width:14px; height:14px; vertical-align:middle;"></i> 雲端</span>';
+        lucide.createIcons();
+        showToast("封面上傳成功");
+      })
+      .catch(err => {
+        statusText.innerHTML = '<span style="color: var(--danger);">上傳失敗</span>';
+        showToast("封面上傳失敗");
+      });
+    });
+    event.target.value = '';
+  };
+
+  window.captureFrameFromVideo = function() {
+    if (!window.currentSelectedLog) return;
+    const videoEl = document.getElementById('preview-player');
+    if (!videoEl || !videoEl.src || videoEl.src.includes('undefined')) {
+      alert("請先點擊預覽播放器啟動影片！");
+      return;
+    }
+
+    const canvas = document.getElementById('captureCanvas');
+    canvas.width = videoEl.videoWidth || 1280;
+    canvas.height = videoEl.videoHeight || 720;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+    const base64Clean = dataUrl.replace(/^data:image\/\w+;base64,/, '');
+
+    const statusText = document.getElementById('coverStatusText');
+    statusText.innerHTML = '<i data-lucide="loader" class="spin" style="width:14px; height:14px; vertical-align:middle;"></i> 擷取上傳中...';
+    lucide.createIcons();
+
+    api({
+      action: 'uploadImage',
+      data: base64Clean,
+      mimeType: 'image/jpeg',
+      logId: window.currentSelectedLog.logId
+    })
+    .then(res => {
+      document.getElementById('workshopCoverPreview').src = res.url;
+      document.getElementById('workshopCoverPreview').style.display = 'block';
+      window.currentSelectedLog.coverUrl = res.url;
+      statusText.innerHTML = '<span style="color: var(--success);"><i data-lucide="check-circle" style="width:14px; height:14px; vertical-align:middle;"></i> 雲端</span>';
+      lucide.createIcons();
+      showToast("擷取成功");
+    })
+    .catch(err => {
+      statusText.innerHTML = '<span style="color: var(--danger);">擷取失敗</span>';
+      showToast("擷取上傳失敗");
+    });
   };
 
   window.removeInlineImage = function(src) {
@@ -1893,7 +2000,7 @@
         videoEl.src = blobUrl;
         videoEl.play().catch(e => { statusEl.innerText = "[暫停]"; });
         if (currentIndex + 1 < urls.length) loadChunk(currentIndex + 1).catch(e => console.log('預載失敗', e));
-        
+
         document.getElementById('btnCaptureCover').disabled = false;
 
       } else { currentIndex++; playNext(); }
@@ -1908,10 +2015,10 @@
     if (!urls || urls.length === 0) return;
     const videoEl = document.getElementById('player-' + logId);
     const statusEl = document.getElementById('player-status-' + logId);
-    
+
     if (videoEl.dataset.playing === 'true') return;
     videoEl.dataset.playing = 'true';
-    
+
     if (!window.blobBuffers[logId]) window.blobBuffers[logId] = [];
     const buffer = window.blobBuffers[logId];
     let currentIndex = 0;
@@ -1939,7 +2046,7 @@
       statusEl.innerText = "[播放] " + (currentIndex + 1) + " / " + urls.length;
       let blobUrl = buffer[currentIndex];
       if (!blobUrl) blobUrl = await loadChunk(currentIndex);
-      
+
       if (blobUrl) {
         videoEl.src = blobUrl;
         videoEl.play().catch(e => { statusEl.innerText = "[暫停]"; });
@@ -1978,7 +2085,7 @@
     else if (field === 'full') content = window.currentSelectedFullMd || "";
 
     showToast("已儲存");
-    
+
     if(field === 'full') {
        window.currentSelectedLog.articleFull = content;
        window.currentSelectedLog.articleTitle = document.getElementById('finalArticleTitle').value;
@@ -2016,7 +2123,7 @@
 
   function deleteHistoryLog(logId) {
     if (!confirm("確定刪除？")) return;
-    
+
     globalLogsCache = globalLogsCache.filter(l => l.logId !== logId);
     if(document.getElementById('tab-history').classList.contains('active')) loadHistoryLogs(false);
     if(document.getElementById('tab-dashboard').classList.contains('active')) loadDashboardLogs(false);
@@ -2047,7 +2154,7 @@
       if (field === 'summary') logItem.summary = newText;
       if (field === 'content') logItem.content = newText;
     }
-    
+
     const viewEl = document.getElementById('view-' + field + '-' + logId);
     if (viewEl) {
       if (field === 'content') {
@@ -2056,7 +2163,7 @@
           viewEl.innerHTML = renderMarkdown(newText);
       }
     }
-    
+
     toggleEditMode(logId, field);
     showToast("已儲存");
 
@@ -2065,9 +2172,6 @@
     });
   }
 
-  
-  
-  
   async function generateStepTitles() {
     if (!window.currentSelectedLog) { alert("請選日誌"); return; }
     const email = localStorage.getItem('bvlog_user_email');
@@ -2077,7 +2181,7 @@
     try {
       const res = await api({ action: "generateArticleStep", step: 1, content: window.currentSelectedLog.content, email: email });
       const titles = res.titles || [];
-      
+
       let htmlOutput = '';
       for(let i=0; i<titles.length; i++){
         const parts = titles[i].split('|||');
@@ -2085,7 +2189,7 @@
         const subTitle = parts[1] ? parts[1].trim() : '';
         htmlOutput += '<div class="title-option-card" style="flex-direction: column; align-items: flex-start;" onclick="selectTitle(\'' + escapeHtml(mainTitle).replace(/'/g, "\\'") + '\', this)"><div style="font-weight: 700; padding-right: 32px; color: var(--text);">' + (i + 1) + '. ' + escapeHtml(mainTitle) + '</div>' + (subTitle ? '<div style="font-size: 12.5px; color: var(--text-muted); margin-top: 6px; line-height: 1.6;">' + escapeHtml(subTitle) + '</div>' : '') + '<i data-lucide="check" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; opacity: 0; transition: opacity 0.2s;"></i></div>';
       }
-      
+
       container.innerHTML = htmlOutput;
       lucide.createIcons();
       showToast("完成");
@@ -2148,8 +2252,6 @@
       showToast("儲存");
     } catch (e) { endingInput.value = ""; alert(e.message); }
   }
-
-
 
 </script>
 
