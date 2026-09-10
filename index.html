@@ -270,22 +270,26 @@
     .image-wrapper:hover .delete-image-btn { opacity: 1; }
     .delete-image-btn:hover { transform: scale(1.1); background: var(--danger); color: #fff; border-color: var(--danger); }
 
+     
     .inline-insert-zone {
-      height: 24px; margin: 12px 0; display: flex; align-items: center; justify-content: center;
-      opacity: 0; cursor: pointer; transition: opacity 0.2s ease; position: relative; z-index: 10;
+      height: 0; margin: 0; display: flex; align-items: center; justify-content: center;
+      opacity: 0; cursor: pointer; transition: opacity 0.3s ease; position: relative; z-index: 10;
     }
     .inline-insert-zone::before {
-      content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px;
+      content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px;
       background: var(--accent); opacity: 0; transition: opacity 0.2s;
     }
-    .inline-insert-zone:hover { opacity: 1; }
-    .inline-insert-zone:hover::before { opacity: 0.3; }
+    .inline-insert-zone:hover, .inline-insert-zone.reveal { opacity: 1; }
+    .inline-insert-zone:hover::before, .inline-insert-zone.reveal::before { opacity: 0.3; }
     .inline-insert-btn {
+      position: absolute; top: -14px;  
       background: var(--surface); border: 1px solid var(--accent); color: var(--accent);
       border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
       z-index: 2; transition: transform 0.2s, background 0.2s;
     }
-    .inline-insert-zone:hover .inline-insert-btn { transform: scale(1.1); background: var(--accent); color: #fff; }
+    .inline-insert-zone:hover .inline-insert-btn, .inline-insert-zone.reveal .inline-insert-btn { 
+      transform: scale(1.1); background: var(--accent); color: #fff; 
+    }
 
      
     .mobile-menu-btn { display: none; background: transparent; border: none; color: var(--text); cursor: pointer; padding: 4px; border-radius: 4px; transition: background 0.2s; }
@@ -327,8 +331,10 @@
       .tab-btn::after { display: none; }
       .tab-btn.active { background: var(--accent-soft); color: var(--accent); }
 
-      .inline-insert-zone { opacity: 1; height: 44px; margin: 0; }
-      .inline-insert-btn { opacity: 0.3; border-color: var(--text-muted); color: var(--text-muted); }
+       
+      .inline-insert-zone { opacity: 0; height: 0; margin: 0; }
+      .inline-insert-zone.reveal { opacity: 1; }
+      .inline-insert-btn { opacity: 0.5; border-color: var(--accent); color: var(--accent); background: var(--surface); }
       .inline-insert-zone:active .inline-insert-btn { opacity: 1; background: var(--accent); color: #fff; border-color: var(--accent); }
       .delete-image-btn { opacity: 1; }
 
@@ -439,7 +445,6 @@
       <button class="tab-btn" onclick="switchTab('tab-dashboard', this)"><i data-lucide="layout-grid" style="width: 16px; height: 16px;"></i> 文章</button>
       <button class="tab-btn" onclick="switchTab('tab-article', this)"><i data-lucide="file-edit" style="width: 16px; height: 16px;"></i> 工坊</button>
       <button class="tab-btn" onclick="switchTab('tab-settings', this)"><i data-lucide="settings" style="width: 16px; height: 16px;"></i> 設定</button>
-      
       
       <div class="mobile-user-info">
         <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px; word-break: break-all;">
@@ -786,7 +791,6 @@
   window.currentSelectedLog = null; 
   window.currentAuthorProfile = null; 
   
-  
   let globalLogsCache = [];
 
   function toggleAuthView(view) {
@@ -810,7 +814,6 @@
       loadUserAccountInfo(email);
       loadPrompts(email);
       loadAuthorProfile(email);
-      
       
       api({ action: "getHistoryLogs", email: email })
         .then(logs => { globalLogsCache = logs || []; })
@@ -935,7 +938,6 @@
     checkLoginStatus();
   });
 
-  
   function toggleFullscreen() {
     const wrapper = document.getElementById('videoWrapper');
     wrapper.classList.toggle('css-fullscreen');
@@ -1168,7 +1170,6 @@
     controlsTimeout = setTimeout(() => { island.classList.add('autohide'); }, 3000);
   }
 
-  
   function toggleMobileMenu() {
     const nav = document.querySelector('.tab-nav');
     const overlay = document.getElementById('mobileMenuOverlay');
@@ -1185,7 +1186,6 @@
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     if (btn) btn.classList.add('active');
     document.getElementById(tabId).classList.add('active');
-    
     
     const nav = document.querySelector('.tab-nav');
     const overlay = document.getElementById('mobileMenuOverlay');
@@ -1300,7 +1300,6 @@
       clearTimeout(chunkTimer); await stopMediaRecorderAsync();
     }
 
-    
     if (currentStream) {
       currentStream.getTracks().forEach(t => t.stop());
       currentStream = null;
@@ -1555,7 +1554,6 @@
     return html || '<div class="markdown-body">' + renderMarkdown(rawText) + '</div>';
   }
 
-  
   async function loadHistoryLogs(forceRefresh = false) {
     const email = localStorage.getItem('bvlog_user_email');
     if (!email) return;
@@ -1697,6 +1695,7 @@
 
     document.getElementById('fullArticlePreview').innerHTML = previewHtml;
 
+    
     const mdZone = document.getElementById('markdown-render-zone');
     if (mdZone) {
       const images = mdZone.querySelectorAll('img');
@@ -1713,6 +1712,25 @@
         delBtn.onclick = function() { window.removeInlineImage(img.getAttribute('src')); };
         wrapper.appendChild(delBtn);
       });
+    }
+
+    
+    const insertZones = document.querySelectorAll('.inline-insert-zone');
+    if (insertZones.length > 0) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('reveal');
+          } else {
+            entry.target.classList.remove('reveal');
+          }
+        });
+      }, {
+        root: null,
+        rootMargin: "-45% 0px -45% 0px", 
+        threshold: 0
+      });
+      insertZones.forEach(zone => observer.observe(zone));
     }
 
     lucide.createIcons();
@@ -1950,7 +1968,6 @@
     showToast("整合");
   }
 
-  
   function saveCurrentStepData(field) {
     if (!window.currentSelectedLog) { alert("未選日誌"); return; }
     let content = "";
@@ -1997,7 +2014,6 @@
     triggerGithubPublish(window.currentSelectedLog.logId);
   }
 
-  
   function deleteHistoryLog(logId) {
     if (!confirm("確定刪除？")) return;
     
@@ -2022,7 +2038,6 @@
     }
   }
 
-  
   function saveHistoryLog(logId, field, btnElement) {
     const textarea = document.getElementById('input-' + field + '-' + logId);
     const newText = textarea.value;
