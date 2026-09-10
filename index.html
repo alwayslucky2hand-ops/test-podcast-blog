@@ -1288,6 +1288,11 @@ async function acquireStream() {
     try {
       const res = await api({ action: "initLog", email: email });
       logSession = res;
+      
+      
+      window.sessionUrls = [];
+      window.sessionTranscripts = [];
+      
       isRecording = true; isPaused = false; chunkIndex = 1; secondsElapsed = 0;
 
       document.getElementById('btnStart').style.display = 'none';
@@ -1319,14 +1324,14 @@ async function acquireStream() {
     
     chunkTimer = setTimeout(() => {
       if (mediaRecorder && mediaRecorder.state === "recording") { 
-        log("[系統] 擷取 30 秒片段，雙軌發送至雲端與 AI..."); 
+        log("[系統] 擷取 1 分鐘片段，雙軌發送至雲端與 AI..."); 
         mediaRecorder.stop(); 
       }
-    }, 30000);
+    }, 60000);
   }
 
   function processChunk(blob, mime, index) {
-    log("> [排隊] 準備傳送第 " + index + " 段 (30秒) 影片...");
+    log("> [排隊] 準備傳送第 " + index + " 段 (1分鐘) 影片...");
     const task = new Promise(resolve => {
       const reader = new FileReader();
       reader.readAsDataURL(blob);
@@ -1338,8 +1343,22 @@ async function acquireStream() {
         const base64 = reader.result.split(',')[1];
         log("> [處理] 第 " + index + " 段 AI 解析中，請稍候...");
         try {
-          await api({ action: "processChunkRealtime", base64Data: base64, mimeType: mime, folderId: logSession.folderId, rowIndex: logSession.rowIndex, chunkIndex: index });
-          log("> [✅] 第 " + index + " 段 AI 辨識並寫入試算表成功！");
+          
+          const res = await api({ action: "processChunkRealtime", base64Data: base64, mimeType: mime, folderId: logSession.folderId, rowIndex: logSession.rowIndex, chunkIndex: index });
+          
+          
+          window.sessionUrls.push(res.url);
+          window.sessionTranscripts.push({ index: res.chunkIndex, text: res.transcript });
+          window.sessionTranscripts.sort((a, b) => a.index - b.index);
+          
+          
+          const fullTranscript = window.sessionTranscripts.map(t => '【第 ' + t.index + ' 段影音】\n' + t.text).join('\n\n');
+          const fullUrls = window.sessionUrls.join('\n');
+
+          
+          await api({ action: "syncSheetRealtime", rowIndex: logSession.rowIndex, fullTrans: fullTranscript, fullUrls: fullUrls });
+          
+          log("> [✅] 第 " + index + " 段 AI 辨識並同步試算表成功！");
         } catch (e) { log("> [❌] 第 " + index + " 段失敗: " + e.message); }
         resolve();
       };
@@ -1400,7 +1419,7 @@ async function acquireStream() {
     document.getElementById('btnCloseCamera').style.display = 'flex'; 
 
     if (activeUploadTasks.size > 0) {
-      log("> ⏳ 請勿關閉網頁！正在等待 AI 處理最後的 " + activeUploadTasks.size + " 個 30 秒片段...");
+      log("> ⏳ 請勿關閉網頁！正在等待 AI 處理最後的 " + activeUploadTasks.size + " 個 1 分鐘片段...");
     }
 
     
@@ -1540,16 +1559,16 @@ async function acquireStream() {
 
         let urlsHtml = '';
         if(urls.length > 0) {
-           for(let j=0; j<urls.length; j++) {
-              urlsHtml += '<a href="' + urls[j] + '" target="_blank" class="file-chip"><i data-lucide="film" style="width: 13px; height: 13px;"></i> ' + (j+1) + '</a>';
-           }
+          for(let j=0; j<urls.length; j++) {
+             urlsHtml += '<a href="' + urls[j] + '" target="_blank" class="file-chip"><i data-lucide="film" style="width: 13px; height: 13px;"></i> ' + (j+1) + '</a>';
+          }
         } else {
-           urlsHtml = '<span style="font-size:12.5px; color:var(--text-muted);">無</span>';
+          urlsHtml = '<span style="font-size:12.5px; color:var(--text-muted);">無</span>';
         }
 
         let playerHtml = '';
         if(urls.length > 0) {
-           playerHtml = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="play-circle" style="width: 16px; height: 16px; color: var(--accent);"></i>播放全片</span><button class="action-btn-sm action-btn-primary" onclick="event.stopPropagation(); window.startSeamlessPlay(\'' + item.logId + '\')"><i data-lucide="play" style="width: 14px; height: 14px;"></i> 啟動</button></summary><div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border);"><video id="player-' + item.logId + '" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block;"></video><div id="player-status-' + item.logId + '" style="padding: 12px 16px; background: #0f172a; color: #f8fafc; font-size: 14px; text-align: center;">等待載入中... (點擊右上方啟動)</div></div></details>';
+          playerHtml = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="play-circle" style="width: 16px; height: 16px; color: var(--accent);"></i>播放全片</span><button class="action-btn-sm action-btn-primary" onclick="event.stopPropagation(); window.startSeamlessPlay(\'' + item.logId + '\')"><i data-lucide="play" style="width: 14px; height: 14px;"></i> 啟動</button></summary><div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border);"><video id="player-' + item.logId + '" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block;"></video><div id="player-status-' + item.logId + '" style="padding: 12px 16px; background: #0f172a; color: #f8fafc; font-size: 14px; text-align: center;">等待載入中... (點擊右上方啟動)</div></div></details>';
         }
 
         let summaryBlock = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>提案</span><div class="flex-wrap-gap"><button type="button" id="btn-edit-summary-' + item.logId + '" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); toggleEditMode(\'' + item.logId + '\', \'summary\')" title="編輯"><i data-lucide="edit-3" style="width: 16px; height: 16px;"></i></button><button type="button" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute(\'data-text\'))" data-text="' + escapeHtml(safeSummaryRaw) + '" title="複製"><i data-lucide="copy" style="width: 16px; height: 16px;"></i></button><span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span></div></summary><div class="accordion-body"><div id="view-summary-' + item.logId + '" class="markdown-body">' + renderMarkdown(safeSummaryRaw) + '</div><div id="edit-summary-' + item.logId + '" style="display: none; flex-direction: column; gap: 12px;"><textarea id="input-summary-' + item.logId + '" class="workshop-textarea" style="min-height: 180px;">' + escapeHtml(safeSummaryRaw) + '</textarea><div style="display: flex; justify-content: flex-end; gap: 8px;"><button class="action-btn-sm action-btn-icon" onclick="toggleEditMode(\'' + item.logId + '\', \'summary\')" title="取消"><i data-lucide="x" style="width: 16px; height: 16px;"></i></button><button class="action-btn-sm action-btn-primary" onclick="saveHistoryLog(\'' + item.logId + '\', \'summary\', this)"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button></div></div></div></details>';
