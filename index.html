@@ -97,9 +97,14 @@
       border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
       transition: aspect-ratio 0.3s ease;
     }
-    .viewport-container:fullscreen {
-      background-color: #000000;
+    
+     
+    .css-fullscreen {
+      position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+      width: 100vw !important; height: 100vh !important; max-height: none !important;
+      z-index: 9999 !important; border-radius: 0 !important; background: #000 !important;
     }
+
     .camera-grid {
       position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 5;
       background-image: 
@@ -109,10 +114,7 @@
         linear-gradient(to bottom, transparent calc(66.66% - 0.5px), rgba(255,255,255,0.15) calc(66.66% - 0.5px), rgba(255,255,255,0.15) calc(66.66% + 0.5px), transparent calc(66.66% + 0.5px));
     }
     
-     
     #mediaPlayer { width: 100%; height: 100%; object-fit: cover; display: block; background: #000; }
-    
-     
     #preview-player, video[id^="player-"] { width: 100%; height: 100%; object-fit: contain; display: block; background: #000; }
 
     .camera-prompt {
@@ -310,7 +312,7 @@
       .mobile-menu-btn { display: inline-flex; align-items: center; justify-content: center; }
       .tab-nav {
         display: none; flex-direction: column; gap: 8px;
-        position: absolute; top: 60px; left: 16px; right: 16px;
+        position: absolute; top: 100%; left: 0; right: 0; margin-top: 10px;
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
         border: 1px solid var(--border); border-radius: 8px;
@@ -398,24 +400,26 @@
 <div class="app-shell" id="mainAppShell" style="display: none;">
 
   
-  <div style="padding: 4px 4px 0px 4px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; position: relative; z-index: 2001;">
-    <div style="display: flex; align-items: center; gap: 12px;">
-      <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><i data-lucide="menu" style="width: 24px; height: 24px;"></i></button>
-      <h2 style="font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: 0.5px;">VBLOG</h2>
+  <header style="position: relative; z-index: 2000;">
+    <div style="padding: 4px 4px 0px 4px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><i data-lucide="menu" style="width: 24px; height: 24px;"></i></button>
+        <h2 style="font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: 0.5px; margin: 0;">VBLOG</h2>
+      </div>
+      <div style="font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
+        <i data-lucide="user" style="width: 14px; height: 14px;"></i> <span id="currentUserEmail"></span>
+        <button class="action-btn-sm action-btn-icon" onclick="logout()" title="登出"><i data-lucide="log-out" style="width: 14px; height: 14px;"></i></button>
+      </div>
     </div>
-    <div style="font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
-      <i data-lucide="user" style="width: 14px; height: 14px;"></i> <span id="currentUserEmail"></span>
-      <button class="action-btn-sm action-btn-icon" onclick="logout()" title="登出"><i data-lucide="log-out" style="width: 14px; height: 14px;"></i></button>
-    </div>
-  </div>
 
-  <div class="tab-nav">
-    <button class="tab-btn active" onclick="switchTab('tab-live', this)"><i data-lucide="video" style="width: 16px; height: 16px;"></i> 錄製</button>
-    <button class="tab-btn" onclick="switchTab('tab-history', this)"><i data-lucide="list-video" style="width: 16px; height: 16px;"></i> 日誌</button>
-    <button class="tab-btn" onclick="switchTab('tab-dashboard', this)"><i data-lucide="layout-grid" style="width: 16px; height: 16px;"></i> 總覽</button>
-    <button class="tab-btn" onclick="switchTab('tab-article', this)"><i data-lucide="file-edit" style="width: 16px; height: 16px;"></i> 工坊</button>
-    <button class="tab-btn" onclick="switchTab('tab-settings', this)"><i data-lucide="settings" style="width: 16px; height: 16px;"></i> 設定</button>
-  </div>
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab('tab-live', this)"><i data-lucide="video" style="width: 16px; height: 16px;"></i> 錄製</button>
+      <button class="tab-btn" onclick="switchTab('tab-history', this)"><i data-lucide="list-video" style="width: 16px; height: 16px;"></i> 日誌</button>
+      <button class="tab-btn" onclick="switchTab('tab-dashboard', this)"><i data-lucide="layout-grid" style="width: 16px; height: 16px;"></i> 總覽</button>
+      <button class="tab-btn" onclick="switchTab('tab-article', this)"><i data-lucide="file-edit" style="width: 16px; height: 16px;"></i> 工坊</button>
+      <button class="tab-btn" onclick="switchTab('tab-settings', this)"><i data-lucide="settings" style="width: 16px; height: 16px;"></i> 設定</button>
+    </div>
+  </header>
 
   
   <div id="tab-live" class="tab-content active">
@@ -889,39 +893,24 @@
     checkLoginStatus();
   });
 
+  
   function toggleFullscreen() {
-    const elem = isMobile ? document.getElementById('mediaPlayer') : document.getElementById('videoWrapper');
+    const wrapper = document.getElementById('videoWrapper');
+    wrapper.classList.toggle('css-fullscreen');
     
-    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-      if (elem.requestFullscreen) {
-        elem.requestFullscreen().catch(err => log("[錯誤] 全螢失敗"));
-      } else if (elem.webkitEnterFullscreen) {
-        elem.webkitEnterFullscreen();
-      } else if (elem.webkitRequestFullscreen) {
-        elem.webkitRequestFullscreen();
-      }
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      }
-    }
-  }
-
-  document.addEventListener('fullscreenchange', updateFullscreenIcon);
-  document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
-
-  function updateFullscreenIcon() {
     const icon = document.getElementById('iconFullscreen');
-    if (!icon) return;
-    if (document.fullscreenElement || document.webkitFullscreenElement) {
-      icon.setAttribute('data-lucide', 'minimize');
-    } else {
-      icon.setAttribute('data-lucide', 'maximize');
+    if (icon) {
+      if (wrapper.classList.contains('css-fullscreen')) {
+        icon.setAttribute('data-lucide', 'minimize');
+      } else {
+        icon.setAttribute('data-lucide', 'maximize');
+      }
+      lucide.createIcons();
     }
-    lucide.createIcons();
   }
+
+  
+  
 
   async function api(payload, retries = 2) {
     if (typeof google !== 'undefined' && google.script && google.script.run) {
@@ -1140,6 +1129,7 @@
     controlsTimeout = setTimeout(() => { island.classList.add('autohide'); }, 3000);
   }
 
+  
   function toggleMobileMenu() {
     const nav = document.querySelector('.tab-nav');
     nav.classList.toggle('show');
@@ -1150,6 +1140,7 @@
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     if (btn) btn.classList.add('active');
     document.getElementById(tabId).classList.add('active');
+    
     
     const nav = document.querySelector('.tab-nav');
     if (nav && nav.classList.contains('show')) {
@@ -1261,6 +1252,14 @@
     if (wasRecording && mediaRecorder && mediaRecorder.state === "recording") {
       clearTimeout(chunkTimer); await stopMediaRecorderAsync();
     }
+
+    
+    if (currentStream) {
+      currentStream.getTracks().forEach(t => t.stop());
+      currentStream = null;
+    }
+    document.getElementById('mediaPlayer').srcObject = null;
+    await new Promise(r => setTimeout(r, 300));
 
     const success = await acquireStream();
     if (!success) { currentSourceType = prevSourceType; mobileFacingMode = prevFacingMode; await acquireStream(); }
@@ -1641,7 +1640,7 @@
     if (urls && urls.length > 0) {
       const isPreloaded = window.blobBuffers[logId] && window.blobBuffers[logId][0];
       const statusText = isPreloaded ? "[就緒]" : "[載入]";
-      videoHtml = '<div style="background: #000; border-radius: 8px; overflow: hidden; margin-bottom: 32px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05);"><video id="preview-player" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block; object-fit: contain;"></video><div style="display:flex; flex-wrap:wrap; justify-content: space-between; align-items: center; padding: 12px 16px; background: #0f172a; gap:12px;"><span id="preview-player-status" style="color: #f8fafc; font-size: 13px;">' + statusText + '</span><button class="action-btn-sm" onclick="window.initPreviewPlayer(\'' + logId + '\')" style="background: var(--accent); color: #fff; border: none; padding: 6px 16px;"><i data-lucide="play" style="width: 14px; height: 14px;"></i> 播放</button></div></div>';
+      videoHtml = '<div style="background: #000; border-radius: 8px; overflow: hidden; margin-bottom: 32px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05);"><video id="preview-player" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block; object-fit: contain;"></video><div style="display:flex; flex-wrap:wrap; justify-content: space-between; align-items: center; padding: 12px 16px; background: #0f172a; gap:12px;"><span id="preview-player-status" style="color: #f8fafc; font-size: 13px;">' + statusText + '</span><button class="action-btn-sm" onclick="window.initPreviewPlayer(\'' + logId + '\')" style="background: var(--accent); color: #fff; border: none; padding: 6px 16px;"><i data-lucide="play" style="width: 14px; height: 14px;"></i> 啟動</button></div></div>';
     }
     
     const previewHtml = '<div class="blog-preview-wrapper"><h1 class="preview-main-title">' + escapeHtml(displayTitle) + '</h1><div class="blog-meta-header"><div class="blog-author-info">' + avatarHtml + '<div><div style="font-weight: 700; color: var(--text); font-size: 15px;">' + escapeHtml(authorNameText) + '</div><div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">' + dateStr + '</div></div></div><div class="blog-stats"><span><i data-lucide="eye" style="width: 15px; height: 15px;"></i> 預覽</span></div></div>' + videoHtml + '<div id="markdown-render-zone" class="markdown-body">' + marked.parse(bodyMd) + '</div><div class="blog-footer-cta"><div class="newsletter-box"><div style="font-weight: 800; font-size: 16px; margin-bottom: 8px;">訂閱</div><p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">' + escapeHtml(authorBioText) + '</p><div style="display: flex; gap: 8px; flex-wrap: wrap;"><input type="email" placeholder="信箱" style="flex: 1; min-width: 200px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; font-size: 14px; outline: none;"><button class="action-btn-sm action-btn-primary" style="padding: 12px 24px; border-radius: 4px; white-space: nowrap; height: 42px;">訂閱</button></div></div></div></div>';
@@ -1825,8 +1824,10 @@
       if (blobUrl) {
         videoEl.src = blobUrl;
         videoEl.play().catch(e => { statusEl.innerText = "[暫停]"; });
-        if (currentIndex + 1 < urls.length) loadChunk(currentIndex + 1).catch(e => {});
+        if (currentIndex + 1 < urls.length) loadChunk(currentIndex + 1).catch(e => console.log('預載失敗', e));
+        
         document.getElementById('btnCaptureCover').disabled = false;
+
       } else { currentIndex++; playNext(); }
     };
 
