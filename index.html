@@ -152,14 +152,14 @@
 
      
     @media (orientation: portrait) {
-      .viewport-container { aspect-ratio: 3 / 4; max-height: 80vh; border-radius: 8px; }
+      .viewport-container { aspect-ratio: 9 / 16; max-height: 85vh; border-radius: 8px; }
       .controls-island {
         bottom: 50%; left: auto; right: 12px; transform: translateY(50%);
-        flex-direction: column; width: auto; max-width: 60px; padding: 12px 8px;
-        border-radius: 12px; gap: 10px;
+        flex-direction: column; width: auto; max-width: 50px; padding: 10px 6px;
+        gap: 8px; border-radius: 12px; background: rgba(255, 255, 255, 0.85);
       }
-      .controls-divider { width: 24px; height: 1px; margin: 4px 0; }
-      .ctrl-btn { width: 36px; height: 36px; font-size: 11px; }
+      .controls-divider { width: 24px; height: 1px; margin: 2px 0; }
+      .ctrl-btn { width: 34px; height: 34px; font-size: 11px; }
     }
 
     .terminal-log {
@@ -424,7 +424,7 @@
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;">
       <div>
         <h3 style="font-size: 18px; font-weight: 700;">日誌素材庫</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">原始影音紀錄，點選產文進入工坊。</p>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">原始影音紀錄，點選工坊進入編輯。</p>
       </div>
       <button onclick="loadHistoryLogs()" class="action-btn-sm" title="重整"><i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> 重整</button>
     </div>
@@ -438,7 +438,7 @@
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px;">
       <div>
         <h3 style="font-size: 18px; font-weight: 700;">發布總覽</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">已編輯完成的草稿與已發布文章。</p>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">已編輯完成的草稿與發布文章。</p>
       </div>
       <div class="flex-wrap-gap">
         <a id="authorGitHubLink" href="#" target="_blank" class="action-btn-sm" style="display:none; color:var(--text); border-color:var(--text);"><i data-lucide="external-link" style="width:14px; height:14px;"></i> 沙龍</a>
@@ -446,7 +446,6 @@
       </div>
     </div>
     <div id="dashboardContainer" class="dashboard-grid">
-      
       <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 40px 0;">載入中...</div>
     </div>
   </div>
@@ -525,7 +524,7 @@
     <div class="workshop-card" id="stepCard5">
       <div class="workshop-step-header">
         <div style="display: flex; align-items: center; gap: 12px;">
-          <span class="step-badge">5</span><div style="font-weight: 700; font-size: 15px;">封面與預覽</div>
+          <span class="step-badge">5</span><div style="font-weight: 700; font-size: 15px;">預覽</div>
         </div>
         <div class="flex-wrap-gap">
           <button class="action-btn-sm action-btn-primary" onclick="assembleFullArticle()"><i data-lucide="layers" style="width: 14px; height: 14px;"></i> 整合</button>
@@ -869,7 +868,12 @@
           .handleClientRequest(payload);
       });
     } else {
-      const res = await fetch(GAS_WEB_URL, { method: 'POST', body: JSON.stringify(payload) });
+      
+      const res = await fetch(GAS_WEB_URL, { 
+          method: 'POST', 
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload) 
+      });
       const json = await res.json();
       if (json.status === 'success') return json.data;
       throw new Error(json.message);
@@ -940,7 +944,7 @@
       const preview = document.getElementById('authorAvatarPreview');
       preview.style.backgroundImage = "url('" + base64 + "')";
       preview.innerHTML = '';
-      showToast("圖片已讀取，請記得儲存設定");
+      showToast("圖片已讀取，請記得儲存");
     };
     reader.readAsDataURL(file);
   }
@@ -963,7 +967,7 @@
     };
 
     if(profile.handle && !/^[a-zA-Z0-9-]+$/.test(profile.handle)) {
-      alert("個人網址代號 (Handle) 只能包含英文字母、數字與減號 (-)");
+      alert("網址代號僅限英數與減號 (-)");
       return;
     }
 
@@ -974,7 +978,7 @@
 
     try {
       const res = await api({ action: "saveAuthorProfile", email: email, profile: profile });
-      showToast("作者設定已更新！");
+      showToast("作者設定已更新");
       tempAvatarBase64 = null; 
       if(res.handle) {
           const ghLink = document.getElementById('authorGitHubLink');
@@ -982,7 +986,7 @@
           ghLink.style.display = 'inline-flex';
       }
     } catch (e) {
-      alert("儲存失敗：" + e.message);
+      alert("失敗：" + e.message);
     } finally {
       btn.innerHTML = originalHtml;
       lucide.createIcons();
@@ -994,7 +998,6 @@
   
   
   async function loadPrompts(email) {
-    
     const fallback = {
       step1: "你是一位深諳短影音變現、爆款內容心理學與商業雜誌的資深總編輯。\n請針對以下【語音逐字稿與畫面描述內容】，為微型創業者設計 20 組極具吸引力的爆款文章策略與標題提案。\n格式必須嚴格依照：「你的吸睛標題｜特洛伊AI賦能師|||[標題類型] 戰略切入點說明」",
       step2: "你是一位專業的商業雜誌首席特約作家與 VBLOG 品牌顧問，深諳 Google E-E-A-T。\n請根據確定的【文章標題】與【原始內容】，寫一段兼具價值與黃金3秒Hook的文章開頭。\n首段必備：50-80 字精煉「實戰經驗價值」。\n第二段開始：直擊微型創業者痛點，極致閱讀呼吸感。",
@@ -1004,7 +1007,6 @@
 
     try {
       const res = await api({ action: "getPrompts", email: email });
-      
       document.getElementById('promptStep1').value = (res && res.prompts && res.prompts.step1) ? res.prompts.step1 : fallback.step1;
       document.getElementById('promptStep2').value = (res && res.prompts && res.prompts.step2) ? res.prompts.step2 : fallback.step2;
       document.getElementById('promptStep3').value = (res && res.prompts && res.prompts.step3) ? res.prompts.step3 : fallback.step3;
@@ -1036,7 +1038,7 @@
 
     try {
       await api({ action: "savePrompts", email: email, prompts: prompts });
-      showToast("提示詞已儲存");
+      showToast("已儲存");
     } catch (e) { alert("失敗：" + e.message); } 
     finally { btn.innerHTML = originalHtml; lucide.createIcons(); btn.disabled = false; }
   }
@@ -1164,10 +1166,16 @@
         currentStream = new MediaStream([ screenStream.getVideoTracks()[0], mixedAudioDest.stream.getAudioTracks()[0] ]);
         screenStream.getVideoTracks()[0].onended = async () => { if (currentSourceType === "screen") { log("> 共用停止，切回鏡頭..."); await switchMediaSource(); } };
       } else {
+        const isPortrait = window.innerHeight > window.innerWidth;
         
         let videoConstraints;
         if (isMobile) {
-          videoConstraints = { facingMode: mobileFacingMode, frameRate: { ideal: cameraFps } };
+          videoConstraints = {
+            facingMode: mobileFacingMode,
+            width: { ideal: isPortrait ? 1080 : 1920 },
+            height: { ideal: isPortrait ? 1920 : 1080 },
+            frameRate: { ideal: cameraFps }
+          };
           if (cameraZoom === 0.5) videoConstraints.advanced = [{ zoom: 0.5 }];
         } else {
           videoConstraints = { width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: cameraFps } };
@@ -1208,7 +1216,7 @@
     else currentSourceType = (currentSourceType === "camera") ? "screen" : "camera";
 
     if (wasRecording && mediaRecorder && mediaRecorder.state === "recording") {
-      log("[系統] 設備切換，切片中..."); clearTimeout(chunkTimer); await stopMediaRecorderAsync();
+      log("[系統] 切換，切片中..."); clearTimeout(chunkTimer); await stopMediaRecorderAsync();
     }
 
     log("> 切換至 [" + (isMobile ? mobileFacingMode : currentSourceType) + "]...");
@@ -1503,7 +1511,7 @@
   
   async function loadDashboardLogs() {
     const container = document.getElementById('dashboardContainer');
-    container.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> 載入總覽中...</div>';
+    container.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> 載入中...</div>';
     lucide.createIcons();
     
     
@@ -1518,7 +1526,7 @@
     const dashboardItems = globalLogsCache.filter(item => item.articleFull || item.articleTitle);
     
     if(dashboardItems.length === 0) {
-      container.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px;">目前尚無已產出之文章草稿或成品，請先至日誌工坊產文。</div>';
+      container.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px;">目前尚無已產出之草稿或文章，請先至工坊產文。</div>';
       return;
     }
 
@@ -1639,13 +1647,13 @@
     const statusText = document.getElementById('coverStatusText');
     coverPreview.src = dataUrl;
     coverPreview.style.display = 'block';
-    statusText.innerHTML = '<i data-lucide="loader" class="spin" style="width:12px; height:12px;"></i> 正在將圖片同步至雲端...';
+    statusText.innerHTML = '<i data-lucide="loader" class="spin" style="width:12px; height:12px;"></i> 同步至雲端...';
     lucide.createIcons();
 
     
     api({ action: 'uploadImage', data: base64Clean, mimeType: 'image/jpeg', logId: window.currentSelectedLog.logId })
       .then(res => {
-         statusText.innerHTML = '<span style="color: var(--success);"><i data-lucide="check-circle" style="width:14px; height:14px; vertical-align:middle;"></i> 已安全存入雲端硬碟！</span>';
+         statusText.innerHTML = '<span style="color: var(--success);"><i data-lucide="check-circle" style="width:14px; height:14px; vertical-align:middle;"></i> 已存入雲端！</span>';
          lucide.createIcons();
          
          if(window.currentSelectedLog) window.currentSelectedLog.coverUrl = res.url;
@@ -1703,7 +1711,7 @@
       const res = await api({ action: "generateArticleStep", step: 2, title: title, content: window.currentSelectedLog.content, email: email });
       hookInput.value = res.hook || "";
       saveCurrentStepData('hook');
-      showToast("已儲存開頭");
+      showToast("已儲存");
     } catch (e) { hookInput.value = ""; alert("失敗: " + e.message); }
   }
 
@@ -1719,7 +1727,7 @@
       const res = await api({ action: "generateArticleStep", step: 3, title: title, hook: hook, content: window.currentSelectedLog.content, email: email });
       bodyInput.value = res.body || "";
       saveCurrentStepData('body');
-      showToast("已儲存內文");
+      showToast("已儲存");
     } catch (e) { bodyInput.value = ""; alert("失敗: " + e.message); }
   }
 
@@ -1732,7 +1740,7 @@
       const res = await api({ action: "generateArticleStep", step: 4, title: title, email: email });
       endingInput.value = res.ending || "";
       saveCurrentStepData('ending');
-      showToast("已儲存結尾");
+      showToast("已儲存");
     } catch (e) { endingInput.value = ""; alert("失敗: " + e.message); }
   }
 
@@ -1758,7 +1766,7 @@
     let videoHtml = '';
     if (urls && urls.length > 0) {
       const isPreloaded = window.blobBuffers[logId] && window.blobBuffers[logId][0];
-      const statusText = isPreloaded ? "✅ 影片就緒，可秒開" : "⚡ 背景預載中...";
+      const statusText = isPreloaded ? "✅ 影片就緒，可秒開" : "⚡ 預載中...";
       videoHtml = '<div style="background: #000; border-radius: 8px; overflow: hidden; margin-bottom: 32px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05);"><video id="preview-player" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block;"></video><div style="display:flex; flex-wrap:wrap; justify-content: space-between; align-items: center; padding: 12px 16px; background: #0f172a; gap:12px;"><span id="preview-player-status" style="color: #f8fafc; font-size: 13px;">' + statusText + '</span><button class="action-btn-sm" onclick="window.initPreviewPlayer(\'' + logId + '\')" style="background: var(--accent); color: #fff; border: none; padding: 6px 16px;"><i data-lucide="play" style="width: 14px; height: 14px;"></i> 播放</button></div></div>';
     }
     
@@ -1803,7 +1811,7 @@
       if (!blobUrl) blobUrl = await loadChunk(currentIndex);
       if (blobUrl) {
         videoEl.src = blobUrl;
-        videoEl.play().catch(e => { statusEl.innerText = "⏸ 準備就緒 (請點擊畫面播放)"; });
+        videoEl.play().catch(e => { statusEl.innerText = "⏸ 點擊畫面播放"; });
         if (currentIndex + 1 < urls.length) loadChunk(currentIndex + 1).catch(e => console.log('背景預載失敗', e));
         
         document.getElementById('btnCaptureCover').disabled = false;
@@ -1827,7 +1835,7 @@
     window.currentSelectedFullMd = fullMd;
     renderBlogPreview(fullMd);
     saveCurrentStepData('full');
-    showToast("已整合定稿");
+    showToast("已整合");
   }
 
   async function saveCurrentStepData(field) {
