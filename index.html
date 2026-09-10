@@ -1789,6 +1789,67 @@
     playNext();
   };
 
+  
+  
+  
+  window.startSeamlessPlay = async function(logId) {
+    const urls = window.logPlaylists[logId];
+    if (!urls || urls.length === 0) return;
+    const videoEl = document.getElementById('player-' + logId);
+    const statusEl = document.getElementById('player-status-' + logId);
+    
+    
+    if (videoEl.dataset.playing === 'true') return;
+    videoEl.dataset.playing = 'true';
+    
+    if (!window.blobBuffers[logId]) window.blobBuffers[logId] = [];
+    const buffer = window.blobBuffers[logId];
+    let currentIndex = 0;
+
+    
+    const loadChunk = async (index) => {
+      if (index >= urls.length) return null;
+      if (buffer[index]) return buffer[index];
+      statusEl.innerText = "[讀取] " + (index + 1) + " / " + urls.length;
+      try {
+        const res = await api({ action: 'getVideoChunk', url: urls[index] });
+        const fetchRes = await fetch("data:" + res.mimeType + ";base64," + res.base64);
+        const blob = await fetchRes.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        buffer[index] = blobUrl;
+        return blobUrl;
+      } catch (err) { statusEl.innerText = "[失敗] " + (index + 1); return null; }
+    };
+
+    
+    const playNext = async () => {
+      if (currentIndex >= urls.length) { 
+        statusEl.innerText = '[結束]'; 
+        videoEl.dataset.playing = 'false'; 
+        return; 
+      }
+      statusEl.innerText = "[播放] " + (currentIndex + 1) + " / " + urls.length;
+      let blobUrl = buffer[currentIndex];
+      if (!blobUrl) blobUrl = await loadChunk(currentIndex);
+      
+      if (blobUrl) {
+        videoEl.src = blobUrl;
+        videoEl.play().catch(e => { statusEl.innerText = "[暫停]"; });
+        
+        if (currentIndex + 1 < urls.length) loadChunk(currentIndex + 1).catch(e => {});
+      } else { 
+        currentIndex++; 
+        playNext(); 
+      }
+    };
+
+    
+    videoEl.onended = () => { currentIndex++; playNext(); };
+    
+    
+    playNext();
+  };
+
   function assembleFullArticle() {
     const title = document.getElementById('finalArticleTitle').value.trim();
     const hook = document.getElementById('finalArticleHook').value.trim();
