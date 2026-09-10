@@ -2075,6 +2075,7 @@
     showToast("整合");
   }
 
+  
   function saveCurrentStepData(field) {
     if (!window.currentSelectedLog) { alert("未選日誌"); return; }
     let content = "";
@@ -2084,12 +2085,17 @@
     else if (field === 'ending') content = document.getElementById('finalArticleEnding').value;
     else if (field === 'full') content = window.currentSelectedFullMd || "";
 
-    showToast("已儲存");
-
+    
+    if(field === 'title') window.currentSelectedLog.articleTitle = content;
+    if(field === 'hook') window.currentSelectedLog.articleHook = content;
+    if(field === 'body') window.currentSelectedLog.articleBody = content;
+    if(field === 'ending') window.currentSelectedLog.articleEnding = content;
     if(field === 'full') {
        window.currentSelectedLog.articleFull = content;
        window.currentSelectedLog.articleTitle = document.getElementById('finalArticleTitle').value;
     }
+
+    showToast("已儲存");
 
     api({ action: "saveArticleSection", logId: window.currentSelectedLog.logId, field: field, content: content })
     .catch (e => { showToast("背景儲存失敗"); });
@@ -2218,7 +2224,8 @@
     hookInput.value = "提煉中...";
     try {
       const res = await api({ action: "generateArticleStep", step: 2, title: title, content: window.currentSelectedLog.content, email: email });
-      hookInput.value = res.hook || "";
+      
+      hookInput.value = (res.hook === "（無輸出）") ? "生成被安全機制阻擋，請稍後重試" : (res.hook || "");
       saveCurrentStepData('hook');
       showToast("儲存");
     } catch (e) { hookInput.value = ""; alert(e.message); }
@@ -2234,7 +2241,8 @@
     bodyInput.value = "重構中...";
     try {
       const res = await api({ action: "generateArticleStep", step: 3, title: title, hook: hook, content: window.currentSelectedLog.content, email: email });
-      bodyInput.value = res.body || "";
+      
+      bodyInput.value = (res.body === "（無輸出）") ? "生成被安全機制阻擋，請稍後重試" : (res.body || "");
       saveCurrentStepData('body');
       showToast("儲存");
     } catch (e) { bodyInput.value = ""; alert(e.message); }
@@ -2247,7 +2255,8 @@
     endingInput.value = "撰寫中...";
     try {
       const res = await api({ action: "generateArticleStep", step: 4, title: title, email: email });
-      endingInput.value = res.ending || "";
+      
+      endingInput.value = (res.ending === "（無輸出）") ? "生成被安全機制阻擋，請稍後重試" : (res.ending || "");
       saveCurrentStepData('ending');
       showToast("儲存");
     } catch (e) { endingInput.value = ""; alert(e.message); }
