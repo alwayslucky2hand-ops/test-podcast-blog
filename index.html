@@ -1213,10 +1213,11 @@ async function acquireStream() {
         
         
         
+        
         let videoConstraints = {
           facingMode: mobileFacingMode,
-          width: { ideal: 1280 },  
-          height: { ideal: 720 },  
+          width: { ideal: 1920 },  
+          height: { ideal: 1080 }, 
           frameRate: { ideal: cameraFps }
         };
 
@@ -1315,7 +1316,7 @@ async function acquireStream() {
     
     chunkTimer = setTimeout(() => {
       if (mediaRecorder && mediaRecorder.state === "recording") { log("[系統] 第 " + chunkIndex + " 段切片..."); mediaRecorder.stop(); }
-    }, 10000);
+    }, 60000);
   }
 
   function processChunk(blob, mime, index) {
