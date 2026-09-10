@@ -1187,8 +1187,10 @@ async function acquireStream() {
         if (isMobile) {
           videoConstraints = {
             facingMode: mobileFacingMode,
-            width: { ideal: isPortrait ? 1440 : 1920 },
-            height: { ideal: isPortrait ? 1920 : 1440 },
+            
+            aspectRatio: { ideal: isPortrait ? 0.75 : 1.333333 }, 
+            width: { ideal: isPortrait ? 1080 : 1440 },
+            height: { ideal: isPortrait ? 1440 : 1080 },
             frameRate: { ideal: cameraFps }
           };
           if (cameraZoom === 0.5) videoConstraints.advanced = [{ zoom: 0.5 }];
@@ -1289,9 +1291,12 @@ async function acquireStream() {
       if (isRecording && !isPaused && mediaRecorder && mediaRecorder.state === "inactive") startChunkRecording(); 
     };
     mediaRecorder.start();
+    
+    
+    
     chunkTimer = setTimeout(() => {
       if (mediaRecorder && mediaRecorder.state === "recording") { log("[系統] 第 " + chunkIndex + " 段切片..."); mediaRecorder.stop(); }
-    }, 60000);
+    }, 10000);
   }
 
   function processChunk(blob, mime, index) {
@@ -1300,6 +1305,13 @@ async function acquireStream() {
       const reader = new FileReader();
       reader.readAsDataURL(blob);
       reader.onloadend = async () => {
+        
+        if (!reader.result || !reader.result.includes(',')) {
+          log("> [❌] " + index + " 失敗: 檔案過大或記憶體不足，片段損毀");
+          resolve();
+          return;
+        }
+        
         const base64 = reader.result.split(',')[1];
         log("> [處理] " + index + " 寫入中...");
         try {
@@ -1311,6 +1323,7 @@ async function acquireStream() {
     });
     activeUploadTasks.add(task); task.then(() => activeUploadTasks.delete(task));
   }
+
 
   function togglePause() {
     if (!isRecording) return;
