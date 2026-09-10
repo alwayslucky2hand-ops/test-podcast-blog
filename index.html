@@ -867,18 +867,22 @@
   
   
   function toggleFullscreen() {
-    const elem = document.getElementById('videoWrapper');
+    
+    const elem = isMobile ? document.getElementById('mediaPlayer') : document.getElementById('videoWrapper');
     
     if (!document.fullscreenElement && !document.webkitFullscreenElement) {
       if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-      } else if (elem.webkitRequestFullscreen) {  
+        elem.requestFullscreen().catch(err => log("> 全螢幕無法啟動：" + err.message));
+      } else if (elem.webkitEnterFullscreen) {
+        
+        elem.webkitEnterFullscreen();
+      } else if (elem.webkitRequestFullscreen) {
         elem.webkitRequestFullscreen();
       }
     } else {
       if (document.exitFullscreen) {
         document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) {  
+      } else if (document.webkitExitFullscreen) {
         document.webkitExitFullscreen();
       }
     }
@@ -1313,35 +1317,35 @@ async function acquireStream() {
     mediaRecorder.start();
     
     
-    
     chunkTimer = setTimeout(() => {
-      if (mediaRecorder && mediaRecorder.state === "recording") { log("[系統] 第 " + chunkIndex + " 段切片..."); mediaRecorder.stop(); }
-    }, 60000);
+      if (mediaRecorder && mediaRecorder.state === "recording") { 
+        log("[系統] 擷取 30 秒片段，雙軌發送至雲端與 AI..."); 
+        mediaRecorder.stop(); 
+      }
+    }, 30000);
   }
 
   function processChunk(blob, mime, index) {
-    log("> [排隊] " + index + " 上傳...");
+    log("> [排隊] 準備傳送第 " + index + " 段 (30秒) 影片...");
     const task = new Promise(resolve => {
       const reader = new FileReader();
       reader.readAsDataURL(blob);
       reader.onloadend = async () => {
-        
         if (!reader.result || !reader.result.includes(',')) {
-          log("> [❌] " + index + " 失敗: 檔案過大或記憶體不足，片段損毀");
-          resolve();
-          return;
+          log("> [❌] 第 " + index + " 段記憶體不足，片段損毀");
+          resolve(); return;
         }
-        
         const base64 = reader.result.split(',')[1];
-        log("> [處理] " + index + " 寫入中...");
+        log("> [處理] 第 " + index + " 段 AI 解析中，請稍候...");
         try {
           await api({ action: "processChunkRealtime", base64Data: base64, mimeType: mime, folderId: logSession.folderId, rowIndex: logSession.rowIndex, chunkIndex: index });
-          log("> [✅] " + index + " 完成！");
-        } catch (e) { log("> [❌] " + index + " 失敗: " + e.message); }
+          log("> [✅] 第 " + index + " 段 AI 辨識並寫入試算表成功！");
+        } catch (e) { log("> [❌] 第 " + index + " 段失敗: " + e.message); }
         resolve();
       };
     });
-    activeUploadTasks.add(task); task.then(() => activeUploadTasks.delete(task));
+    activeUploadTasks.add(task); 
+    task.then(() => activeUploadTasks.delete(task));
   }
 
 
@@ -1375,29 +1379,37 @@ async function acquireStream() {
     const email = localStorage.getItem('bvlog_user_email');
     isRecording = false; isPaused = false; clearTimeout(chunkTimer); clearInterval(timerInterval);
 
-    if (mediaRecorder && mediaRecorder.state === "recording") log("[系統] 結束，傳送中...");
+    if (mediaRecorder && mediaRecorder.state === "recording") log("[系統] 結束錄影，打包最後切片...");
     await stopMediaRecorderAsync();
 
     if (currentStream) { currentStream.getTracks().forEach(t => t.stop()); currentStream = null; }
     if (document.getElementById('mediaPlayer')) document.getElementById('mediaPlayer').srcObject = null;
     if (audioContext) { audioContext.close(); audioContext = null; }
-    log("> 設備已關閉，等待寫入...");
+    
+    log("> 設備已關閉，準備歸檔...");
 
     document.getElementById('cameraPrompt').style.display = 'flex';
     document.getElementById('controlsIsland').style.display = 'none';
     document.getElementById('statusBadge').style.display = 'none';
     document.getElementById('cameraGrid').style.display = 'none';
 
-    document.getElementById('btnStop').disabled = true;
+    
+    const stopBtn = document.getElementById('btnStop');
+    stopBtn.disabled = true;
     document.getElementById('btnPause').style.display = 'none';
     document.getElementById('btnCloseCamera').style.display = 'flex'; 
 
+    if (activeUploadTasks.size > 0) {
+      log("> ⏳ 請勿關閉網頁！正在等待 AI 處理最後的 " + activeUploadTasks.size + " 個 30 秒片段...");
+    }
+
+    
     while (activeUploadTasks.size > 0) { await Promise.all(Array.from(activeUploadTasks)); }
-    log("> 提煉摘要中...");
+    log("> AI 辨識全數完成，產出總結摘要中...");
 
     try {
       const res = await api({ action: "finalizeLog", rowIndex: logSession.rowIndex, email: email });
-      log("> 歸檔完成！");
+      log("> ✅ 歸檔大功告成！");
       const urls = res.urls || [];
       
       let linksHtml = '';
