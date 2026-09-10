@@ -108,7 +108,6 @@
         linear-gradient(to bottom, transparent calc(33.33% - 0.5px), rgba(255,255,255,0.15) calc(33.33% - 0.5px), rgba(255,255,255,0.15) calc(33.33% + 0.5px), transparent calc(33.33% + 0.5px)),
         linear-gradient(to bottom, transparent calc(66.66% - 0.5px), rgba(255,255,255,0.15) calc(66.66% - 0.5px), rgba(255,255,255,0.15) calc(66.66% + 0.5px), transparent calc(66.66% + 0.5px));
     }
-     
     video { width: 100%; height: 100%; object-fit: contain; display: block; background: #000; }
 
     .camera-prompt {
@@ -146,23 +145,6 @@
     .ctrl-btn.stop-btn { color: var(--danger); }
     .ctrl-btn.pause-btn { color: var(--warning); }
     .controls-divider { width: 1px; height: 24px; background: var(--border); margin: 0 4px; }
-
-    @media (orientation: portrait) {
-      .viewport-container { 
-        aspect-ratio: 9 / 16 !important; 
-        max-height: 85vh; 
-        border-radius: 12px; 
-      }
-      .controls-island {
-        bottom: auto; top: 50%; left: auto; right: 12px; transform: translateY(-50%);
-        flex-direction: column; width: 48px; padding: 12px 6px;
-        gap: 12px; border-radius: 24px; background: rgba(255, 255, 255, 0.75);
-        backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-        border: 1px solid rgba(255,255,255,0.4);
-      }
-      .controls-divider { width: 24px; height: 1px; margin: 0 auto; background: rgba(0,0,0,0.1); }
-      .ctrl-btn { width: 34px; height: 34px; font-size: 10px; border-radius: 50%; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border: none; }
-    }
 
     .terminal-log {
       width: 100%; height: 100px; background: #ffffff; border: 1px solid var(--border); border-radius: 4px;
@@ -298,6 +280,66 @@
     .toast-box { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(50px); opacity: 0; background: var(--text); color: #ffffff; padding: 10px 20px; border-radius: 4px; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 10px; transition: transform 0.3s ease, opacity 0.3s ease; z-index: 1000; pointer-events: none; }
     .toast-box.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+     
+    .markdown-body img {
+      max-width: 100%; height: auto; object-fit: contain;
+      border-radius: 8px; display: block; margin: 24px auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+    .inline-insert-zone {
+      height: 24px; margin: -12px 0; display: flex; align-items: center; justify-content: center;
+      opacity: 0; cursor: pointer; transition: opacity 0.2s ease; position: relative; z-index: 10;
+    }
+    .inline-insert-zone::before {
+      content: ''; position: absolute; left: 0; right: 0; top: 50%;
+      height: 1px; background: var(--accent); opacity: 0; transition: opacity 0.2s;
+    }
+    .inline-insert-zone:hover { opacity: 1; }
+    .inline-insert-zone:hover::before { opacity: 0.3; }
+    .inline-insert-btn {
+      background: var(--surface); border: 1px solid var(--accent); color: var(--accent); border-radius: 50%;
+      width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+      z-index: 2; transition: transform 0.2s, background 0.2s;
+    }
+    .inline-insert-zone:hover .inline-insert-btn { transform: scale(1.1); background: var(--accent); color: #fff; }
+    
+    .inline-img-wrapper { position: relative; display: inline-block; width: 100%; }
+    .delete-img-btn {
+      position: absolute; top: 8px; right: 8px; background: rgba(255, 255, 255, 0.8);
+      border: 1px solid var(--border); color: var(--danger); border-radius: 50%;
+      width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.2s; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .delete-img-btn:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
+
+     
+    .mobile-menu-btn {
+      display: none; background: transparent; border: none; color: var(--text);
+      cursor: pointer; padding: 4px; border-radius: 4px; transition: background 0.2s;
+    }
+    
+    @media (max-width: 768px) {
+      .mobile-menu-btn { display: inline-flex; align-items: center; justify-content: center; }
+      
+      .tab-nav {
+        display: none; flex-direction: column; gap: 8px;
+        position: absolute; top: 60px; left: 16px; right: 16px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        border: 1px solid var(--border); border-radius: 8px;
+        padding: 16px; z-index: 2000; box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+      }
+      .tab-nav.show { display: flex; animation: fadeIn 0.2s ease; }
+      
+      .tab-btn { justify-content: flex-start; padding: 12px 16px; border-radius: 6px; }
+      .tab-btn::after { display: none; } 
+      .tab-btn.active { background: var(--accent-soft); color: var(--accent); }
+
+      .inline-insert-zone { opacity: 1; height: 44px; margin: -10px 0; }
+      .inline-insert-btn { opacity: 0.25; border-color: var(--text-muted); color: var(--text-muted); background: var(--surface); }
+      .inline-insert-zone:active .inline-insert-btn { opacity: 1; background: var(--accent); color: #fff; border-color: var(--accent); }
+    }
   </style>
 </head>
 <body>
@@ -336,8 +378,12 @@
 
 <div class="app-shell" id="mainAppShell" style="display: none;">
 
-  <div style="padding: 4px 4px 0px 4px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;">
-    <h2 style="font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: 0.5px;">VBLOG</h2>
+  
+  <div style="padding: 4px 4px 0px 4px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; position: relative; z-index: 2001;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><i data-lucide="menu" style="width: 24px; height: 24px;"></i></button>
+      <h2 style="font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: 0.5px;">VBLOG</h2>
+    </div>
     <div style="font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
       <i data-lucide="user" style="width: 14px; height: 14px;"></i> <span id="currentUserEmail"></span>
       <button class="action-btn-sm action-btn-icon" onclick="logout()" title="登出"><i data-lucide="log-out" style="width: 14px; height: 14px;"></i></button>
@@ -644,7 +690,9 @@
 
 </div>
 
+
 <canvas id="captureCanvas" style="display: none;"></canvas>
+<input type="file" id="inlineImageUpload" accept="image/*" style="display: none;" onchange="executeInlineImageUpload(event)">
 
 <div id="toast" class="toast-box">
   <i data-lucide="check" style="width: 16px; height: 16px;"></i>
@@ -1074,11 +1122,23 @@
     controlsTimeout = setTimeout(() => { island.classList.add('autohide'); }, 3000);
   }
 
+  
+  function toggleMobileMenu() {
+    const nav = document.querySelector('.tab-nav');
+    nav.classList.toggle('show');
+  }
+
   function switchTab(tabId, btn) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     if (btn) btn.classList.add('active');
     document.getElementById(tabId).classList.add('active');
+    
+    const nav = document.querySelector('.tab-nav');
+    if (nav.classList.contains('show')) {
+      nav.classList.remove('show');
+    }
+
     if (tabId === 'tab-history') loadHistoryLogs();
     if (tabId === 'tab-dashboard') loadDashboardLogs();
   }
@@ -1475,8 +1535,7 @@
 
         let playerHtml = '';
         if(urls.length > 0) {
-           
-        playerHtml = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="play-circle" style="width: 16px; height: 16px; color: var(--accent);"></i>全片</span><button class="action-btn-sm action-btn-primary" onclick="event.stopPropagation(); window.startSeamlessPlay(\'' + item.logId + '\')"><i data-lucide="play" style="width: 14px; height: 14px;"></i> 啟動</button></summary><div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border);"><video id="player-' + item.logId + '" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block; object-fit: contain;"></video><div id="player-status-' + item.logId + '" style="padding: 12px 16px; background: #0f172a; color: #f8fafc; font-size: 14px; text-align: center;">待啟動</div></div></details>';
+          playerHtml = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="play-circle" style="width: 16px; height: 16px; color: var(--accent);"></i>全片</span><button class="action-btn-sm action-btn-primary" onclick="event.stopPropagation(); window.startSeamlessPlay(\'' + item.logId + '\')"><i data-lucide="play" style="width: 14px; height: 14px;"></i> 啟動</button></summary><div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border);"><video id="player-' + item.logId + '" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block; object-fit: contain;"></video><div id="player-status-' + item.logId + '" style="padding: 12px 16px; background: #0f172a; color: #f8fafc; font-size: 14px; text-align: center;">待啟動</div></div></details>';
         }
 
         let summaryBlock = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>提案</span><div class="flex-wrap-gap"><button type="button" id="btn-edit-summary-' + item.logId + '" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); toggleEditMode(\'' + item.logId + '\', \'summary\')" title="編輯"><i data-lucide="edit-3" style="width: 16px; height: 16px;"></i></button><button type="button" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute(\'data-text\'))" data-text="' + escapeHtml(safeSummaryRaw) + '" title="複製"><i data-lucide="copy" style="width: 16px; height: 16px;"></i></button><span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span></div></summary><div class="accordion-body"><div id="view-summary-' + item.logId + '" class="markdown-body">' + renderMarkdown(safeSummaryRaw) + '</div><div id="edit-summary-' + item.logId + '" style="display: none; flex-direction: column; gap: 12px;"><textarea id="input-summary-' + item.logId + '" class="workshop-textarea" style="min-height: 180px;">' + escapeHtml(safeSummaryRaw) + '</textarea><div style="display: flex; justify-content: flex-end; gap: 8px;"><button class="action-btn-sm action-btn-icon" onclick="toggleEditMode(\'' + item.logId + '\', \'summary\')" title="取消"><i data-lucide="x" style="width: 16px; height: 16px;"></i></button><button class="action-btn-sm action-btn-primary" onclick="saveHistoryLog(\'' + item.logId + '\', \'summary\', this)"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button></div></div></div></details>';
@@ -1714,6 +1773,11 @@
     } catch (e) { endingInput.value = ""; alert(e.message); }
   }
 
+  
+  
+  
+  window.currentInlineInsertIndex = -1;
+
   function renderBlogPreview(fullMd) {
     const today = new Date();
     const pad = function(n){ return String(n).padStart(2, '0'); };
@@ -1722,9 +1786,15 @@
     const urls = window.logPlaylists[logId];
     const profile = window.currentAuthorProfile || {}; 
 
-    const titleMatch = fullMd.match(/^#\s+(.+)\n/);
+    let insertIndex = 0;
+    let mdWithButtons = fullMd.replace(/([。！？.!?][”」]?)\n+/g, function(match, p1) {
+      let idx = insertIndex++;
+      return `${p1}\n\n<div class="inline-insert-zone" title="插圖" onclick="triggerInlineUpload(${idx})"><div class="inline-insert-btn"><i data-lucide="image-plus" style="width:14px;height:14px;"></i></div></div>\n\n`;
+    });
+
+    const titleMatch = mdWithButtons.match(/^#\s+(.+)\n/);
     const displayTitle = titleMatch ? titleMatch[1] : document.getElementById('finalArticleTitle').value;
-    const bodyMd = fullMd.replace(/^#\s+.+\n/, '');
+    const bodyMd = mdWithButtons.replace(/^#\s+.+\n/, '');
 
     const avatarHtml = profile.avatarUrl 
       ? '<div class="blog-avatar" style="background-image:url(\'' + profile.avatarUrl + '\')"></div>' 
@@ -1737,16 +1807,117 @@
     if (urls && urls.length > 0) {
       const isPreloaded = window.blobBuffers[logId] && window.blobBuffers[logId][0];
       const statusText = isPreloaded ? "[就緒]" : "[載入]";
-       
-    videoHtml = '<div style="background: #000; border-radius: 8px; overflow: hidden; margin-bottom: 32px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05);"><video id="preview-player" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block; object-fit: contain;"></video><div style="display:flex; flex-wrap:wrap; justify-content: space-between; align-items: center; padding: 12px 16px; background: #0f172a; gap:12px;"><span id="preview-player-status" style="color: #f8fafc; font-size: 13px;">' + statusText + '</span><button class="action-btn-sm" onclick="window.initPreviewPlayer(\'' + logId + '\')" style="background: var(--accent); color: #fff; border: none; padding: 6px 16px;"><i data-lucide="play" style="width: 14px; height: 14px;"></i> 播放</button></div></div>';
+      videoHtml = '<div style="background: #000; border-radius: 8px; overflow: hidden; margin-bottom: 32px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05);"><video id="preview-player" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block; object-fit: contain;"></video><div style="display:flex; flex-wrap:wrap; justify-content: space-between; align-items: center; padding: 12px 16px; background: #0f172a; gap:12px;"><span id="preview-player-status" style="color: #f8fafc; font-size: 13px;">' + statusText + '</span><button class="action-btn-sm" onclick="window.initPreviewPlayer(\'' + logId + '\')" style="background: var(--accent); color: #fff; border: none; padding: 6px 16px;"><i data-lucide="play" style="width: 14px; height: 14px;"></i> 播放</button></div></div>';
     }
     
-    const previewHtml = '<div class="blog-preview-wrapper"><h1 class="preview-main-title">' + escapeHtml(displayTitle) + '</h1><div class="blog-meta-header"><div class="blog-author-info">' + avatarHtml + '<div><div style="font-weight: 700; color: var(--text); font-size: 15px;">' + escapeHtml(authorNameText) + '</div><div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">' + dateStr + '</div></div></div><div class="blog-stats"><span><i data-lucide="eye" style="width: 15px; height: 15px;"></i> 預覽</span></div></div>' + videoHtml + '<div class="markdown-body">' + renderMarkdown(bodyMd) + '</div><div class="blog-footer-cta"><div class="newsletter-box"><div style="font-weight: 800; font-size: 16px; margin-bottom: 8px;">訂閱</div><p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">' + escapeHtml(authorBioText) + '</p><div style="display: flex; gap: 8px; flex-wrap: wrap;"><input type="email" placeholder="信箱" style="flex: 1; min-width: 200px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; font-size: 14px; outline: none;"><button class="action-btn-sm action-btn-primary" style="padding: 12px 24px; border-radius: 4px; white-space: nowrap; height: 42px;">訂閱</button></div></div></div></div>';
+    const previewHtml = '<div class="blog-preview-wrapper"><h1 class="preview-main-title">' + escapeHtml(displayTitle) + '</h1><div class="blog-meta-header"><div class="blog-author-info">' + avatarHtml + '<div><div style="font-weight: 700; color: var(--text); font-size: 15px;">' + escapeHtml(authorNameText) + '</div><div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">' + dateStr + '</div></div></div><div class="blog-stats"><span><i data-lucide="eye" style="width: 15px; height: 15px;"></i> 預覽</span></div></div>' + videoHtml + '<div class="markdown-body">' + marked.parse(bodyMd) + '</div><div class="blog-footer-cta"><div class="newsletter-box"><div style="font-weight: 800; font-size: 16px; margin-bottom: 8px;">訂閱</div><p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">' + escapeHtml(authorBioText) + '</p><div style="display: flex; gap: 8px; flex-wrap: wrap;"><input type="email" placeholder="信箱" style="flex: 1; min-width: 200px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; font-size: 14px; outline: none;"><button class="action-btn-sm action-btn-primary" style="padding: 12px 24px; border-radius: 4px; white-space: nowrap; height: 42px;">訂閱</button></div></div></div></div>';
 
     document.getElementById('fullArticlePreview').innerHTML = previewHtml;
+    
+    const imgs = document.querySelectorAll('#fullArticlePreview .markdown-body img');
+    imgs.forEach(img => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'inline-img-wrapper';
+      const btn = document.createElement('button');
+      btn.className = 'delete-img-btn';
+      btn.innerHTML = '<i data-lucide="x" style="width:14px;height:14px;"></i>';
+      btn.onclick = () => window.deleteInlineImage(img.src);
+      
+      img.parentNode.insertBefore(wrapper, img);
+      wrapper.appendChild(img);
+      wrapper.appendChild(btn);
+    });
+
     lucide.createIcons();
     if (urls && urls.length > 0 && window.blobBuffers[logId] && window.blobBuffers[logId][0]) {
       document.getElementById('preview-player').src = window.blobBuffers[logId][0];
+    }
+  }
+
+  window.triggerInlineUpload = function(index) {
+    window.currentInlineInsertIndex = index;
+    document.getElementById('inlineImageUpload').click();
+  };
+
+  window.executeInlineImageUpload = function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const base64DataUrl = e.target.result;
+      const base64Clean = base64DataUrl.replace(/^data:image\/\w+;base64,/, '');
+      const targetIndex = window.currentInlineInsertIndex;
+
+      let counter = 0;
+      window.currentSelectedFullMd = window.currentSelectedFullMd.replace(/([。！？.!?][”」]?)\n+/g, function(match, p1) {
+        if (counter === targetIndex) {
+          counter++;
+          return `${p1}\n\n![插圖](${base64DataUrl})\n\n`;
+        }
+        counter++;
+        return match;
+      });
+      
+      syncTextareasFromMd();
+      renderBlogPreview(window.currentSelectedFullMd);
+      showToast("上傳");
+
+      api({ 
+        action: 'uploadImage', 
+        data: base64Clean, 
+        mimeType: file.type || 'image/jpeg', 
+        logId: null 
+      })
+      .then(res => {
+        const realUrl = res.url + "&t=" + new Date().getTime();
+        window.currentSelectedFullMd = window.currentSelectedFullMd.replace(base64DataUrl, realUrl);
+        
+        syncTextareasFromMd();
+        saveCurrentStepData('full');
+        renderBlogPreview(window.currentSelectedFullMd);
+        showToast("成功");
+      })
+      .catch(err => {
+        showToast("失敗");
+      });
+      
+      event.target.value = '';
+    };
+    reader.readAsDataURL(file);
+  };
+
+  window.deleteInlineImage = function(src) {
+    if(!confirm("刪除？")) return;
+    const fileIdMatch = src.match(/id=([^&]+)/);
+    if (fileIdMatch) {
+      const fileId = fileIdMatch[1];
+      const regex = new RegExp(`!\\[.*?\\]\\([^)]*${fileId}[^)]*\\)\\n*`, 'g');
+      window.currentSelectedFullMd = window.currentSelectedFullMd.replace(regex, '');
+    } else {
+      window.currentSelectedFullMd = window.currentSelectedFullMd.replace(/!\[.*?\]\([^)]+\)\n*/g, (match) => {
+        if (match.includes(src.substring(0, 100))) return '';
+        return match;
+      });
+    }
+    
+    syncTextareasFromMd();
+    renderBlogPreview(window.currentSelectedFullMd);
+    saveCurrentStepData('full');
+    showToast("已刪");
+  };
+
+  function syncTextareasFromMd() {
+    if (!window.currentSelectedFullMd) return;
+    const parts = window.currentSelectedFullMd.split('\n\n---\n\n');
+    if (parts.length >= 3) {
+      const titleMatch = parts[0].match(/^#\s+(.+)\n\n([\s\S]*)$/);
+      if (titleMatch) {
+        document.getElementById('finalArticleTitle').value = titleMatch[1];
+        document.getElementById('finalArticleHook').value = titleMatch[2];
+      }
+      document.getElementById('finalArticleBody').value = parts[1];
+      document.getElementById('finalArticleEnding').value = parts.slice(2).join('\n\n---\n\n');
     }
   }
 
@@ -1789,67 +1960,6 @@
     };
 
     videoEl.onended = () => { currentIndex++; playNext(); };
-    playNext();
-  };
-
-  
-  
-  
-  window.startSeamlessPlay = async function(logId) {
-    const urls = window.logPlaylists[logId];
-    if (!urls || urls.length === 0) return;
-    const videoEl = document.getElementById('player-' + logId);
-    const statusEl = document.getElementById('player-status-' + logId);
-    
-    
-    if (videoEl.dataset.playing === 'true') return;
-    videoEl.dataset.playing = 'true';
-    
-    if (!window.blobBuffers[logId]) window.blobBuffers[logId] = [];
-    const buffer = window.blobBuffers[logId];
-    let currentIndex = 0;
-
-    
-    const loadChunk = async (index) => {
-      if (index >= urls.length) return null;
-      if (buffer[index]) return buffer[index];
-      statusEl.innerText = "[讀取] " + (index + 1) + " / " + urls.length;
-      try {
-        const res = await api({ action: 'getVideoChunk', url: urls[index] });
-        const fetchRes = await fetch("data:" + res.mimeType + ";base64," + res.base64);
-        const blob = await fetchRes.blob();
-        const blobUrl = URL.createObjectURL(blob);
-        buffer[index] = blobUrl;
-        return blobUrl;
-      } catch (err) { statusEl.innerText = "[失敗] " + (index + 1); return null; }
-    };
-
-    
-    const playNext = async () => {
-      if (currentIndex >= urls.length) { 
-        statusEl.innerText = '[結束]'; 
-        videoEl.dataset.playing = 'false'; 
-        return; 
-      }
-      statusEl.innerText = "[播放] " + (currentIndex + 1) + " / " + urls.length;
-      let blobUrl = buffer[currentIndex];
-      if (!blobUrl) blobUrl = await loadChunk(currentIndex);
-      
-      if (blobUrl) {
-        videoEl.src = blobUrl;
-        videoEl.play().catch(e => { statusEl.innerText = "[暫停]"; });
-        
-        if (currentIndex + 1 < urls.length) loadChunk(currentIndex + 1).catch(e => {});
-      } else { 
-        currentIndex++; 
-        playNext(); 
-      }
-    };
-
-    
-    videoEl.onended = () => { currentIndex++; playNext(); };
-    
-    
     playNext();
   };
 
