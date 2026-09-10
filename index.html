@@ -2225,9 +2225,14 @@
     try {
       const res = await api({ action: "generateArticleStep", step: 2, title: title, content: window.currentSelectedLog.content, email: email });
       
-      hookInput.value = (res.hook === "（無輸出）") ? "生成被安全機制阻擋，請稍後重試" : (res.hook || "");
-      saveCurrentStepData('hook');
-      showToast("儲存");
+      
+      if (res.hook === "（無輸出）") {
+         hookInput.value = "⚠️ 生成被安全機制阻擋，或產出為空。已取消自動儲存。\n請調整提示詞或檢查逐字稿後重試。";
+         showToast("生成失敗，未儲存");
+      } else {
+         hookInput.value = res.hook || "";
+         saveCurrentStepData('hook'); 
+      }
     } catch (e) { hookInput.value = ""; alert(e.message); }
   }
 
@@ -2242,9 +2247,14 @@
     try {
       const res = await api({ action: "generateArticleStep", step: 3, title: title, hook: hook, content: window.currentSelectedLog.content, email: email });
       
-      bodyInput.value = (res.body === "（無輸出）") ? "生成被安全機制阻擋，請稍後重試" : (res.body || "");
-      saveCurrentStepData('body');
-      showToast("儲存");
+      
+      if (res.body === "（無輸出）") {
+         bodyInput.value = "⚠️ 生成被安全機制阻擋，或產出為空。已取消自動儲存。\n請調整提示詞或檢查逐字稿後重試。";
+         showToast("生成失敗，未儲存");
+      } else {
+         bodyInput.value = res.body || "";
+         saveCurrentStepData('body'); 
+      }
     } catch (e) { bodyInput.value = ""; alert(e.message); }
   }
 
@@ -2256,9 +2266,14 @@
     try {
       const res = await api({ action: "generateArticleStep", step: 4, title: title, email: email });
       
-      endingInput.value = (res.ending === "（無輸出）") ? "生成被安全機制阻擋，請稍後重試" : (res.ending || "");
-      saveCurrentStepData('ending');
-      showToast("儲存");
+      
+      if (res.ending === "（無輸出）") {
+         endingInput.value = "⚠️ 生成被安全機制阻擋，或產出為空。已取消自動儲存。\n請調整提示詞後重試。";
+         showToast("生成失敗，未儲存");
+      } else {
+         endingInput.value = res.ending || "";
+         saveCurrentStepData('ending'); 
+      }
     } catch (e) { endingInput.value = ""; alert(e.message); }
   }
 
