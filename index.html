@@ -1179,22 +1179,16 @@ async function acquireStream() {
         currentStream = new MediaStream([ screenStream.getVideoTracks()[0], mixedAudioDest.stream.getAudioTracks()[0] ]);
         screenStream.getVideoTracks()[0].onended = async () => { if (currentSourceType === "screen") { log("> 共用停止，切回鏡頭..."); await switchMediaSource(); } };
       } else {
-        const isPortrait = window.innerHeight > window.innerWidth;
         
         
         
-        let videoConstraints;
-        if (isMobile) {
-          videoConstraints = {
-            facingMode: mobileFacingMode,
-            aspectRatio: { ideal: isPortrait ? 0.5625 : 1.777777 }, 
-            width: { ideal: isPortrait ? 720 : 1280 },
-            height: { ideal: isPortrait ? 1280 : 720 },
-            frameRate: { ideal: cameraFps }
-          };
-        } else {
-          videoConstraints = { width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: cameraFps } };
-        }
+        
+        let videoConstraints = {
+          facingMode: mobileFacingMode,
+          width: { ideal: 1280 },  
+          height: { ideal: 720 },  
+          frameRate: { ideal: cameraFps }
+        };
 
         currentStream = await navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: audioConstraints });
       }
