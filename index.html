@@ -152,14 +152,20 @@
 
      
     @media (orientation: portrait) {
-      .viewport-container { aspect-ratio: 9 / 16; max-height: 85vh; border-radius: 8px; }
-      .controls-island {
-        bottom: 50%; left: auto; right: 12px; transform: translateY(50%);
-        flex-direction: column; width: auto; max-width: 50px; padding: 10px 6px;
-        gap: 8px; border-radius: 12px; background: rgba(255, 255, 255, 0.85);
+      .viewport-container { 
+        aspect-ratio: 3 / 4 !important; 
+        max-height: 82vh; 
+        border-radius: 12px; 
       }
-      .controls-divider { width: 24px; height: 1px; margin: 2px 0; }
-      .ctrl-btn { width: 34px; height: 34px; font-size: 11px; }
+      .controls-island {
+        bottom: auto; top: 50%; left: auto; right: 12px; transform: translateY(-50%);
+        flex-direction: column; width: 48px; padding: 12px 6px;
+        gap: 12px; border-radius: 24px; background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255,255,255,0.4);
+      }
+      .controls-divider { width: 24px; height: 1px; margin: 0 auto; background: rgba(0,0,0,0.1); }
+      .ctrl-btn { width: 34px; height: 34px; font-size: 10px; border-radius: 50%; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border: none; }
     }
 
     .terminal-log {
@@ -855,7 +861,7 @@
   
   
   
-  async function api(payload) {
+  async function api(payload, retries = 2) {
     if (typeof google !== 'undefined' && google.script && google.script.run) {
       return new Promise((resolve, reject) => {
         google.script.run
@@ -868,15 +874,22 @@
           .handleClientRequest(payload);
       });
     } else {
-      
-      const res = await fetch(GAS_WEB_URL, { 
-          method: 'POST', 
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload) 
-      });
-      const json = await res.json();
-      if (json.status === 'success') return json.data;
-      throw new Error(json.message);
+      for (let i = 0; i <= retries; i++) {
+        try {
+          const res = await fetch(GAS_WEB_URL, { 
+              method: 'POST', 
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+              body: JSON.stringify(payload) 
+          });
+          const json = await res.json();
+          if (json.status === 'success') return json.data;
+          throw new Error(json.message);
+        } catch (e) {
+          if (i === retries) throw e;
+          console.log(`[API Retry ${i+1}] ${e.message}`);
+          await new Promise(r => setTimeout(r, 1000));
+        }
+      }
     }
   }
 
@@ -1569,7 +1582,7 @@
     if (logItem.coverUrl) {
       coverPreview.src = logItem.coverUrl;
       coverPreview.style.display = 'block';
-      statusText.innerHTML = '<span style="color: var(--success);"><i data-lucide="check-circle" style="width:14px; height:14px; vertical-align:middle;"></i> 已安全存入雲端硬碟！</span>';
+      statusText.innerHTML = '<span style="color: var(--success);"><i data-lucide="check-circle" style="width:14px; height:14px; vertical-align:middle;"></i> 已存入雲端硬碟 (ID: ' + logItem.coverUrl.match(/id=([^&]+)/)?.[1]?.substring(0,8) + '...)</span>';
     } else {
       coverPreview.src = '';
       coverPreview.style.display = 'none';
@@ -1579,7 +1592,7 @@
     const urls = window.logPlaylists[logItem.logId];
     const btnCapture = document.getElementById('btnCaptureCover');
     btnCapture.disabled = true; 
-    btnCapture.title = "需等待整合載入影片";
+    btnCapture.title = "需等待預覽影片載入";
 
     if (urls && urls.length > 0) {
       if (!window.blobBuffers[logItem.logId]) window.blobBuffers[logItem.logId] = [];
@@ -1623,7 +1636,7 @@
     ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
     
     const base64DataUrl = canvas.toDataURL('image/jpeg', 0.8);
-    const base64Clean = base64DataUrl.split(',')[1];
+    const base64Clean = base64DataUrl.replace(/^data:image\/\w+;base64,/, '');
     
     updateCoverOptimistically(base64DataUrl, base64Clean);
   }
@@ -1635,7 +1648,7 @@
     const reader = new FileReader();
     reader.onload = (e) => {
       const base64DataUrl = e.target.result;
-      const base64Clean = base64DataUrl.split(',')[1];
+      const base64Clean = base64DataUrl.replace(/^data:image\/\w+;base64,/, '');
       updateCoverOptimistically(base64DataUrl, base64Clean);
     };
     reader.readAsDataURL(file);
@@ -1653,10 +1666,10 @@
     
     api({ action: 'uploadImage', data: base64Clean, mimeType: 'image/jpeg', logId: window.currentSelectedLog.logId })
       .then(res => {
-         statusText.innerHTML = '<span style="color: var(--success);"><i data-lucide="check-circle" style="width:14px; height:14px; vertical-align:middle;"></i> 已存入雲端！</span>';
+         statusText.innerHTML = '<span style="color: var(--success);"><i data-lucide="check-circle" style="width:14px; height:14px; vertical-align:middle;"></i> 已存入雲端硬碟 (ID: ' + res.fileId.substring(0,8) + '...)</span>';
          lucide.createIcons();
          
-         if(window.currentSelectedLog) window.currentSelectedLog.coverUrl = res.url;
+         if(window.currentSelectedLog) window.currentSelectedLog.coverUrl = res.url + "&t=" + new Date().getTime();
       })
       .catch(err => {
          statusText.innerHTML = '<span style="color: var(--danger);">上傳失敗：' + err.message + '</span>';
