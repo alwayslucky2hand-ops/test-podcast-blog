@@ -2064,6 +2064,93 @@
       showToast("背景儲存失敗");
     });
   }
+
+  
+  
+  
+  async function generateStepTitles() {
+    if (!window.currentSelectedLog) { alert("請選日誌"); return; }
+    const email = localStorage.getItem('bvlog_user_email');
+    const container = document.getElementById('titleProposalContainer');
+    container.innerHTML = '<div style="color: var(--accent); padding: 10px 0; display: flex; align-items: center; gap: 8px;"><i data-lucide="loader" class="spin"></i> 分析...</div>';
+    lucide.createIcons();
+    try {
+      const res = await api({ action: "generateArticleStep", step: 1, content: window.currentSelectedLog.content, email: email });
+      const titles = res.titles || [];
+      
+      let htmlOutput = '';
+      for(let i=0; i<titles.length; i++){
+        const parts = titles[i].split('|||');
+        const mainTitle = parts[0] ? parts[0].replace(/^[\d\.、\s]+/, '').trim() : titles[i].trim();
+        const subTitle = parts[1] ? parts[1].trim() : '';
+        htmlOutput += '<div class="title-option-card" style="flex-direction: column; align-items: flex-start;" onclick="selectTitle(\'' + escapeHtml(mainTitle).replace(/'/g, "\\'") + '\', this)"><div style="font-weight: 700; padding-right: 32px; color: var(--text);">' + (i + 1) + '. ' + escapeHtml(mainTitle) + '</div>' + (subTitle ? '<div style="font-size: 12.5px; color: var(--text-muted); margin-top: 6px; line-height: 1.6;">' + escapeHtml(subTitle) + '</div>' : '') + '<i data-lucide="check" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; opacity: 0; transition: opacity 0.2s;"></i></div>';
+      }
+      
+      container.innerHTML = htmlOutput;
+      lucide.createIcons();
+      showToast("完成");
+    } catch (e) { container.innerHTML = '<div style="color: var(--danger); padding: 10px 0;">失敗: ' + e.message + '</div>'; }
+  }
+
+  function selectTitle(titleText, cardEl) {
+    document.querySelectorAll('.title-option-card').forEach(c => {
+      c.classList.remove('selected');
+      const icon = c.querySelector('[data-lucide="check"]');
+      if (icon) icon.style.opacity = '0';
+    });
+    cardEl.classList.add('selected');
+    const checkIcon = cardEl.querySelector('[data-lucide="check"]');
+    if (checkIcon) checkIcon.style.opacity = '1';
+    document.getElementById('finalArticleTitle').value = titleText;
+    saveCurrentStepData('title');
+  }
+
+  async function generateStepHook() {
+    if (!window.currentSelectedLog) { alert("請載日誌"); return; }
+    const title = document.getElementById('finalArticleTitle').value.trim();
+    if (!title) { alert("缺標題"); return; }
+    const email = localStorage.getItem('bvlog_user_email');
+    const hookInput = document.getElementById('finalArticleHook');
+    hookInput.value = "提煉中...";
+    try {
+      const res = await api({ action: "generateArticleStep", step: 2, title: title, content: window.currentSelectedLog.content, email: email });
+      hookInput.value = res.hook || "";
+      saveCurrentStepData('hook');
+      showToast("儲存");
+    } catch (e) { hookInput.value = ""; alert(e.message); }
+  }
+
+  async function generateStepBody() {
+    if (!window.currentSelectedLog) { alert("請載日誌"); return; }
+    const title = document.getElementById('finalArticleTitle').value.trim();
+    const hook = document.getElementById('finalArticleHook').value.trim();
+    if (!title) { alert("缺標題"); return; }
+    const email = localStorage.getItem('bvlog_user_email');
+    const bodyInput = document.getElementById('finalArticleBody');
+    bodyInput.value = "重構中...";
+    try {
+      const res = await api({ action: "generateArticleStep", step: 3, title: title, hook: hook, content: window.currentSelectedLog.content, email: email });
+      bodyInput.value = res.body || "";
+      saveCurrentStepData('body');
+      showToast("儲存");
+    } catch (e) { bodyInput.value = ""; alert(e.message); }
+  }
+
+  async function generateStepEnding() {
+    const title = document.getElementById('finalArticleTitle').value.trim();
+    const email = localStorage.getItem('bvlog_user_email');
+    const endingInput = document.getElementById('finalArticleEnding');
+    endingInput.value = "撰寫中...";
+    try {
+      const res = await api({ action: "generateArticleStep", step: 4, title: title, email: email });
+      endingInput.value = res.ending || "";
+      saveCurrentStepData('ending');
+      showToast("儲存");
+    } catch (e) { endingInput.value = ""; alert(e.message); }
+  }
+
+
+
 </script>
 
 </body>
