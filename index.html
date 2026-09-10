@@ -98,7 +98,6 @@
       transition: aspect-ratio 0.3s ease;
     }
     
-     
     .css-fullscreen {
       position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
       width: 100vw !important; height: 100vh !important; max-height: none !important;
@@ -152,23 +151,6 @@
     .ctrl-btn.stop-btn { color: var(--danger); }
     .ctrl-btn.pause-btn { color: var(--warning); }
     .controls-divider { width: 1px; height: 24px; background: var(--border); margin: 0 4px; }
-
-    @media (orientation: portrait) {
-      .viewport-container { 
-        aspect-ratio: 9 / 16 !important; 
-        max-height: 85vh; 
-        border-radius: 12px; 
-      }
-      .controls-island {
-        bottom: auto; top: 50%; left: auto; right: 12px; transform: translateY(-50%);
-        flex-direction: column; width: 48px; padding: 12px 6px;
-        gap: 12px; border-radius: 24px; background: rgba(255, 255, 255, 0.75);
-        backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-        border: 1px solid rgba(255,255,255,0.4);
-      }
-      .controls-divider { width: 24px; height: 1px; margin: 0 auto; background: rgba(0,0,0,0.1); }
-      .ctrl-btn { width: 34px; height: 34px; font-size: 10px; border-radius: 50%; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border: none; }
-    }
 
     .terminal-log {
       width: 100%; height: 100px; background: #ffffff; border: 1px solid var(--border); border-radius: 4px;
@@ -308,11 +290,33 @@
      
     .mobile-menu-btn { display: none; background: transparent; border: none; color: var(--text); cursor: pointer; padding: 4px; border-radius: 4px; transition: background 0.2s; }
     
+    #mobileMenuOverlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4); z-index: 1999; display: none;
+      backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+    }
+    
+    .mobile-close-btn { display: none; }
+    .desktop-user-info { display: flex; align-items: center; gap: 6px; }
+    .mobile-user-info { display: none; }
+
     @media (max-width: 768px) {
+      .desktop-user-info { display: none !important; }
       .mobile-menu-btn { display: inline-flex; align-items: center; justify-content: center; }
+      
+      .mobile-close-btn { 
+        display: flex; align-self: flex-end; background: transparent; border: none; 
+        color: var(--text-muted); cursor: pointer; padding: 4px; margin-bottom: 8px;
+      }
+      
+      .mobile-user-info { 
+        display: flex; flex-direction: column; gap: 12px; margin-top: auto; 
+        padding-top: 16px; border-top: 1px solid var(--border); 
+      }
+
       .tab-nav {
         display: none; flex-direction: column; gap: 8px;
-        position: absolute; top: 100%; left: 0; right: 0; margin-top: 10px;
+        position: absolute; top: 60px; left: 16px; right: 16px;
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
         border: 1px solid var(--border); border-radius: 8px;
@@ -327,6 +331,21 @@
       .inline-insert-btn { opacity: 0.3; border-color: var(--text-muted); color: var(--text-muted); }
       .inline-insert-zone:active .inline-insert-btn { opacity: 1; background: var(--accent); color: #fff; border-color: var(--accent); }
       .delete-image-btn { opacity: 1; }
+
+      .viewport-container { 
+        aspect-ratio: 9 / 16 !important; 
+        max-height: 85vh; 
+        border-radius: 12px; 
+      }
+      .controls-island {
+        bottom: auto; top: 50%; left: auto; right: 12px; transform: translateY(-50%);
+        flex-direction: column; width: 48px; padding: 12px 6px;
+        gap: 12px; border-radius: 24px; background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255,255,255,0.4);
+      }
+      .controls-divider { width: 24px; height: 1px; margin: 0 auto; background: rgba(0,0,0,0.1); }
+      .ctrl-btn { width: 34px; height: 34px; font-size: 10px; border-radius: 50%; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border: none; }
     }
 
     .markdown-body h1 { font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 24px; line-height: 1.4; }
@@ -400,26 +419,38 @@
 <div class="app-shell" id="mainAppShell" style="display: none;">
 
   
-  <header style="position: relative; z-index: 2000;">
+  <header style="position: relative; z-index: 2001;">
     <div style="padding: 4px 4px 0px 4px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;">
       <div style="display: flex; align-items: center; gap: 12px;">
         <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><i data-lucide="menu" style="width: 24px; height: 24px;"></i></button>
         <h2 style="font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: 0.5px; margin: 0;">VBLOG</h2>
       </div>
-      <div style="font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
+      <div class="desktop-user-info" style="font-size: 12px; color: var(--text-muted);">
         <i data-lucide="user" style="width: 14px; height: 14px;"></i> <span id="currentUserEmail"></span>
         <button class="action-btn-sm action-btn-icon" onclick="logout()" title="登出"><i data-lucide="log-out" style="width: 14px; height: 14px;"></i></button>
       </div>
     </div>
 
     <div class="tab-nav">
+      <button class="mobile-close-btn" onclick="toggleMobileMenu()"><i data-lucide="x" style="width: 20px; height: 20px;"></i></button>
+      
       <button class="tab-btn active" onclick="switchTab('tab-live', this)"><i data-lucide="video" style="width: 16px; height: 16px;"></i> 錄製</button>
       <button class="tab-btn" onclick="switchTab('tab-history', this)"><i data-lucide="list-video" style="width: 16px; height: 16px;"></i> 日誌</button>
       <button class="tab-btn" onclick="switchTab('tab-dashboard', this)"><i data-lucide="layout-grid" style="width: 16px; height: 16px;"></i> 總覽</button>
       <button class="tab-btn" onclick="switchTab('tab-article', this)"><i data-lucide="file-edit" style="width: 16px; height: 16px;"></i> 工坊</button>
       <button class="tab-btn" onclick="switchTab('tab-settings', this)"><i data-lucide="settings" style="width: 16px; height: 16px;"></i> 設定</button>
+      
+      
+      <div class="mobile-user-info">
+        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px; word-break: break-all;">
+          <i data-lucide="user" style="width: 12px; height: 12px;"></i> <span id="mobileUserEmail"></span>
+        </div>
+        <button class="tab-btn" style="color: var(--danger);" onclick="logout()"><i data-lucide="log-out" style="width: 16px; height: 16px;"></i> 登出</button>
+      </div>
     </div>
   </header>
+  
+  <div id="mobileMenuOverlay" onclick="toggleMobileMenu()"></div>
 
   
   <div id="tab-live" class="tab-content active">
@@ -483,7 +514,7 @@
       <div>
         <h3 style="font-size: 18px; font-weight: 700;">日誌</h3>
       </div>
-      <button onclick="loadHistoryLogs()" class="action-btn-sm"><i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> 重整</button>
+      <button onclick="loadHistoryLogs(true)" class="action-btn-sm"><i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> 重整</button>
     </div>
     <div id="historyContainer" style="display: flex; flex-direction: column; gap: 16px;">
       <div style="text-align: center; color: var(--text-muted); padding: 40px 0;">載入中...</div>
@@ -498,7 +529,7 @@
       </div>
       <div class="flex-wrap-gap">
         <a id="authorGitHubLink" href="#" target="_blank" class="action-btn-sm" style="display:none; color:var(--text); border-color:var(--text);"><i data-lucide="external-link" style="width:14px; height:14px;"></i> 沙龍</a>
-        <button onclick="loadDashboardLogs()" class="action-btn-sm"><i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> 重整</button>
+        <button onclick="loadDashboardLogs(true)" class="action-btn-sm"><i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> 重整</button>
       </div>
     </div>
     <div id="dashboardContainer" class="dashboard-grid">
@@ -754,6 +785,9 @@
   window.blobBuffers = {};
   window.currentSelectedLog = null; 
   window.currentAuthorProfile = null; 
+  
+  
+  let globalLogsCache = [];
 
   function toggleAuthView(view) {
     if (view === 'register') {
@@ -771,10 +805,17 @@
       document.getElementById('loginOverlay').style.display = 'none';
       document.getElementById('mainAppShell').style.display = 'flex';
       document.getElementById('currentUserEmail').innerText = email;
+      document.getElementById('mobileUserEmail').innerText = email;
       
       loadUserAccountInfo(email);
       loadPrompts(email);
       loadAuthorProfile(email);
+      
+      
+      api({ action: "getHistoryLogs", email: email })
+        .then(logs => { globalLogsCache = logs || []; })
+        .catch(e => console.log(e));
+        
     } else {
       document.getElementById('loginOverlay').style.display = 'flex';
       document.getElementById('mainAppShell').style.display = 'none';
@@ -885,6 +926,7 @@
     document.getElementById('regBirth').value = '';
     document.getElementById('regEmail').value = '';
     document.getElementById('regOtp').value = '';
+    globalLogsCache = [];
     checkLoginStatus();
   }
 
@@ -908,9 +950,6 @@
       lucide.createIcons();
     }
   }
-
-  
-  
 
   async function api(payload, retries = 2) {
     if (typeof google !== 'undefined' && google.script && google.script.run) {
@@ -1132,7 +1171,13 @@
   
   function toggleMobileMenu() {
     const nav = document.querySelector('.tab-nav');
+    const overlay = document.getElementById('mobileMenuOverlay');
     nav.classList.toggle('show');
+    if (nav.classList.contains('show')) {
+      overlay.style.display = 'block';
+    } else {
+      overlay.style.display = 'none';
+    }
   }
 
   function switchTab(tabId, btn) {
@@ -1143,8 +1188,10 @@
     
     
     const nav = document.querySelector('.tab-nav');
+    const overlay = document.getElementById('mobileMenuOverlay');
     if (nav && nav.classList.contains('show')) {
       nav.classList.remove('show');
+      overlay.style.display = 'none';
     }
 
     if (tabId === 'tab-history') loadHistoryLogs();
@@ -1291,7 +1338,7 @@
       document.getElementById('statusBadge').style.display = 'flex';
 
       startTimer(); startChunkRecording(); wakeControls();
-      log("[系統] 錄製中 (30秒循環)");
+      log("[系統] 錄製");
     } catch (e) { log("[錯誤] " + e.message); document.getElementById('btnStart').disabled = false; }
   }
 
@@ -1335,11 +1382,11 @@
       reader.readAsDataURL(blob);
       reader.onloadend = async () => {
         if (!reader.result || !reader.result.includes(',')) {
-          log("[失敗] 第 " + index + " 段損毀");
+          log("[失敗] 損毀");
           resolve(); return;
         }
         const base64 = reader.result.split(',')[1];
-        log("[處理] 第 " + index + " 段解析...");
+        log("[處理] 解析");
         try {
           await api({ 
             action: "processChunkRealtime", 
@@ -1349,8 +1396,8 @@
             rowIndex: logSession.rowIndex, 
             chunkIndex: index 
           });
-          log("[成功] 第 " + index + " 段寫入");
-        } catch (e) { log("[失敗] 第 " + index + " 段: " + e.message); }
+          log("[成功] 寫入");
+        } catch (e) { log("[失敗] " + e.message); }
         resolve();
       };
     });
@@ -1410,11 +1457,11 @@
     }
 
     while (activeUploadTasks.size > 0) { await Promise.all(Array.from(activeUploadTasks)); }
-    log("[處理] 歸檔摘要...");
+    log("[處理] 歸檔...");
 
     try {
       const res = await api({ action: "finalizeLog", rowIndex: logSession.rowIndex, email: email });
-      log("[成功] 歸檔完成");
+      log("[成功] 完成");
       const urls = res.urls || [];
       
       let linksHtml = '';
@@ -1460,7 +1507,7 @@
   }
 
   function renderMarkdown(md) {
-    if (!md) return '<p class="text-muted">無內容</p>';
+    if (!md) return '<p class="text-muted">無</p>';
     if (typeof marked !== 'undefined') {
       try { return marked.parse(md); } catch (e) { return '<pre style="white-space:pre-wrap;">' + escapeHtml(md) + '</pre>'; }
     }
@@ -1508,76 +1555,81 @@
     return html || '<div class="markdown-body">' + renderMarkdown(rawText) + '</div>';
   }
 
-  let globalLogsCache = [];
-
-  async function loadHistoryLogs() {
+  
+  async function loadHistoryLogs(forceRefresh = false) {
     const email = localStorage.getItem('bvlog_user_email');
     if (!email) return;
 
     const container = document.getElementById('historyContainer');
-    container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> ...</div>';
-    lucide.createIcons();
+    
+    
+    if (forceRefresh || globalLogsCache.length === 0) {
+      container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> ...</div>';
+      lucide.createIcons();
 
-    try {
-      const logs = await api({ action: "getHistoryLogs", email: email });
-      globalLogsCache = logs;
-      
-      if (!logs || logs.length === 0) {
-        container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px;">無紀錄</div>';
+      try {
+        const logs = await api({ action: "getHistoryLogs", email: email });
+        globalLogsCache = logs;
+      } catch (e) {
+        container.innerHTML = '<div style="text-align:center; color:var(--danger); padding:30px 0; border:1px solid var(--danger); border-radius:4px;">失敗</div>';
         return;
       }
-
-      window.logPlaylists = {};
-      window.blobBuffers = {};
-      
-      let listHtml = '';
-      for(let i=0; i<logs.length; i++) {
-        const item = logs[i];
-        const cleanTime = sanitizeTimestamp(item.timestamp);
-        const isRec = item.status && item.status.includes('錄製中');
-        const urls = Array.isArray(item.urls) ? item.urls : [];
-        const safeSummaryRaw = item.summary || "";
-        const safeContentRaw = item.content || "";
-        window.logPlaylists[item.logId] = urls;
-
-        let urlsHtml = '';
-        if(urls.length > 0) {
-          for(let j=0; j<urls.length; j++) {
-             urlsHtml += '<a href="' + urls[j] + '" target="_blank" class="file-chip"><i data-lucide="film" style="width: 13px; height: 13px;"></i> ' + (j+1) + '</a>';
-          }
-        } else {
-          urlsHtml = '<span style="font-size:12.5px; color:var(--text-muted);">無</span>';
-        }
-
-        let playerHtml = '';
-        if(urls.length > 0) {
-          playerHtml = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="play-circle" style="width: 16px; height: 16px; color: var(--accent);"></i>全片</span><button class="action-btn-sm action-btn-primary" onclick="event.stopPropagation(); window.startSeamlessPlay(\'' + item.logId + '\')"><i data-lucide="play" style="width: 14px; height: 14px;"></i> 啟動</button></summary><div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border);"><video id="player-' + item.logId + '" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block; object-fit: contain;"></video><div id="player-status-' + item.logId + '" style="padding: 12px 16px; background: #0f172a; color: #f8fafc; font-size: 14px; text-align: center;">待啟動</div></div></details>';
-        }
-
-        let summaryBlock = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>提案</span><div class="flex-wrap-gap"><button type="button" id="btn-edit-summary-' + item.logId + '" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); toggleEditMode(\'' + item.logId + '\', \'summary\')" title="編輯"><i data-lucide="edit-3" style="width: 16px; height: 16px;"></i></button><button type="button" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute(\'data-text\'))" data-text="' + escapeHtml(safeSummaryRaw) + '" title="複製"><i data-lucide="copy" style="width: 16px; height: 16px;"></i></button><span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span></div></summary><div class="accordion-body"><div id="view-summary-' + item.logId + '" class="markdown-body">' + renderMarkdown(safeSummaryRaw) + '</div><div id="edit-summary-' + item.logId + '" style="display: none; flex-direction: column; gap: 12px;"><textarea id="input-summary-' + item.logId + '" class="workshop-textarea" style="min-height: 180px;">' + escapeHtml(safeSummaryRaw) + '</textarea><div style="display: flex; justify-content: flex-end; gap: 8px;"><button class="action-btn-sm action-btn-icon" onclick="toggleEditMode(\'' + item.logId + '\', \'summary\')" title="取消"><i data-lucide="x" style="width: 16px; height: 16px;"></i></button><button class="action-btn-sm action-btn-primary" onclick="saveHistoryLog(\'' + item.logId + '\', \'summary\', this)"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button></div></div></div></details>';
-
-        let contentBlock = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="file-text" style="width: 15px; height: 15px; color: var(--text-muted);"></i>內容</span><div class="flex-wrap-gap"><button type="button" id="btn-edit-content-' + item.logId + '" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); toggleEditMode(\'' + item.logId + '\', \'content\')" title="編輯"><i data-lucide="edit-3" style="width: 16px; height: 16px;"></i></button><button type="button" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute(\'data-text\'))" data-text="' + escapeHtml(safeContentRaw) + '" title="複製"><i data-lucide="copy" style="width: 16px; height: 16px;"></i></button><span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span></div></summary><div class="accordion-body"><div id="view-content-' + item.logId + '">' + formatTranscriptContent(safeContentRaw, urls) + '</div><div id="edit-content-' + item.logId + '" style="display: none; flex-direction: column; gap: 12px;"><textarea id="input-content-' + item.logId + '" class="workshop-textarea" style="min-height: 250px;">' + escapeHtml(safeContentRaw) + '</textarea><div style="display: flex; justify-content: flex-end; gap: 8px;"><button class="action-btn-sm action-btn-icon" onclick="toggleEditMode(\'' + item.logId + '\', \'content\')" title="取消"><i data-lucide="x" style="width: 16px; height: 16px;"></i></button><button class="action-btn-sm action-btn-primary" onclick="saveHistoryLog(\'' + item.logId + '\', \'content\', this)"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button></div></div></div></details>';
-
-        listHtml += '<div class="history-card" data-row-id="' + item.logId + '"><div class="history-header"><div><div style="font-weight: 700; font-size: 16px; color: var(--text);">ID: ' + item.logId + '</div><div style="font-size: 13px; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; gap: 6px;"><i data-lucide="clock" style="width: 14px; height: 14px;"></i> ' + cleanTime + '</div></div><div class="flex-wrap-gap"><span class="badge ' + (isRec ? 'recording' : '') + '">' + item.status + '</span><button type="button" class="action-btn-sm action-btn-primary" onclick="openArticleWorkshop(\'' + item.logId + '\')"><i data-lucide="file-text" style="width: 14px; height: 14px;"></i> 工坊</button><button type="button" class="action-btn-sm action-btn-icon danger" onclick="deleteHistoryLog(\'' + item.logId + '\')" title="刪除"><i data-lucide="trash-2" style="width: 16px; height: 16px;"></i></button></div></div><div><div style="font-size: 12.5px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px;">切片 (' + urls.length + ')</div><div class="flex-wrap-gap">' + urlsHtml + '</div></div>' + playerHtml + summaryBlock + contentBlock + '</div>';
-      }
-      
-      container.innerHTML = listHtml;
-      lucide.createIcons();
-    } catch (e) {
-      container.innerHTML = '<div style="text-align:center; color:var(--danger); padding:30px 0; border:1px solid var(--danger); border-radius:4px;">失敗: ' + e.message + '</div>';
     }
+
+    if (!globalLogsCache || globalLogsCache.length === 0) {
+      container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px;">無紀錄</div>';
+      return;
+    }
+
+    window.logPlaylists = {};
+    window.blobBuffers = {};
+    
+    let listHtml = '';
+    for(let i=0; i<globalLogsCache.length; i++) {
+      const item = globalLogsCache[i];
+      const cleanTime = sanitizeTimestamp(item.timestamp);
+      const isRec = item.status && item.status.includes('錄製中');
+      const urls = Array.isArray(item.urls) ? item.urls : [];
+      const safeSummaryRaw = item.summary || "";
+      const safeContentRaw = item.content || "";
+      window.logPlaylists[item.logId] = urls;
+
+      let urlsHtml = '';
+      if(urls.length > 0) {
+        for(let j=0; j<urls.length; j++) {
+           urlsHtml += '<a href="' + urls[j] + '" target="_blank" class="file-chip"><i data-lucide="film" style="width: 13px; height: 13px;"></i> ' + (j+1) + '</a>';
+        }
+      } else {
+        urlsHtml = '<span style="font-size:12.5px; color:var(--text-muted);">無</span>';
+      }
+
+      let playerHtml = '';
+      if(urls.length > 0) {
+        playerHtml = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="play-circle" style="width: 16px; height: 16px; color: var(--accent);"></i>全片</span><button class="action-btn-sm action-btn-primary" onclick="event.stopPropagation(); window.startSeamlessPlay(\'' + item.logId + '\')"><i data-lucide="play" style="width: 14px; height: 14px;"></i> 啟動</button></summary><div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border);"><video id="player-' + item.logId + '" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block; object-fit: contain;"></video><div id="player-status-' + item.logId + '" style="padding: 12px 16px; background: #0f172a; color: #f8fafc; font-size: 14px; text-align: center;">待啟動</div></div></details>';
+      }
+
+      let summaryBlock = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>提案</span><div class="flex-wrap-gap"><button type="button" id="btn-edit-summary-' + item.logId + '" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); toggleEditMode(\'' + item.logId + '\', \'summary\')" title="編輯"><i data-lucide="edit-3" style="width: 16px; height: 16px;"></i></button><button type="button" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute(\'data-text\'))" data-text="' + escapeHtml(safeSummaryRaw) + '" title="複製"><i data-lucide="copy" style="width: 16px; height: 16px;"></i></button><span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span></div></summary><div class="accordion-body"><div id="view-summary-' + item.logId + '" class="markdown-body">' + renderMarkdown(safeSummaryRaw) + '</div><div id="edit-summary-' + item.logId + '" style="display: none; flex-direction: column; gap: 12px;"><textarea id="input-summary-' + item.logId + '" class="workshop-textarea" style="min-height: 180px;">' + escapeHtml(safeSummaryRaw) + '</textarea><div style="display: flex; justify-content: flex-end; gap: 8px;"><button class="action-btn-sm action-btn-icon" onclick="toggleEditMode(\'' + item.logId + '\', \'summary\')" title="取消"><i data-lucide="x" style="width: 16px; height: 16px;"></i></button><button class="action-btn-sm action-btn-primary" onclick="saveHistoryLog(\'' + item.logId + '\', \'summary\', this)"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button></div></div></div></details>';
+
+      let contentBlock = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="file-text" style="width: 15px; height: 15px; color: var(--text-muted);"></i>內容</span><div class="flex-wrap-gap"><button type="button" id="btn-edit-content-' + item.logId + '" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); toggleEditMode(\'' + item.logId + '\', \'content\')" title="編輯"><i data-lucide="edit-3" style="width: 16px; height: 16px;"></i></button><button type="button" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute(\'data-text\'))" data-text="' + escapeHtml(safeContentRaw) + '" title="複製"><i data-lucide="copy" style="width: 16px; height: 16px;"></i></button><span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span></div></summary><div class="accordion-body"><div id="view-content-' + item.logId + '">' + formatTranscriptContent(safeContentRaw, urls) + '</div><div id="edit-content-' + item.logId + '" style="display: none; flex-direction: column; gap: 12px;"><textarea id="input-content-' + item.logId + '" class="workshop-textarea" style="min-height: 250px;">' + escapeHtml(safeContentRaw) + '</textarea><div style="display: flex; justify-content: flex-end; gap: 8px;"><button class="action-btn-sm action-btn-icon" onclick="toggleEditMode(\'' + item.logId + '\', \'content\')" title="取消"><i data-lucide="x" style="width: 16px; height: 16px;"></i></button><button class="action-btn-sm action-btn-primary" onclick="saveHistoryLog(\'' + item.logId + '\', \'content\', this)"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button></div></div></div></details>';
+
+      listHtml += '<div class="history-card" data-row-id="' + item.logId + '"><div class="history-header"><div><div style="font-weight: 700; font-size: 16px; color: var(--text);">ID: ' + item.logId + '</div><div style="font-size: 13px; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; gap: 6px;"><i data-lucide="clock" style="width: 14px; height: 14px;"></i> ' + cleanTime + '</div></div><div class="flex-wrap-gap"><span class="badge ' + (isRec ? 'recording' : '') + '">' + item.status + '</span><button type="button" class="action-btn-sm action-btn-primary" onclick="openArticleWorkshop(\'' + item.logId + '\')"><i data-lucide="file-text" style="width: 14px; height: 14px;"></i> 工坊</button><button type="button" class="action-btn-sm action-btn-icon danger" onclick="deleteHistoryLog(\'' + item.logId + '\')" title="刪除"><i data-lucide="trash-2" style="width: 16px; height: 16px;"></i></button></div></div><div><div style="font-size: 12.5px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px;">切片 (' + urls.length + ')</div><div class="flex-wrap-gap">' + urlsHtml + '</div></div>' + playerHtml + summaryBlock + contentBlock + '</div>';
+    }
+    
+    container.innerHTML = listHtml;
+    lucide.createIcons();
   }
 
-  async function loadDashboardLogs() {
+  
+  async function loadDashboardLogs(forceRefresh = false) {
     const container = document.getElementById('dashboardContainer');
-    container.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> ...</div>';
-    lucide.createIcons();
     
-    if(globalLogsCache.length === 0) {
+    if(forceRefresh || globalLogsCache.length === 0) {
+      container.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> ...</div>';
+      lucide.createIcons();
       const email = localStorage.getItem('bvlog_user_email');
       if(email) {
         try { globalLogsCache = await api({ action: "getHistoryLogs", email: email }); }
-        catch(e) { container.innerHTML = "失敗: " + e.message; return; }
+        catch(e) { container.innerHTML = "失敗"; return; }
       }
     }
 
@@ -1616,6 +1668,7 @@
     const urls = window.logPlaylists[logId];
     const profile = window.currentAuthorProfile || {}; 
 
+    
     let insertIndex = 0;
     let mdWithButtons = fullMd.replace(/([。！？.!?][”」]?)\n+/g, function(match, p1) {
       let idx = insertIndex++;
@@ -1633,8 +1686,8 @@
       ? '<div class="blog-avatar" style="background-image:url(\'' + profile.avatarUrl + '\')"></div>' 
       : '<div class="blog-avatar">' + (profile.authorName ? profile.authorName.charAt(0) : 'T') + '</div>';
     
-    const authorNameText = profile.authorName || '特洛伊';
-    const authorBioText = profile.bio || '創業指南';
+    const authorNameText = profile.authorName || '作者';
+    const authorBioText = profile.bio || '簡介';
 
     let videoHtml = '';
     if (urls && urls.length > 0) {
@@ -1647,6 +1700,7 @@
 
     document.getElementById('fullArticlePreview').innerHTML = previewHtml;
 
+    
     const mdZone = document.getElementById('markdown-render-zone');
     if (mdZone) {
       const images = mdZone.querySelectorAll('img');
@@ -1727,7 +1781,7 @@
   };
 
   window.removeInlineImage = function(src) {
-    if (!confirm("確定刪除圖片？")) return;
+    if (!confirm("確定刪除？")) return;
     const escapedSrc = src.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const regex = new RegExp(`!\\[.*?\\]\\(${escapedSrc}\\)\\n*`, 'g');
     window.currentSelectedFullMd = window.currentSelectedFullMd.replace(regex, '');
@@ -1953,8 +2007,8 @@
       await api({ action: "deleteLog", logId: logId }); 
       showToast("已刪"); 
       globalLogsCache = globalLogsCache.filter(l => l.logId !== logId);
-      if(document.getElementById('tab-history').classList.contains('active')) loadHistoryLogs();
-      if(document.getElementById('tab-dashboard').classList.contains('active')) loadDashboardLogs();
+      if(document.getElementById('tab-history').classList.contains('active')) loadHistoryLogs(true);
+      if(document.getElementById('tab-dashboard').classList.contains('active')) loadDashboardLogs(true);
     } 
     catch (e) { alert(e.message); }
   }
