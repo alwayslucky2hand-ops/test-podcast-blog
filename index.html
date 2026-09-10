@@ -4,22 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>VBLOG-錄誌</title>
-  
   <script src="https://unpkg.com/lucide@latest"></script>
-  
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
-     
     :root {
-      --bg: #ffffff;             
+      --bg: #ffffff;
       --card-bg: #ffffff;
-      --text: #0f172a;           
+      --text: #0f172a;
       --text-muted: #64748b;
-      --border: #cbd5e1;         
+      --border: #cbd5e1;
       --border-subtle: #e2e8f0;
-      --accent: #3175B5;         
+      --accent: #3175B5;
       --accent-soft: rgba(49, 117, 181, 0.08);
-      --accent-green: #B5D333;   
+      --accent-green: #B5D333;
       --danger: #ef4444;
       --warning: #f59e0b;
       --success: #10b981;
@@ -46,7 +43,6 @@
       gap: 20px;
     }
 
-     
     #loginOverlay {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
       background: var(--bg); z-index: 9999;
@@ -72,7 +68,6 @@
     }
     .auth-switch:hover { color: var(--accent); }
 
-     
     .tab-nav {
       display: flex; background: var(--bg); padding: 0;
       border-bottom: 1px solid var(--border); gap: 24px; margin-bottom: 8px;
@@ -96,7 +91,6 @@
     .tab-content { display: none; flex-direction: column; gap: 20px; animation: fadeIn 0.3s ease; }
     .tab-content.active { display: flex; }
 
-     
     .viewport-container {
       position: relative; width: 100%; aspect-ratio: 16 / 9;
       background-color: #000000; border-radius: 4px; overflow: hidden;
@@ -131,7 +125,6 @@
     .pulse-dot { width: 8px; height: 8px; border-radius: 50%; background-color: var(--danger); animation: pulse 1.5s infinite; }
     @keyframes pulse { 0% { transform: scale(0.9); opacity: 0.7; } 50% { transform: scale(1.3); opacity: 1; } 100% { transform: scale(0.9); opacity: 0.7; } }
 
-     
     .controls-island {
       position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
       display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
@@ -153,7 +146,6 @@
     .ctrl-btn.pause-btn { color: var(--warning); }
     .controls-divider { width: 1px; height: 24px; background: var(--border); margin: 0 4px; }
 
-     
     @media (orientation: portrait) {
       .viewport-container { 
         aspect-ratio: 9 / 16 !important; 
@@ -177,7 +169,6 @@
       line-height: 1.6; color: #334155; overflow-y: auto;
     }
 
-     
     .archive-view { display: none; background: var(--card-bg); border-radius: 4px; border: 1px solid var(--border); padding: 24px; animation: fadeIn 0.3s ease; }
     .history-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 4px; padding: 20px; display: flex; flex-direction: column; gap: 16px; transition: border-color 0.2s; }
     .history-card:hover { border-color: var(--accent); }
@@ -201,7 +192,6 @@
     .action-btn-icon:hover { border-color: var(--border); color: var(--accent); }
     .action-btn-icon.danger:hover { color: var(--danger); border-color: var(--danger); }
 
-     
     details.history-accordion { border: 1px solid var(--border); border-radius: 4px; overflow: hidden; background: var(--card-bg); }
     details.history-accordion summary {
       display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;
@@ -215,7 +205,6 @@
     details[open] > summary { border-bottom: 1px solid var(--border); }
     .accordion-body { padding: 16px; background: #ffffff; }
 
-     
     .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
     .vocus-card {
       display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 6px;
@@ -235,7 +224,6 @@
     .vocus-meta { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
     .vocus-actions { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; }
 
-     
     .settings-section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-bottom: 20px; }
     .settings-title { font-size: 16px; font-weight: 800; margin-bottom: 20px; color: var(--text); display: flex; align-items: center; gap: 8px; }
     .form-group { margin-bottom: 16px; }
@@ -260,7 +248,6 @@
     .input-group-addon { background: var(--bg); padding: 10px 12px; font-size: 13px; color: var(--text-muted); border-right: 1px solid var(--border); font-weight: 500; display: flex; align-items: center; justify-content: center; }
     .input-group .login-input { border: none; margin-bottom: 0; border-radius: 0; }
 
-     
     .blog-preview-wrapper { border: 1px solid var(--border); border-radius: 8px; background: #ffffff; padding: 32px 24px; margin-top: 16px; }
     .preview-main-title { font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 16px; line-height: 1.4; }
     .blog-meta-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 16px; margin-bottom: 24px; gap: 16px; }
@@ -270,17 +257,13 @@
     .blog-stats span { display: flex; align-items: center; gap: 4px; }
     .blog-footer-cta { margin-top: 40px; border-top: 1px solid var(--border-subtle); padding-top: 32px; display: flex; flex-direction: column; gap: 24px; }
     .newsletter-box { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 20px; }
-    .chat-action-btn { display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--text); color: #ffffff; padding: 16px; border-radius: 6px; font-weight: 700; font-size: 15px; text-decoration: none; transition: background 0.2s; }
-    .chat-action-btn:hover { background: var(--accent); color: #ffffff; }
 
-     
     .cover-capture-box {
       border: 1px dashed var(--border); border-radius: 6px; background: var(--bg); padding: 16px;
       display: flex; flex-direction: column; align-items: center; gap: 12px;
     }
     .cover-preview-img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 4px; border: 1px solid var(--border); display: none; background: #000; }
 
-     
     .markdown-body { font-size: 16px; line-height: 2.1; color: #1e293b; letter-spacing: 0.5px; }
     .markdown-body h1 { font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 24px; line-height: 1.4; }
     .markdown-body h2 { font-size: 22px; margin-top: 36px; margin-bottom: 16px; color: var(--text); font-weight: 800; }
@@ -318,46 +301,42 @@
 </head>
 <body>
 
-
 <div id="loginOverlay">
-  
   <div class="login-box" id="loginView">
-    <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">VBLOG-錄誌</h2>
-    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">登入以存取專屬日誌與設定</p>
+    <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">VBLOG</h2>
+    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">登入</p>
     
-    <input type="email" id="loginEmail" class="login-input" placeholder="註冊信箱">
+    <input type="email" id="loginEmail" class="login-input" placeholder="信箱">
     <div style="display: flex; gap: 8px; margin-bottom: 16px;">
-      <input type="text" id="loginOtp" class="login-input" placeholder="6 碼驗證碼" style="margin-bottom: 0;" maxlength="6">
-      <button id="btnSendLoginOtp" class="action-btn-sm" style="height: 42px; white-space: nowrap;" onclick="requestOtp('login')">發送</button>
+      <input type="text" id="loginOtp" class="login-input" placeholder="驗證碼" style="margin-bottom: 0;" maxlength="6">
+      <button id="btnSendLoginOtp" class="action-btn-sm" style="height: 42px; white-space: nowrap;" onclick="requestOtp('login')"><i data-lucide="send" style="width:14px; height:14px;"></i> 發送</button>
     </div>
-    <button class="action-btn-sm action-btn-primary" style="width: 100%; padding: 10px; height: 42px;" onclick="submitLogin()">登入</button>
+    <button class="action-btn-sm action-btn-primary" style="width: 100%; padding: 10px; height: 42px;" onclick="submitLogin()"><i data-lucide="log-in" style="width:14px; height:14px;"></i> 登入</button>
     
-    <div class="auth-switch" onclick="toggleAuthView('register')">無帳號？點此註冊</div>
+    <div class="auth-switch" onclick="toggleAuthView('register')">註冊</div>
   </div>
 
-  
   <div class="login-box" id="registerView" style="display: none;">
-    <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">註冊會員</h2>
-    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">建立您的 VBLOG 專屬帳號</p>
+    <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">VBLOG</h2>
+    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">註冊</p>
     
-    <input type="text" id="regName" class="login-input" placeholder="真實姓名 (必填)">
-    <input type="date" id="regBirth" class="login-input" placeholder="生日 (西元)">
-    <input type="email" id="regEmail" class="login-input" placeholder="註冊信箱">
+    <input type="text" id="regName" class="login-input" placeholder="姓名">
+    <input type="date" id="regBirth" class="login-input" placeholder="生日">
+    <input type="email" id="regEmail" class="login-input" placeholder="信箱">
     <div style="display: flex; gap: 8px; margin-bottom: 16px;">
-      <input type="text" id="regOtp" class="login-input" placeholder="6 碼驗證碼" style="margin-bottom: 0;" maxlength="6">
-      <button id="btnSendRegOtp" class="action-btn-sm" style="height: 42px; white-space: nowrap;" onclick="requestOtp('register')">發送</button>
+      <input type="text" id="regOtp" class="login-input" placeholder="驗證碼" style="margin-bottom: 0;" maxlength="6">
+      <button id="btnSendRegOtp" class="action-btn-sm" style="height: 42px; white-space: nowrap;" onclick="requestOtp('register')"><i data-lucide="send" style="width:14px; height:14px;"></i> 發送</button>
     </div>
-    <button class="action-btn-sm action-btn-primary" style="width: 100%; padding: 10px; height: 42px;" onclick="submitRegister()">註冊</button>
+    <button class="action-btn-sm action-btn-primary" style="width: 100%; padding: 10px; height: 42px;" onclick="submitRegister()"><i data-lucide="user-plus" style="width:14px; height:14px;"></i> 註冊</button>
     
-    <div class="auth-switch" onclick="toggleAuthView('login')">已有帳號？點此登入</div>
+    <div class="auth-switch" onclick="toggleAuthView('login')">登入</div>
   </div>
 </div>
 
 <div class="app-shell" id="mainAppShell" style="display: none;">
 
-  
   <div style="padding: 4px 4px 0px 4px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;">
-    <h2 style="font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: 0.5px;">VBLOG<span style="font-weight: 400; color: var(--accent); font-size: 18px; margin-left: 2px;">-錄誌</span></h2>
+    <h2 style="font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: 0.5px;">VBLOG</h2>
     <div style="font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
       <i data-lucide="user" style="width: 14px; height: 14px;"></i> <span id="currentUserEmail"></span>
       <button class="action-btn-sm action-btn-icon" onclick="logout()" title="登出"><i data-lucide="log-out" style="width: 14px; height: 14px;"></i></button>
@@ -392,7 +371,7 @@
       <div id="controlsIsland" class="controls-island" style="display: none;">
         <button class="ctrl-btn" id="btnSource" onclick="switchMediaSource()" title="鏡頭"><i data-lucide="switch-camera" id="iconSource"></i></button>
         <button class="ctrl-btn" id="btnVideoTrack" onclick="toggleVideoTrack()" title="畫面"><i data-lucide="video" id="iconVideo"></i></button>
-        <button class="ctrl-btn" id="btnFullscreen" onclick="toggleFullscreen()" title="全螢幕"><i data-lucide="maximize" id="iconFullscreen"></i></button>
+        <button class="ctrl-btn" id="btnFullscreen" onclick="toggleFullscreen()" title="全螢"><i data-lucide="maximize" id="iconFullscreen"></i></button>
         <button class="ctrl-btn" id="btnFps" onclick="toggleFps()" title="幀率">30</button>
         <div class="controls-divider"></div>
         <button class="ctrl-btn record-btn" id="btnStart" onclick="startRecording()" title="錄影"><i data-lucide="circle-dot"></i></button>
@@ -402,7 +381,7 @@
       </div>
     </div>
 
-    <div class="terminal-log" id="sysLog">系統就緒。點擊上方啟動設備。</div>
+    <div class="terminal-log" id="sysLog">[系統] 就緒</div>
 
     <div id="archiveView" class="archive-view">
       <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 16px; gap: 12px;">
@@ -432,10 +411,9 @@
   <div id="tab-history" class="tab-content">
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;">
       <div>
-        <h3 style="font-size: 18px; font-weight: 700;">日誌素材庫</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">原始影音紀錄，點選工坊進入編輯。</p>
+        <h3 style="font-size: 18px; font-weight: 700;">日誌</h3>
       </div>
-      <button onclick="loadHistoryLogs()" class="action-btn-sm" title="重整"><i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> 重整</button>
+      <button onclick="loadHistoryLogs()" class="action-btn-sm"><i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> 重整</button>
     </div>
     <div id="historyContainer" style="display: flex; flex-direction: column; gap: 16px;">
       <div style="text-align: center; color: var(--text-muted); padding: 40px 0;">載入中...</div>
@@ -446,12 +424,11 @@
   <div id="tab-dashboard" class="tab-content">
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px;">
       <div>
-        <h3 style="font-size: 18px; font-weight: 700;">發布總覽</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">已編輯完成的草稿與發布文章。</p>
+        <h3 style="font-size: 18px; font-weight: 700;">總覽</h3>
       </div>
       <div class="flex-wrap-gap">
         <a id="authorGitHubLink" href="#" target="_blank" class="action-btn-sm" style="display:none; color:var(--text); border-color:var(--text);"><i data-lucide="external-link" style="width:14px; height:14px;"></i> 沙龍</a>
-        <button onclick="loadDashboardLogs()" class="action-btn-sm" title="重整"><i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> 重整</button>
+        <button onclick="loadDashboardLogs()" class="action-btn-sm"><i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> 重整</button>
       </div>
     </div>
     <div id="dashboardContainer" class="dashboard-grid">
@@ -464,7 +441,6 @@
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;">
       <div>
         <h3 style="font-size: 18px; font-weight: 700;">工坊</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">解構重組與封面設定。</p>
       </div>
       <div id="workshopActiveLogBadge" style="font-size: 12px; font-weight: 600; color: var(--text-muted); padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px;">未選</div>
     </div>
@@ -482,11 +458,10 @@
         <div style="color: var(--text-muted); font-size: 13px; padding: 10px 0;">點擊上方。</div>
       </div>
       <div>
-        <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 8px;">標題</label>
-        <input type="text" id="finalArticleTitle" class="workshop-textarea" style="min-height: 40px; padding: 10px 14px; font-weight: 600;" placeholder="選擇或撰寫...">
+        <input type="text" id="finalArticleTitle" class="workshop-textarea" style="min-height: 40px; padding: 10px 14px; font-weight: 600;" placeholder="標題">
       </div>
       <div style="display: flex; justify-content: flex-end;">
-        <button class="action-btn-sm" onclick="saveCurrentStepData('title')" title="儲存"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button>
+        <button class="action-btn-sm" onclick="saveCurrentStepData('title')"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button>
       </div>
     </div>
 
@@ -497,9 +472,9 @@
         </div>
         <button class="action-btn-sm action-btn-primary" onclick="generateStepHook()"><i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> 開頭</button>
       </div>
-      <div><textarea id="finalArticleHook" class="workshop-textarea" style="min-height: 120px;" placeholder="開頭..."></textarea></div>
+      <div><textarea id="finalArticleHook" class="workshop-textarea" style="min-height: 120px;" placeholder="開頭"></textarea></div>
       <div style="display: flex; justify-content: flex-end;">
-        <button class="action-btn-sm" onclick="saveCurrentStepData('hook')" title="儲存"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button>
+        <button class="action-btn-sm" onclick="saveCurrentStepData('hook')"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button>
       </div>
     </div>
 
@@ -510,9 +485,9 @@
         </div>
         <button class="action-btn-sm action-btn-primary" onclick="generateStepBody()"><i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> 內文</button>
       </div>
-      <div><textarea id="finalArticleBody" class="workshop-textarea" style="min-height: 300px;" placeholder="內文..."></textarea></div>
+      <div><textarea id="finalArticleBody" class="workshop-textarea" style="min-height: 300px;" placeholder="內文"></textarea></div>
       <div style="display: flex; justify-content: flex-end;">
-        <button class="action-btn-sm" onclick="saveCurrentStepData('body')" title="儲存"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button>
+        <button class="action-btn-sm" onclick="saveCurrentStepData('body')"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button>
       </div>
     </div>
 
@@ -523,13 +498,12 @@
         </div>
         <button class="action-btn-sm action-btn-primary" onclick="generateStepEnding()"><i data-lucide="sparkles" style="width: 14px; height: 14px;"></i> 結尾</button>
       </div>
-      <div><textarea id="finalArticleEnding" class="workshop-textarea" style="min-height: 120px;" placeholder="結尾..."></textarea></div>
+      <div><textarea id="finalArticleEnding" class="workshop-textarea" style="min-height: 120px;" placeholder="結尾"></textarea></div>
       <div style="display: flex; justify-content: flex-end;">
-        <button class="action-btn-sm" onclick="saveCurrentStepData('ending')" title="儲存"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button>
+        <button class="action-btn-sm" onclick="saveCurrentStepData('ending')"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button>
       </div>
     </div>
 
-    
     <div class="workshop-card" id="stepCard5">
       <div class="workshop-step-header">
         <div style="display: flex; align-items: center; gap: 12px;">
@@ -540,27 +514,24 @@
         </div>
       </div>
       
-      
       <div class="cover-capture-box">
-        <div style="font-size: 13px; font-weight: 700; color: var(--text); width: 100%; text-align: left;">文章封面圖設定</div>
-        <img id="workshopCoverPreview" class="cover-preview-img" src="" alt="封面預覽">
+        <img id="workshopCoverPreview" class="cover-preview-img" src="" alt="封面">
         <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-          <button class="action-btn-sm" onclick="captureFrameFromVideo()" id="btnCaptureCover" disabled title="需等待整合載入影片"><i data-lucide="camera" style="width: 14px; height: 14px;"></i> 擷取</button>
+          <button class="action-btn-sm" onclick="captureFrameFromVideo()" id="btnCaptureCover" disabled><i data-lucide="camera" style="width: 14px; height: 14px;"></i> 擷取</button>
           <label class="action-btn-sm" style="cursor: pointer;">
             <i data-lucide="upload" style="width: 14px; height: 14px;"></i> 上傳
             <input type="file" id="coverImageUpload" accept="image/*" style="display: none;" onchange="handleCoverUpload(event)">
           </label>
         </div>
-        <div style="font-size: 12px; color: var(--text-muted);" id="coverStatusText">尚未設定封面圖。</div>
+        <div style="font-size: 12px; color: var(--text-muted);" id="coverStatusText">無封面</div>
       </div>
 
       <div id="fullArticlePreview" style="min-height: 150px; margin-top: 8px;">
-        <div style="border: 1px dashed var(--border); border-radius: 4px; padding: 32px; text-align: center;"><p style="color: var(--text-muted); font-size: 13px;">點擊整合，渲染預覽。</p></div>
+        <div style="border: 1px dashed var(--border); border-radius: 4px; padding: 32px; text-align: center;"><p style="color: var(--text-muted); font-size: 13px;">點擊整合</p></div>
       </div>
       
       <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-top: 8px;">
-        <div style="font-size: 12px; color: var(--text-muted);">* 同步寫入資料庫，並準備推送至 GitHub。</div>
-        <div class="flex-wrap-gap">
+        <div class="flex-wrap-gap" style="margin-left: auto;">
           <button class="action-btn-sm" onclick="saveCurrentStepData('full')"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button>
           <button class="action-btn-sm" style="color: #ffffff; border-color: var(--text); background: var(--text);" onclick="publishArticleToWeb()"><i data-lucide="globe" style="width: 14px; height: 14px;"></i> 發布</button>
         </div>
@@ -573,20 +544,18 @@
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px;">
       <div>
         <h3 style="font-size: 18px; font-weight: 700;">設定</h3>
-        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">會員資訊、作者設定與 AI 提示詞</p>
       </div>
     </div>
 
-    
     <div class="settings-section">
-      <div class="settings-title"><i data-lucide="shield-check" style="width: 18px; height: 18px; color: var(--success);"></i> 帳號資訊</div>
+      <div class="settings-title"><i data-lucide="shield-check" style="width: 18px; height: 18px; color: var(--success);"></i> 帳號</div>
       <div class="input-row">
         <div class="input-col form-group">
-          <label class="form-label">註冊信箱</label>
+          <label class="form-label">信箱</label>
           <input type="text" id="infoEmail" class="login-input" disabled value="載入中...">
         </div>
         <div class="input-col form-group">
-          <label class="form-label">真實姓名</label>
+          <label class="form-label">姓名</label>
           <input type="text" id="infoName" class="login-input" disabled value="載入中...">
         </div>
       </div>
@@ -596,19 +565,18 @@
           <input type="text" id="infoBirth" class="login-input" disabled value="載入中...">
         </div>
         <div class="input-col form-group">
-          <label class="form-label">註冊時間</label>
+          <label class="form-label">註冊</label>
           <input type="text" id="infoReg" class="login-input" disabled value="載入中...">
         </div>
         <div class="input-col form-group">
-          <label class="form-label">會員等級</label>
+          <label class="form-label">等級</label>
           <input type="text" id="infoTier" class="login-input" disabled value="載入中...">
         </div>
       </div>
     </div>
 
-    
     <div class="settings-section">
-      <div class="settings-title"><i data-lucide="user-circle" style="width: 18px; height: 18px; color: var(--accent);"></i> 專屬作者簡介 (供沙龍與文章底部使用)</div>
+      <div class="settings-title"><i data-lucide="user-circle" style="width: 18px; height: 18px; color: var(--accent);"></i> 作者</div>
       
       <div class="avatar-upload-zone">
         <div class="avatar-preview" id="authorAvatarPreview"><i data-lucide="image" style="width: 24px; height: 24px;"></i></div>
@@ -617,46 +585,43 @@
             <i data-lucide="upload-cloud" style="width: 14px; height: 14px;"></i> 上傳
             <input type="file" id="authorAvatarInput" accept="image/*" onchange="handleAvatarUpload(event)">
           </label>
-          <div style="font-size: 12px; color: var(--text-muted);">建議 400x400。</div>
         </div>
       </div>
 
       <div class="input-row">
         <div class="input-col form-group">
-          <label class="form-label">個人網址代號 (Handle)</label>
+          <label class="form-label">代號</label>
           <div class="input-group">
             <span class="input-group-addon">vblog.com/</span>
-            <input type="text" id="authorHandle" class="login-input" placeholder="例如: troy-ai (限英數與減號)">
+            <input type="text" id="authorHandle" class="login-input" placeholder="代號">
           </div>
-          <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">*發布 GitHub 首頁與文章的專屬目錄名稱。</div>
         </div>
         <div class="input-col form-group">
-          <label class="form-label">筆名 / 顯示名稱</label>
-          <input type="text" id="authorDisplayName" class="login-input" placeholder="例如: 特洛伊AI賦能師">
+          <label class="form-label">筆名</label>
+          <input type="text" id="authorDisplayName" class="login-input" placeholder="筆名">
         </div>
       </div>
 
       <div class="form-group">
-        <label class="form-label">一小段簡介 (顯示於文章底部，限 300 字)</label>
-        <textarea id="authorBio" class="workshop-textarea" style="min-height: 80px;" maxlength="300" placeholder="嗨！我是特洛伊，專注於微型創業與 AI 應用..."></textarea>
+        <label class="form-label">簡介</label>
+        <textarea id="authorBio" class="workshop-textarea" style="min-height: 80px;" maxlength="300" placeholder="簡介"></textarea>
       </div>
       
       <div class="form-group">
-        <label class="form-label">沙龍詳細介紹 (顯示於首頁，限 2000 字)</label>
-        <textarea id="authorSalonIntro" class="workshop-textarea" style="min-height: 120px;" maxlength="2000" placeholder="歡迎來到我的 AI 賦能沙龍..."></textarea>
+        <label class="form-label">介紹</label>
+        <textarea id="authorSalonIntro" class="workshop-textarea" style="min-height: 120px;" maxlength="2000" placeholder="介紹"></textarea>
       </div>
 
-      <div class="form-label" style="margin-top: 24px;">社群連結 (選填，發布時會顯示 Icon)</div>
       <div class="input-row">
-        <div class="input-col form-group"><input type="email" id="socialEmail" class="login-input" placeholder="聯繫 Email"></div>
-        <div class="input-col form-group"><input type="url" id="socialIG" class="login-input" placeholder="Instagram 網址"></div>
+        <div class="input-col form-group"><input type="email" id="socialEmail" class="login-input" placeholder="信箱"></div>
+        <div class="input-col form-group"><input type="url" id="socialIG" class="login-input" placeholder="IG"></div>
       </div>
       <div class="input-row">
-        <div class="input-col form-group"><input type="url" id="socialFB" class="login-input" placeholder="Facebook 網址"></div>
-        <div class="input-col form-group"><input type="url" id="socialYT" class="login-input" placeholder="YouTube 網址"></div>
+        <div class="input-col form-group"><input type="url" id="socialFB" class="login-input" placeholder="FB"></div>
+        <div class="input-col form-group"><input type="url" id="socialYT" class="login-input" placeholder="YT"></div>
       </div>
       <div class="input-row">
-        <div class="input-col form-group"><input type="url" id="socialPodcast" class="login-input" placeholder="Podcast 網址"></div>
+        <div class="input-col form-group"><input type="url" id="socialPodcast" class="login-input" placeholder="播客"></div>
       </div>
 
       <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
@@ -664,28 +629,25 @@
       </div>
     </div>
 
-    
     <div class="settings-section">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <div class="settings-title" style="margin-bottom: 0;"><i data-lucide="bot" style="width: 18px; height: 18px; color: var(--accent);"></i> 自訂 AI 提示詞</div>
+        <div class="settings-title" style="margin-bottom: 0;"><i data-lucide="bot" style="width: 18px; height: 18px; color: var(--accent);"></i> 指令</div>
         <button class="action-btn-sm action-btn-primary" onclick="saveAllPrompts(this)"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button>
       </div>
-      <div class="form-group"><label class="form-label">提案</label><textarea id="promptStep1" class="workshop-textarea" style="min-height: 120px; font-size: 13.5px;" placeholder="載入中..."></textarea></div>
-      <div class="form-group"><label class="form-label">開頭</label><textarea id="promptStep2" class="workshop-textarea" style="min-height: 120px; font-size: 13.5px;" placeholder="載入中..."></textarea></div>
-      <div class="form-group"><label class="form-label">內文</label><textarea id="promptStep3" class="workshop-textarea" style="min-height: 120px; font-size: 13.5px;" placeholder="載入中..."></textarea></div>
-      <div class="form-group"><label class="form-label">結尾</label><textarea id="promptStep4" class="workshop-textarea" style="min-height: 120px; font-size: 13.5px;" placeholder="載入中..."></textarea></div>
+      <div class="form-group"><label class="form-label">提案</label><textarea id="promptStep1" class="workshop-textarea" style="min-height: 120px; font-size: 13.5px;" placeholder="提案"></textarea></div>
+      <div class="form-group"><label class="form-label">開頭</label><textarea id="promptStep2" class="workshop-textarea" style="min-height: 120px; font-size: 13.5px;" placeholder="開頭"></textarea></div>
+      <div class="form-group"><label class="form-label">內文</label><textarea id="promptStep3" class="workshop-textarea" style="min-height: 120px; font-size: 13.5px;" placeholder="內文"></textarea></div>
+      <div class="form-group"><label class="form-label">結尾</label><textarea id="promptStep4" class="workshop-textarea" style="min-height: 120px; font-size: 13.5px;" placeholder="結尾"></textarea></div>
     </div>
   </div>
 
 </div>
 
-
 <canvas id="captureCanvas" style="display: none;"></canvas>
-
 
 <div id="toast" class="toast-box">
   <i data-lucide="check" style="width: 16px; height: 16px;"></i>
-  <span id="toastMsg">已複製</span>
+  <span id="toastMsg">成功</span>
 </div>
 
 <script>
@@ -722,9 +684,6 @@
   window.currentSelectedLog = null; 
   window.currentAuthorProfile = null; 
 
-  
-  
-  
   function toggleAuthView(view) {
     if (view === 'register') {
       document.getElementById('loginView').style.display = 'none';
@@ -762,7 +721,8 @@
       if (timeLeft < 0) {
         clearInterval(timerId);
         btnElement.disabled = false;
-        btnElement.innerText = "發送";
+        btnElement.innerHTML = '<i data-lucide="send" style="width:14px; height:14px;"></i> 發送';
+        lucide.createIcons();
       }
     }, 1000);
   }
@@ -773,48 +733,50 @@
     const email = emailInput.value.trim();
     const btn = isLogin ? document.getElementById('btnSendLoginOtp') : document.getElementById('btnSendRegOtp');
 
-    if (!email || !email.includes('@')) { alert("請輸入有效的信箱"); return; }
+    if (!email || !email.includes('@')) { alert("信箱無效"); return; }
     
     let name = "", birth = "";
     if (!isLogin) {
       name = document.getElementById('regName').value.trim();
       birth = document.getElementById('regBirth').value;
-      if (!name || !birth) { alert("姓名與生日為必填欄位"); return; }
+      if (!name || !birth) { alert("必填缺漏"); return; }
     }
 
     btn.disabled = true;
-    btn.innerText = "發送中";
+    btn.innerText = "...";
 
     try {
       await api({ action: "sendOtp", email: email, type: type });
-      showToast("驗證碼已寄出");
+      showToast("已發送");
       startOtpTimer(btn);
     } catch (e) {
       alert(e.message);
       btn.disabled = false;
-      btn.innerText = "發送";
+      btn.innerHTML = '<i data-lucide="send" style="width:14px; height:14px;"></i> 發送';
+      lucide.createIcons();
     }
   }
 
   async function submitLogin() {
     const email = document.getElementById('loginEmail').value.trim();
     const otp = document.getElementById('loginOtp').value.trim();
-    if (!email || !otp) { alert("請填寫信箱與驗證碼"); return; }
+    if (!email || !otp) { alert("必填缺漏"); return; }
 
     const btn = event.currentTarget;
-    const oldText = btn.innerText;
-    btn.innerText = "驗證中..."; btn.disabled = true;
+    btn.innerText = "..."; btn.disabled = true;
 
     try {
       const res = await api({ action: "verifyAndLogin", email: email, otp: otp });
       if (res) {
         localStorage.setItem('bvlog_user_email', email);
-        showToast("登入成功");
+        showToast("成功");
         checkLoginStatus();
       }
     } catch (e) {
       alert(e.message);
-      btn.innerText = oldText; btn.disabled = false;
+      btn.innerHTML = '<i data-lucide="log-in" style="width:14px; height:14px;"></i> 登入';
+      btn.disabled = false;
+      lucide.createIcons();
     }
   }
 
@@ -824,22 +786,23 @@
     const name = document.getElementById('regName').value.trim();
     const birth = document.getElementById('regBirth').value;
     
-    if (!email || !otp || !name || !birth) { alert("請填寫完整資料"); return; }
+    if (!email || !otp || !name || !birth) { alert("必填缺漏"); return; }
 
     const btn = event.currentTarget;
-    const oldText = btn.innerText;
-    btn.innerText = "驗證中..."; btn.disabled = true;
+    btn.innerText = "..."; btn.disabled = true;
 
     try {
       const res = await api({ action: "verifyAndRegister", email: email, otp: otp, name: name, birth: birth });
       if (res) {
         localStorage.setItem('bvlog_user_email', email);
-        showToast("註冊成功");
+        showToast("成功");
         checkLoginStatus();
       }
     } catch (e) {
       alert(e.message);
-      btn.innerText = oldText; btn.disabled = false;
+      btn.innerHTML = '<i data-lucide="user-plus" style="width:14px; height:14px;"></i> 註冊';
+      btn.disabled = false;
+      lucide.createIcons();
     }
   }
 
@@ -859,15 +822,12 @@
     checkLoginStatus();
   });
 
-  
-  
-  
   function toggleFullscreen() {
     const elem = isMobile ? document.getElementById('mediaPlayer') : document.getElementById('videoWrapper');
     
     if (!document.fullscreenElement && !document.webkitFullscreenElement) {
       if (elem.requestFullscreen) {
-        elem.requestFullscreen().catch(err => log("> 全螢幕無法啟動：" + err.message));
+        elem.requestFullscreen().catch(err => log("[錯誤] 全螢失敗"));
       } else if (elem.webkitEnterFullscreen) {
         elem.webkitEnterFullscreen();
       } else if (elem.webkitRequestFullscreen) {
@@ -896,17 +856,14 @@
     lucide.createIcons();
   }
 
-  
-  
-  
   async function api(payload, retries = 2) {
     if (typeof google !== 'undefined' && google.script && google.script.run) {
       return new Promise((resolve, reject) => {
         google.script.run
           .withSuccessHandler(res => {
-            if (!res) { reject(new Error("後端無回應")); return; }
+            if (!res) { reject(new Error("無回應")); return; }
             if (res.status === 'success') resolve(res.data);
-            else reject(new Error(res.message || "發生錯誤"));
+            else reject(new Error(res.message || "錯誤"));
           })
           .withFailureHandler(err => reject(err))
           .handleClientRequest(payload);
@@ -924,35 +881,27 @@
           throw new Error(json.message);
         } catch (e) {
           if (i === retries) throw e;
-          console.log(`[API Retry ${i+1}] ${e.message}`);
           await new Promise(r => setTimeout(r, 1000));
         }
       }
     }
   }
 
-  
-  
-  
   async function loadUserAccountInfo(email) {
     try {
       const res = await api({ action: "getUserAccountInfo", email: email });
       if (res) {
         document.getElementById('infoEmail').value = res.email || email;
-        document.getElementById('infoName').value = res.name || "未設定";
-        document.getElementById('infoBirth').value = res.birth || "未設定";
-        document.getElementById('infoReg').value = res.regTime || "未設定";
-        document.getElementById('infoTier').value = res.tier || "一般會員";
+        document.getElementById('infoName').value = res.name || "未設";
+        document.getElementById('infoBirth').value = res.birth || "未設";
+        document.getElementById('infoReg').value = res.regTime || "未設";
+        document.getElementById('infoTier').value = res.tier || "會員";
       }
     } catch (e) {
-      console.log("帳號資訊載入失敗：", e.message);
       document.getElementById('infoEmail').value = email;
     }
   }
 
-  
-  
-  
   let tempAvatarBase64 = null;
 
   async function loadAuthorProfile(email) {
@@ -982,7 +931,7 @@
           ghLink.style.display = 'inline-flex';
         }
       }
-    } catch (e) { console.log("載入作者資料失敗：", e.message); }
+    } catch (e) { }
   }
 
   function handleAvatarUpload(event) {
@@ -995,7 +944,7 @@
       const preview = document.getElementById('authorAvatarPreview');
       preview.style.backgroundImage = "url('" + base64 + "')";
       preview.innerHTML = '';
-      showToast("圖片已讀取，請記得儲存");
+      showToast("讀取");
     };
     reader.readAsDataURL(file);
   }
@@ -1018,18 +967,18 @@
     };
 
     if(profile.handle && !/^[a-zA-Z0-9-]+$/.test(profile.handle)) {
-      alert("網址代號僅限英數與減號 (-)");
+      alert("限英數");
       return;
     }
 
     const originalHtml = btn.innerHTML;
-    btn.innerHTML = '<i data-lucide="loader" class="spin" style="width:14px; height:14px;"></i> 儲存...';
+    btn.innerHTML = '<i data-lucide="loader" class="spin" style="width:14px; height:14px;"></i> 儲存';
     lucide.createIcons();
     btn.disabled = true;
 
     try {
       const res = await api({ action: "saveAuthorProfile", email: email, profile: profile });
-      showToast("作者設定已更新");
+      showToast("儲存");
       tempAvatarBase64 = null; 
       if(res.handle) {
           const ghLink = document.getElementById('authorGitHubLink');
@@ -1037,7 +986,7 @@
           ghLink.style.display = 'inline-flex';
       }
     } catch (e) {
-      alert("失敗：" + e.message);
+      alert(e.message);
     } finally {
       btn.innerHTML = originalHtml;
       lucide.createIcons();
@@ -1045,15 +994,12 @@
     }
   }
 
-  
-  
-  
   async function loadPrompts(email) {
     const fallback = {
-      step1: "你是一位深諳短影音變現、爆款內容心理學與商業雜誌的資深總編輯。\n請針對以下【語音逐字稿與畫面描述內容】，為微型創業者設計 20 組極具吸引力的爆款文章策略與標題提案。\n格式必須嚴格依照：「你的吸睛標題｜特洛伊AI賦能師|||[標題類型] 戰略切入點說明」",
-      step2: "你是一位專業的商業雜誌首席特約作家與 VBLOG 品牌顧問，深諳 Google E-E-A-T。\n請根據確定的【文章標題】與【原始內容】，寫一段兼具價值與黃金3秒Hook的文章開頭。\n首段必備：50-80 字精煉「實戰經驗價值」。\n第二段開始：直擊微型創業者痛點，極致閱讀呼吸感。",
-      step3: "你是一位頂尖商業雜誌特約主筆，也是陪伴微型創業者的特洛伊導師。\n請將下方的內容重構整理：\n1. 原汁原味保留口語精髓與案例。\n2. 「小學生都能懂」的白話文。\n3. 極致閱讀呼吸感，零 Emoji。\n4. 分為 3 到 5 個明確的子標題（###），中間加分隔線（---）。\n5. 開門見山，不要重複寫標題與開頭。",
-      step4: "你是一位溫暖而堅定的商業導師。請根據以下長文章的脈絡，寫一段充滿力量的結尾祝福與行動呼籲（CTA）。\n1. 結尾昇華金句。\n2. 互動呼籲。\n3. 在最後一字不漏加上：「讓ＡＩ為你效勞，讓創業不再過勞\n我是特洛伊，一起用ＡＩ守住光陰」。\n4. 零 Emoji，大量換行與留白。"
+      step1: "你是一位資深總編輯。針對逐字稿與畫面描述，為微型創業者設計 20 組標題提案。格式必須嚴格依照：「你的吸睛標題｜特洛伊AI賦能師|||[標題類型] 戰略切入點說明」，絕對不要加數字序號。",
+      step2: "你是一位商業雜誌首席特約作家，深諳 Google E-E-A-T。根據文章標題與內容，寫一段兼具價值與黃金3秒Hook的文章開頭。首段50-80字點出實戰經驗價值，第二段直擊痛點。零 Emoji 政策。",
+      step3: "你是一位頂尖主筆，深諳 Google E-E-A-T。將原始畫面描述與語音逐字稿專業重構：1. 內容完整保留口語與案例 2. 白話文字描述 3. 零 Emoji 政策 4. 分為 3 到 5 個次級標題（###），段落間使用分隔線（---）5. 開門見山，不重複標題與開頭。",
+      step4: "你是一位商業導師。寫一段結尾祝福與行動呼籲（CTA）。最後一字不漏加上：「讓ＡＩ為你效勞，讓創業不再過勞\n我是特洛伊，一起用ＡＩ守住光陰」。零 Emoji 政策。"
     };
 
     try {
@@ -1063,7 +1009,6 @@
       document.getElementById('promptStep3').value = (res && res.prompts && res.prompts.step3) ? res.prompts.step3 : fallback.step3;
       document.getElementById('promptStep4').value = (res && res.prompts && res.prompts.step4) ? res.prompts.step4 : fallback.step4;
     } catch (e) {
-      console.log("提示詞載入異常，啟動防呆備援：", e.message);
       document.getElementById('promptStep1').value = fallback.step1;
       document.getElementById('promptStep2').value = fallback.step2;
       document.getElementById('promptStep3').value = fallback.step3;
@@ -1076,7 +1021,7 @@
     if (!email) return;
 
     const originalHtml = btn.innerHTML;
-    btn.innerHTML = '<i data-lucide="loader" class="spin" style="width:14px; height:14px;"></i> 儲存...';
+    btn.innerHTML = '<i data-lucide="loader" class="spin" style="width:14px; height:14px;"></i> 儲存';
     lucide.createIcons();
     btn.disabled = true;
 
@@ -1089,14 +1034,11 @@
 
     try {
       await api({ action: "savePrompts", email: email, prompts: prompts });
-      showToast("已儲存");
-    } catch (e) { alert("失敗：" + e.message); } 
+      showToast("儲存");
+    } catch (e) { alert(e.message); } 
     finally { btn.innerHTML = originalHtml; lucide.createIcons(); btn.disabled = false; }
   }
 
-  
-  
-  
   function log(msg) {
     const el = document.getElementById('sysLog');
     if (!el) return;
@@ -1116,10 +1058,10 @@
 
   function copyTextToClipboard(text, successMsg) {
     if (!text) return;
-    navigator.clipboard.writeText(text).then(() => { showToast(successMsg || "已複製"); })
+    navigator.clipboard.writeText(text).then(() => { showToast(successMsg || "複製"); })
     .catch(() => {
       const textarea = document.createElement("textarea");
-      textarea.value = text; document.body.appendChild(textarea); textarea.select(); document.execCommand("copy"); document.body.removeChild(textarea); showToast(successMsg || "已複製");
+      textarea.value = text; document.body.appendChild(textarea); textarea.select(); document.execCommand("copy"); document.body.removeChild(textarea); showToast(successMsg || "複製");
     });
   }
 
@@ -1140,19 +1082,16 @@
     if (tabId === 'tab-dashboard') loadDashboardLogs();
   }
 
-  
-  
-  
   function toggleFps() {
     cameraFps = (cameraFps === 30) ? 60 : 30;
     document.getElementById('btnFps').innerText = cameraFps;
     document.getElementById('btnFps').classList.toggle('active', cameraFps === 60);
-    log("> 切換至 " + cameraFps + " FPS...");
+    log("[系統] 幀率: " + cameraFps);
     if (currentStream) acquireStream();
   }
 
   async function enableHardware() {
-    log("> 請求權限...");
+    log("[系統] 授權...");
     const ok = await acquireStream();
     if (ok) {
       document.getElementById('cameraPrompt').style.display = 'none';
@@ -1160,7 +1099,7 @@
       document.getElementById('btnCloseCamera').style.display = 'flex';
       document.getElementById('cameraGrid').style.display = 'block'; 
       wakeControls();
-      log("> 設備就緒。");
+      log("[系統] 就緒");
     }
   }
 
@@ -1172,7 +1111,7 @@
     document.getElementById('controlsIsland').style.display = 'none';
     document.getElementById('statusBadge').style.display = 'none';
     document.getElementById('cameraGrid').style.display = 'none';
-    log("> 相機已關閉。");
+    log("[系統] 關閉");
   }
 
   function updateSourceIcon() {
@@ -1194,7 +1133,7 @@
         const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: { ideal: cameraFps } }, audio: true });
         let micStream = null;
         try { micStream = await navigator.mediaDevices.getUserMedia({ audio: audioConstraints }); } 
-        catch (e) { log("> 無麥克風，僅系統音。"); }
+        catch (e) { log("[系統] 靜音"); }
 
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
         mixedAudioDest = audioContext.createMediaStreamDestination();
@@ -1203,9 +1142,8 @@
         if (micStream && micStream.getAudioTracks().length > 0) { const micSource = audioContext.createMediaStreamSource(micStream); micSource.connect(mixedAudioDest); }
 
         currentStream = new MediaStream([ screenStream.getVideoTracks()[0], mixedAudioDest.stream.getAudioTracks()[0] ]);
-        screenStream.getVideoTracks()[0].onended = async () => { if (currentSourceType === "screen") { log("> 共用停止，切回鏡頭..."); await switchMediaSource(); } };
+        screenStream.getVideoTracks()[0].onended = async () => { if (currentSourceType === "screen") { await switchMediaSource(); } };
       } else {
-        
         let videoConstraints = {
           facingMode: mobileFacingMode,
           width: { ideal: 1280 },
@@ -1220,9 +1158,8 @@
       const vTrack = currentStream.getVideoTracks()[0];
       if (vTrack) vTrack.enabled = isVideoEnabled;
       updateSourceIcon();
-      log("> 載入：[" + (isMobile ? mobileFacingMode : currentSourceType) + "] " + cameraFps + "fps");
       return true;
-    } catch (err) { log("> 失敗：" + err.message); return false; }
+    } catch (err) { log("[錯誤] " + err.message); return false; }
   }
 
   function toggleVideoTrack() {
@@ -1232,7 +1169,6 @@
     if (icon) icon.setAttribute('data-lucide', isVideoEnabled ? 'video' : 'video-off');
     document.getElementById('btnVideoTrack').classList.toggle('active', !isVideoEnabled);
     lucide.createIcons();
-    log("> 畫面已" + (isVideoEnabled ? '開啟' : '關閉'));
     wakeControls();
   }
 
@@ -1245,23 +1181,18 @@
     else currentSourceType = (currentSourceType === "camera") ? "screen" : "camera";
 
     if (wasRecording && mediaRecorder && mediaRecorder.state === "recording") {
-      log("[系統] 切換，切片中..."); clearTimeout(chunkTimer); await stopMediaRecorderAsync();
+      clearTimeout(chunkTimer); await stopMediaRecorderAsync();
     }
 
-    log("> 切換至 [" + (isMobile ? mobileFacingMode : currentSourceType) + "]...");
     const success = await acquireStream();
-
-    if (!success) { log("> 取消，恢復..."); currentSourceType = prevSourceType; mobileFacingMode = prevFacingMode; await acquireStream(); }
-    if (wasRecording && !isPaused && currentStream) { startChunkRecording(); log("> 切換完成！"); }
+    if (!success) { currentSourceType = prevSourceType; mobileFacingMode = prevFacingMode; await acquireStream(); }
+    if (wasRecording && !isPaused && currentStream) { startChunkRecording(); }
     wakeControls();
   }
 
-  
-  
-  
   async function startRecording() {
     const email = localStorage.getItem('bvlog_user_email');
-    if (!email) { alert("請先登入"); return; }
+    if (!email) { alert("請登入"); return; }
 
     document.getElementById('btnStart').disabled = true;
     document.getElementById('archiveView').style.display = 'none';
@@ -1270,8 +1201,6 @@
       const ok = await acquireStream();
       if (!ok) { document.getElementById('btnStart').disabled = false; return; }
     }
-
-    log("> 建立中...");
 
     try {
       const res = await api({ action: "initLog", email: email });
@@ -1285,15 +1214,14 @@
       document.getElementById('statusBadge').style.display = 'flex';
 
       startTimer(); startChunkRecording(); wakeControls();
-      log("🟢 雙軌錄製中！每 1 分鐘自動建檔並寫入試算表。");
-    } catch (e) { log("> 錯誤：" + e.message); document.getElementById('btnStart').disabled = false; }
+      log("[系統] 錄製中 (30秒循環)");
+    } catch (e) { log("[錯誤] " + e.message); document.getElementById('btnStart').disabled = false; }
   }
 
   function startChunkRecording() {
     if (!isRecording || !currentStream || isPaused) return;
     recordedChunks = [];
     const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
-    
     
     const recorderOptions = {
       mimeType: mime,
@@ -1316,29 +1244,26 @@
     };
     mediaRecorder.start();
     
-    
     chunkTimer = setTimeout(() => {
       if (mediaRecorder && mediaRecorder.state === "recording") { 
-        log("[系統] 第 " + chunkIndex + " 段 1 分鐘已滿，打包建檔寫入試算表..."); 
+        log("[排隊] 第 " + chunkIndex + " 段切片"); 
         mediaRecorder.stop(); 
       }
-    }, 60000);
+    }, 30000);
   }
 
   function processChunk(blob, mime, index) {
-    log("> [排隊] 傳送第 " + index + " 段影片 (1分鐘)...");
     const task = new Promise(resolve => {
       const reader = new FileReader();
       reader.readAsDataURL(blob);
       reader.onloadend = async () => {
         if (!reader.result || !reader.result.includes(',')) {
-          log("> [❌] 第 " + index + " 段記憶體不足，片段損毀");
+          log("[失敗] 第 " + index + " 段損毀");
           resolve(); return;
         }
         const base64 = reader.result.split(',')[1];
-        log("> [處理] 第 " + index + " 段雲端建檔與 AI 解析中...");
+        log("[處理] 第 " + index + " 段解析...");
         try {
-          
           await api({ 
             action: "processChunkRealtime", 
             base64Data: base64, 
@@ -1347,8 +1272,8 @@
             rowIndex: logSession.rowIndex, 
             chunkIndex: index 
           });
-          log("> [✅] 第 " + index + " 段已建檔並成功寫入試算表！");
-        } catch (e) { log("> [❌] 第 " + index + " 段失敗: " + e.message); }
+          log("[成功] 第 " + index + " 段寫入");
+        } catch (e) { log("[失敗] 第 " + index + " 段: " + e.message); }
         resolve();
       };
     });
@@ -1361,14 +1286,14 @@
     const pauseIcon = document.getElementById('iconPause');
     if (!isPaused) {
       isPaused = true;
-      if (mediaRecorder && mediaRecorder.state === "recording") { log("[系統] 暫停，切片中..."); mediaRecorder.stop(); }
+      if (mediaRecorder && mediaRecorder.state === "recording") { mediaRecorder.stop(); }
       clearTimeout(chunkTimer); clearInterval(timerInterval);
       if (pauseIcon) pauseIcon.setAttribute('data-lucide', 'play');
-      log("> 已暫停。");
+      log("[系統] 暫停");
     } else {
       isPaused = false; startTimer(); startChunkRecording();
       if (pauseIcon) pauseIcon.setAttribute('data-lucide', 'pause');
-      log("> 已恢復。");
+      log("[系統] 恢復");
     }
     lucide.createIcons(); wakeControls();
   }
@@ -1386,14 +1311,12 @@
     const email = localStorage.getItem('bvlog_user_email');
     isRecording = false; isPaused = false; clearTimeout(chunkTimer); clearInterval(timerInterval);
 
-    if (mediaRecorder && mediaRecorder.state === "recording") log("[系統] 結束錄影，打包最後切片...");
+    if (mediaRecorder && mediaRecorder.state === "recording") log("[系統] 結束");
     await stopMediaRecorderAsync();
 
     if (currentStream) { currentStream.getTracks().forEach(t => t.stop()); currentStream = null; }
     if (document.getElementById('mediaPlayer')) document.getElementById('mediaPlayer').srcObject = null;
     if (audioContext) { audioContext.close(); audioContext = null; }
-    
-    log("> 設備已關閉，等待所有切片寫入...");
 
     document.getElementById('cameraPrompt').style.display = 'flex';
     document.getElementById('controlsIsland').style.display = 'none';
@@ -1406,17 +1329,15 @@
     document.getElementById('btnCloseCamera').style.display = 'flex'; 
 
     if (activeUploadTasks.size > 0) {
-      log("> ⏳ 正在等待最後 " + activeUploadTasks.size + " 個切片完成寫入試算表...");
+      log("[等待] 剩餘 " + activeUploadTasks.size + " 段");
     }
 
-    
     while (activeUploadTasks.size > 0) { await Promise.all(Array.from(activeUploadTasks)); }
-    log("> 所有片段已入庫，開始進行 AI 全局重點提煉...");
+    log("[處理] 歸檔摘要...");
 
     try {
-      
       const res = await api({ action: "finalizeLog", rowIndex: logSession.rowIndex, email: email });
-      log("> ✅ 歸檔大功告成！");
+      log("[成功] 歸檔完成");
       const urls = res.urls || [];
       
       let linksHtml = '';
@@ -1434,7 +1355,7 @@
       document.getElementById('btnStart').style.display = 'flex';
       document.getElementById('btnStart').disabled = false;
       lucide.createIcons();
-    } catch (e) { log("> 歸檔失敗：" + e.message); }
+    } catch (e) { log("[失敗] " + e.message); }
   }
 
   function startTimer() {
@@ -1472,7 +1393,7 @@
   function escapeHtml(str) { return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
 
   function formatTranscriptContent(rawText, urls) {
-    if (!rawText || !rawText.trim()) return '<div style="color:var(--text-muted); font-size:14px; padding:12px 0;">尚無紀錄</div>';
+    if (!rawText || !rawText.trim()) return '<div style="color:var(--text-muted); font-size:14px; padding:12px 0;">無</div>';
     const urlList = Array.isArray(urls) ? urls : [];
     if (!/【第\s*\d+\s*(?:分鐘|段影音|段)】/.test(rawText)) return '<div class="markdown-body">' + renderMarkdown(rawText) + '</div>';
 
@@ -1499,8 +1420,8 @@
         chunkHtml += '<div class="minute-chunk-title"><i data-lucide="clock" style="width: 14px; height: 14px; color: var(--accent);"></i><span>' + (currentTitle || ('【第 ' + chunkNum + ' 段】')) + '</span></div>';
         if(videoUrl) chunkHtml += '<a href="' + videoUrl + '" target="_blank" class="file-chip"><i data-lucide="film" style="width: 13px; height: 13px;"></i> 影片</a>';
         chunkHtml += '</div><div class="minute-chunk-content">';
-        if(screenDesc) chunkHtml += '<div class="sub-section desc-section"><div class="sub-section-title"><i data-lucide="eye" style="width: 13px; height: 13px;"></i> 畫面描述</div><div class="markdown-body">' + renderMarkdown(screenDesc) + '</div></div>';
-        if(voiceText) chunkHtml += '<div class="sub-section voice-section"><div class="sub-section-title"><i data-lucide="mic" style="width: 13px; height: 13px;"></i> 逐字稿</div><div class="voice-body">' + escapeHtml(voiceText) + '</div></div>';
+        if(screenDesc) chunkHtml += '<div class="sub-section desc-section"><div class="sub-section-title"><i data-lucide="eye" style="width: 13px; height: 13px;"></i> 畫面</div><div class="markdown-body">' + renderMarkdown(screenDesc) + '</div></div>';
+        if(voiceText) chunkHtml += '<div class="sub-section voice-section"><div class="sub-section-title"><i data-lucide="mic" style="width: 13px; height: 13px;"></i> 語音</div><div class="voice-body">' + escapeHtml(voiceText) + '</div></div>';
         chunkHtml += '</div></div>';
         
         html += chunkHtml;
@@ -1510,9 +1431,6 @@
     return html || '<div class="markdown-body">' + renderMarkdown(rawText) + '</div>';
   }
 
-  
-  
-  
   let globalLogsCache = [];
 
   async function loadHistoryLogs() {
@@ -1520,7 +1438,7 @@
     if (!email) return;
 
     const container = document.getElementById('historyContainer');
-    container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> 載入中...</div>';
+    container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> ...</div>';
     lucide.createIcons();
 
     try {
@@ -1528,7 +1446,7 @@
       globalLogsCache = logs;
       
       if (!logs || logs.length === 0) {
-        container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px;">目前尚無歷史錄影紀錄。</div>';
+        container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px;">無紀錄</div>';
         return;
       }
 
@@ -1556,43 +1474,40 @@
 
         let playerHtml = '';
         if(urls.length > 0) {
-          playerHtml = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="play-circle" style="width: 16px; height: 16px; color: var(--accent);"></i>播放全片</span><button class="action-btn-sm action-btn-primary" onclick="event.stopPropagation(); window.startSeamlessPlay(\'' + item.logId + '\')"><i data-lucide="play" style="width: 14px; height: 14px;"></i> 啟動</button></summary><div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border);"><video id="player-' + item.logId + '" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block;"></video><div id="player-status-' + item.logId + '" style="padding: 12px 16px; background: #0f172a; color: #f8fafc; font-size: 14px; text-align: center;">等待載入中... (點擊右上方啟動)</div></div></details>';
+          playerHtml = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="play-circle" style="width: 16px; height: 16px; color: var(--accent);"></i>全片</span><button class="action-btn-sm action-btn-primary" onclick="event.stopPropagation(); window.startSeamlessPlay(\'' + item.logId + '\')"><i data-lucide="play" style="width: 14px; height: 14px;"></i> 啟動</button></summary><div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border);"><video id="player-' + item.logId + '" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block;"></video><div id="player-status-' + item.logId + '" style="padding: 12px 16px; background: #0f172a; color: #f8fafc; font-size: 14px; text-align: center;">待啟動</div></div></details>';
         }
 
         let summaryBlock = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>提案</span><div class="flex-wrap-gap"><button type="button" id="btn-edit-summary-' + item.logId + '" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); toggleEditMode(\'' + item.logId + '\', \'summary\')" title="編輯"><i data-lucide="edit-3" style="width: 16px; height: 16px;"></i></button><button type="button" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute(\'data-text\'))" data-text="' + escapeHtml(safeSummaryRaw) + '" title="複製"><i data-lucide="copy" style="width: 16px; height: 16px;"></i></button><span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span></div></summary><div class="accordion-body"><div id="view-summary-' + item.logId + '" class="markdown-body">' + renderMarkdown(safeSummaryRaw) + '</div><div id="edit-summary-' + item.logId + '" style="display: none; flex-direction: column; gap: 12px;"><textarea id="input-summary-' + item.logId + '" class="workshop-textarea" style="min-height: 180px;">' + escapeHtml(safeSummaryRaw) + '</textarea><div style="display: flex; justify-content: flex-end; gap: 8px;"><button class="action-btn-sm action-btn-icon" onclick="toggleEditMode(\'' + item.logId + '\', \'summary\')" title="取消"><i data-lucide="x" style="width: 16px; height: 16px;"></i></button><button class="action-btn-sm action-btn-primary" onclick="saveHistoryLog(\'' + item.logId + '\', \'summary\', this)"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button></div></div></div></details>';
 
         let contentBlock = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="file-text" style="width: 15px; height: 15px; color: var(--text-muted);"></i>內容</span><div class="flex-wrap-gap"><button type="button" id="btn-edit-content-' + item.logId + '" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); toggleEditMode(\'' + item.logId + '\', \'content\')" title="編輯"><i data-lucide="edit-3" style="width: 16px; height: 16px;"></i></button><button type="button" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute(\'data-text\'))" data-text="' + escapeHtml(safeContentRaw) + '" title="複製"><i data-lucide="copy" style="width: 16px; height: 16px;"></i></button><span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span></div></summary><div class="accordion-body"><div id="view-content-' + item.logId + '">' + formatTranscriptContent(safeContentRaw, urls) + '</div><div id="edit-content-' + item.logId + '" style="display: none; flex-direction: column; gap: 12px;"><textarea id="input-content-' + item.logId + '" class="workshop-textarea" style="min-height: 250px;">' + escapeHtml(safeContentRaw) + '</textarea><div style="display: flex; justify-content: flex-end; gap: 8px;"><button class="action-btn-sm action-btn-icon" onclick="toggleEditMode(\'' + item.logId + '\', \'content\')" title="取消"><i data-lucide="x" style="width: 16px; height: 16px;"></i></button><button class="action-btn-sm action-btn-primary" onclick="saveHistoryLog(\'' + item.logId + '\', \'content\', this)"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button></div></div></div></details>';
 
-        listHtml += '<div class="history-card" data-row-id="' + item.logId + '"><div class="history-header"><div><div style="font-weight: 700; font-size: 16px; color: var(--text);">ID: ' + item.logId + '</div><div style="font-size: 13px; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; gap: 6px;"><i data-lucide="clock" style="width: 14px; height: 14px;"></i> ' + cleanTime + '</div></div><div class="flex-wrap-gap"><span class="badge ' + (isRec ? 'recording' : '') + '">' + item.status + '</span><button type="button" class="action-btn-sm action-btn-primary" onclick="openArticleWorkshop(\'' + item.logId + '\')"><i data-lucide="file-text" style="width: 14px; height: 14px;"></i> 工坊</button><button type="button" class="action-btn-sm action-btn-icon danger" onclick="deleteHistoryLog(\'' + item.logId + '\')" title="刪除"><i data-lucide="trash-2" style="width: 16px; height: 16px;"></i></button></div></div><div><div style="font-size: 12.5px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px;">雲端切片 (' + urls.length + ')</div><div class="flex-wrap-gap">' + urlsHtml + '</div></div>' + playerHtml + summaryBlock + contentBlock + '</div>';
+        listHtml += '<div class="history-card" data-row-id="' + item.logId + '"><div class="history-header"><div><div style="font-weight: 700; font-size: 16px; color: var(--text);">ID: ' + item.logId + '</div><div style="font-size: 13px; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; gap: 6px;"><i data-lucide="clock" style="width: 14px; height: 14px;"></i> ' + cleanTime + '</div></div><div class="flex-wrap-gap"><span class="badge ' + (isRec ? 'recording' : '') + '">' + item.status + '</span><button type="button" class="action-btn-sm action-btn-primary" onclick="openArticleWorkshop(\'' + item.logId + '\')"><i data-lucide="file-text" style="width: 14px; height: 14px;"></i> 工坊</button><button type="button" class="action-btn-sm action-btn-icon danger" onclick="deleteHistoryLog(\'' + item.logId + '\')" title="刪除"><i data-lucide="trash-2" style="width: 16px; height: 16px;"></i></button></div></div><div><div style="font-size: 12.5px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px;">切片 (' + urls.length + ')</div><div class="flex-wrap-gap">' + urlsHtml + '</div></div>' + playerHtml + summaryBlock + contentBlock + '</div>';
       }
       
       container.innerHTML = listHtml;
       lucide.createIcons();
     } catch (e) {
-      container.innerHTML = '<div style="text-align:center; color:var(--danger); padding:30px 0; border:1px solid var(--danger); border-radius:4px;">載入失敗：' + e.message + '</div>';
+      container.innerHTML = '<div style="text-align:center; color:var(--danger); padding:30px 0; border:1px solid var(--danger); border-radius:4px;">失敗: ' + e.message + '</div>';
     }
   }
 
-  
-  
-  
   async function loadDashboardLogs() {
     const container = document.getElementById('dashboardContainer');
-    container.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> 載入中...</div>';
+    container.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> ...</div>';
     lucide.createIcons();
     
     if(globalLogsCache.length === 0) {
       const email = localStorage.getItem('bvlog_user_email');
       if(email) {
         try { globalLogsCache = await api({ action: "getHistoryLogs", email: email }); }
-        catch(e) { container.innerHTML = "載入失敗: " + e.message; return; }
+        catch(e) { container.innerHTML = "失敗: " + e.message; return; }
       }
     }
 
     const dashboardItems = globalLogsCache.filter(item => item.articleFull || item.articleTitle);
     
     if(dashboardItems.length === 0) {
-      container.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px;">目前尚無已產出之草稿或文章，請先至工坊產文。</div>';
+      container.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px;">無文章</div>';
       return;
     }
 
@@ -1603,26 +1518,23 @@
       const isPublished = item.status && item.status.includes('已發布'); 
       const coverHtml = item.coverUrl 
         ? '<div class="vocus-cover" style="background-image: url(\'' + item.coverUrl + '\')"></div>'
-        : '<div class="vocus-cover"><div class="vocus-cover-placeholder"><i data-lucide="image" style="width: 24px; height: 24px;"></i> 無封面圖</div></div>';
+        : '<div class="vocus-cover"><div class="vocus-cover-placeholder"><i data-lucide="image" style="width: 24px; height: 24px;"></i> 無圖</div></div>';
       
-      const displayTitle = item.articleTitle || "未命名草稿 (ID: " + item.logId + ")";
+      const displayTitle = item.articleTitle || "草稿 (" + item.logId + ")";
 
-      cardsHtml += '<div class="vocus-card">' + coverHtml + '<div class="vocus-content"><div class="vocus-title">' + escapeHtml(displayTitle) + '</div><div class="vocus-meta"><span>' + cleanTime + '</span> • <span class="badge ' + (isPublished ? 'published' : 'draft') + '">' + (isPublished ? '已發布' : '草稿') + '</span></div><div class="vocus-actions"><button class="action-btn-sm action-btn-icon danger" onclick="deleteHistoryLog(\'' + item.logId + '\')" title="刪除"><i data-lucide="trash-2" style="width: 16px; height: 16px;"></i></button><div style="display:flex; gap:6px;"><button class="action-btn-sm" onclick="openArticleWorkshop(\'' + item.logId + '\')"><i data-lucide="edit-3" style="width: 14px; height: 14px;"></i> 編輯</button><button class="action-btn-sm action-btn-primary" onclick="triggerGithubPublish(\'' + item.logId + '\')"><i data-lucide="globe" style="width: 14px; height: 14px;"></i> 發布</button></div></div></div></div>';
+      cardsHtml += '<div class="vocus-card">' + coverHtml + '<div class="vocus-content"><div class="vocus-title">' + escapeHtml(displayTitle) + '</div><div class="vocus-meta"><span>' + cleanTime + '</span> • <span class="badge ' + (isPublished ? 'published' : 'draft') + '">' + (isPublished ? '發布' : '草稿') + '</span></div><div class="vocus-actions"><button class="action-btn-sm action-btn-icon danger" onclick="deleteHistoryLog(\'' + item.logId + '\')" title="刪除"><i data-lucide="trash-2" style="width: 16px; height: 16px;"></i></button><div style="display:flex; gap:6px;"><button class="action-btn-sm" onclick="openArticleWorkshop(\'' + item.logId + '\')"><i data-lucide="edit-3" style="width: 14px; height: 14px;"></i> 編輯</button><button class="action-btn-sm action-btn-primary" onclick="triggerGithubPublish(\'' + item.logId + '\')"><i data-lucide="globe" style="width: 14px; height: 14px;"></i> 發布</button></div></div></div></div>';
     }
     
     container.innerHTML = cardsHtml;
     lucide.createIcons();
   }
 
-  
-  
-  
   function openArticleWorkshop(logId) {
     const logItem = globalLogsCache.find(l => l.logId === logId);
     if (!logItem) return;
 
     window.currentSelectedLog = logItem;
-    document.getElementById('workshopActiveLogBadge').innerText = "已選: " + logItem.logId;
+    document.getElementById('workshopActiveLogBadge').innerText = logItem.logId;
 
     document.getElementById('finalArticleTitle').value = logItem.articleTitle || '';
     document.getElementById('finalArticleHook').value = logItem.articleHook || '';
@@ -1634,17 +1546,16 @@
     if (logItem.coverUrl) {
       coverPreview.src = logItem.coverUrl;
       coverPreview.style.display = 'block';
-      statusText.innerHTML = '<span style="color: var(--success);"><i data-lucide="check-circle" style="width:14px; height:14px; vertical-align:middle;"></i> 已存入雲端硬碟 (ID: ' + logItem.coverUrl.match(/id=([^&]+)/)?.[1]?.substring(0,8) + '...)</span>';
+      statusText.innerHTML = '<span style="color: var(--success);"><i data-lucide="check-circle" style="width:14px; height:14px; vertical-align:middle;"></i> 雲端</span>';
     } else {
       coverPreview.src = '';
       coverPreview.style.display = 'none';
-      statusText.innerText = "尚未設定封面圖。";
+      statusText.innerText = "無封面";
     }
 
     const urls = window.logPlaylists[logItem.logId];
     const btnCapture = document.getElementById('btnCaptureCover');
     btnCapture.disabled = true; 
-    btnCapture.title = "需等待預覽影片載入";
 
     if (urls && urls.length > 0) {
       if (!window.blobBuffers[logItem.logId]) window.blobBuffers[logItem.logId] = [];
@@ -1653,14 +1564,12 @@
           fetch("data:" + res.mimeType + ";base64," + res.base64).then(r => r.blob()).then(blob => {
             window.blobBuffers[logItem.logId][0] = URL.createObjectURL(blob);
             const previewStatus = document.getElementById('preview-player-status');
-            if (previewStatus) previewStatus.innerText = "✅ 影片就緒，可秒開";
+            if (previewStatus) previewStatus.innerText = "[就緒]";
             btnCapture.disabled = false;
-            btnCapture.title = "擷取";
           }).catch(e => console.log(e));
         }).catch(e => console.log(e));
       } else {
          btnCapture.disabled = false;
-         btnCapture.title = "擷取";
       }
     }
 
@@ -1668,16 +1577,16 @@
       window.currentSelectedFullMd = logItem.articleFull;
       renderBlogPreview(logItem.articleFull);
     } else {
-      document.getElementById('fullArticlePreview').innerHTML = '<div style="border: 1px dashed var(--border); border-radius: 4px; padding: 32px; text-align: center;"><p style="color: var(--text-muted); font-size: 13px;">點擊整合，渲染預覽。</p></div>';
+      document.getElementById('fullArticlePreview').innerHTML = '<div style="border: 1px dashed var(--border); border-radius: 4px; padding: 32px; text-align: center;"><p style="color: var(--text-muted); font-size: 13px;">點擊整合</p></div>';
     }
 
     switchTab('tab-article');
-    showToast("已載入 " + logItem.logId);
+    showToast(logItem.logId);
   }
 
   function captureFrameFromVideo() {
     const videoEl = document.getElementById('preview-player');
-    if (!videoEl || !videoEl.src) { alert("請先點擊預覽區的播放按鈕載入影片！"); return; }
+    if (!videoEl || !videoEl.src) { alert("請先播放"); return; }
     
     const canvas = document.getElementById('captureCanvas');
     canvas.width = videoEl.videoWidth || 1280;
@@ -1708,25 +1617,25 @@
     const statusText = document.getElementById('coverStatusText');
     coverPreview.src = dataUrl;
     coverPreview.style.display = 'block';
-    statusText.innerHTML = '<i data-lucide="loader" class="spin" style="width:12px; height:12px;"></i> 同步至雲端...';
+    statusText.innerHTML = '<i data-lucide="loader" class="spin" style="width:12px; height:12px;"></i> 同步...';
     lucide.createIcons();
 
     api({ action: 'uploadImage', data: base64Clean, mimeType: 'image/jpeg', logId: window.currentSelectedLog.logId })
       .then(res => {
-         statusText.innerHTML = '<span style="color: var(--success);"><i data-lucide="check-circle" style="width:14px; height:14px; vertical-align:middle;"></i> 已存入雲端硬碟 (ID: ' + res.fileId.substring(0,8) + '...)</span>';
+         statusText.innerHTML = '<span style="color: var(--success);"><i data-lucide="check-circle" style="width:14px; height:14px; vertical-align:middle;"></i> 成功</span>';
          lucide.createIcons();
          if(window.currentSelectedLog) window.currentSelectedLog.coverUrl = res.url + "&t=" + new Date().getTime();
       })
       .catch(err => {
-         statusText.innerHTML = '<span style="color: var(--danger);">上傳失敗：' + err.message + '</span>';
+         statusText.innerHTML = '<span style="color: var(--danger);">失敗</span>';
       });
   }
 
   async function generateStepTitles() {
-    if (!window.currentSelectedLog) { alert("請先選取日誌！"); return; }
+    if (!window.currentSelectedLog) { alert("請選日誌"); return; }
     const email = localStorage.getItem('bvlog_user_email');
     const container = document.getElementById('titleProposalContainer');
-    container.innerHTML = '<div style="color: var(--accent); padding: 10px 0; display: flex; align-items: center; gap: 8px;"><i data-lucide="loader" class="spin"></i> 分析中...</div>';
+    container.innerHTML = '<div style="color: var(--accent); padding: 10px 0; display: flex; align-items: center; gap: 8px;"><i data-lucide="loader" class="spin"></i> 分析...</div>';
     lucide.createIcons();
     try {
       const res = await api({ action: "generateArticleStep", step: 1, content: window.currentSelectedLog.content, email: email });
@@ -1737,12 +1646,12 @@
         const parts = titles[i].split('|||');
         const mainTitle = parts[0] ? parts[0].replace(/^[\d\.、\s]+/, '').trim() : titles[i].trim();
         const subTitle = parts[1] ? parts[1].trim() : '';
-        htmlOutput += '<div class="title-option-card" style="flex-direction: column; align-items: flex-start;" onclick="selectTitle(\'' + escapeHtml(mainTitle).replace(/'/g, "\\'") + '\', this)"><div style="font-weight: 700; padding-right: 32px; color: var(--text);">【' + (i + 1) + '】 ' + escapeHtml(mainTitle) + '</div>' + (subTitle ? '<div style="font-size: 12.5px; color: var(--text-muted); margin-top: 6px; line-height: 1.6;">' + escapeHtml(subTitle) + '</div>' : '') + '<i data-lucide="check" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; opacity: 0; transition: opacity 0.2s;"></i></div>';
+        htmlOutput += '<div class="title-option-card" style="flex-direction: column; align-items: flex-start;" onclick="selectTitle(\'' + escapeHtml(mainTitle).replace(/'/g, "\\'") + '\', this)"><div style="font-weight: 700; padding-right: 32px; color: var(--text);">' + (i + 1) + '. ' + escapeHtml(mainTitle) + '</div>' + (subTitle ? '<div style="font-size: 12.5px; color: var(--text-muted); margin-top: 6px; line-height: 1.6;">' + escapeHtml(subTitle) + '</div>' : '') + '<i data-lucide="check" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; opacity: 0; transition: opacity 0.2s;"></i></div>';
       }
       
       container.innerHTML = htmlOutput;
       lucide.createIcons();
-      showToast("提案完成");
+      showToast("完成");
     } catch (e) { container.innerHTML = '<div style="color: var(--danger); padding: 10px 0;">失敗: ' + e.message + '</div>'; }
   }
 
@@ -1760,9 +1669,9 @@
   }
 
   async function generateStepHook() {
-    if (!window.currentSelectedLog) { alert("請先載入日誌！"); return; }
+    if (!window.currentSelectedLog) { alert("請載日誌"); return; }
     const title = document.getElementById('finalArticleTitle').value.trim();
-    if (!title) { alert("請先確認標題！"); return; }
+    if (!title) { alert("缺標題"); return; }
     const email = localStorage.getItem('bvlog_user_email');
     const hookInput = document.getElementById('finalArticleHook');
     hookInput.value = "提煉中...";
@@ -1770,15 +1679,15 @@
       const res = await api({ action: "generateArticleStep", step: 2, title: title, content: window.currentSelectedLog.content, email: email });
       hookInput.value = res.hook || "";
       saveCurrentStepData('hook');
-      showToast("已儲存");
-    } catch (e) { hookInput.value = ""; alert("失敗: " + e.message); }
+      showToast("儲存");
+    } catch (e) { hookInput.value = ""; alert(e.message); }
   }
 
   async function generateStepBody() {
-    if (!window.currentSelectedLog) { alert("請先載入日誌！"); return; }
+    if (!window.currentSelectedLog) { alert("請載日誌"); return; }
     const title = document.getElementById('finalArticleTitle').value.trim();
     const hook = document.getElementById('finalArticleHook').value.trim();
-    if (!title) { alert("請先完成標題！"); return; }
+    if (!title) { alert("缺標題"); return; }
     const email = localStorage.getItem('bvlog_user_email');
     const bodyInput = document.getElementById('finalArticleBody');
     bodyInput.value = "重構中...";
@@ -1786,8 +1695,8 @@
       const res = await api({ action: "generateArticleStep", step: 3, title: title, hook: hook, content: window.currentSelectedLog.content, email: email });
       bodyInput.value = res.body || "";
       saveCurrentStepData('body');
-      showToast("已儲存");
-    } catch (e) { bodyInput.value = ""; alert("失敗: " + e.message); }
+      showToast("儲存");
+    } catch (e) { bodyInput.value = ""; alert(e.message); }
   }
 
   async function generateStepEnding() {
@@ -1799,8 +1708,8 @@
       const res = await api({ action: "generateArticleStep", step: 4, title: title, email: email });
       endingInput.value = res.ending || "";
       saveCurrentStepData('ending');
-      showToast("已儲存");
-    } catch (e) { endingInput.value = ""; alert("失敗: " + e.message); }
+      showToast("儲存");
+    } catch (e) { endingInput.value = ""; alert(e.message); }
   }
 
   function renderBlogPreview(fullMd) {
@@ -1820,16 +1729,16 @@
       : '<div class="blog-avatar">' + (profile.authorName ? profile.authorName.charAt(0) : 'T') + '</div>';
     
     const authorNameText = profile.authorName || '特洛伊AI賦能師';
-    const authorBioText = profile.bio || '這是一篇寫給身兼數職、渴望用 AI 解放時間的微型創業者的陪伴成長指南。';
+    const authorBioText = profile.bio || '微型創業陪伴指南。';
 
     let videoHtml = '';
     if (urls && urls.length > 0) {
       const isPreloaded = window.blobBuffers[logId] && window.blobBuffers[logId][0];
-      const statusText = isPreloaded ? "✅ 影片就緒，可秒開" : "⚡ 預載中...";
+      const statusText = isPreloaded ? "[就緒]" : "[載入]";
       videoHtml = '<div style="background: #000; border-radius: 8px; overflow: hidden; margin-bottom: 32px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05);"><video id="preview-player" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block;"></video><div style="display:flex; flex-wrap:wrap; justify-content: space-between; align-items: center; padding: 12px 16px; background: #0f172a; gap:12px;"><span id="preview-player-status" style="color: #f8fafc; font-size: 13px;">' + statusText + '</span><button class="action-btn-sm" onclick="window.initPreviewPlayer(\'' + logId + '\')" style="background: var(--accent); color: #fff; border: none; padding: 6px 16px;"><i data-lucide="play" style="width: 14px; height: 14px;"></i> 播放</button></div></div>';
     }
     
-    const previewHtml = '<div class="blog-preview-wrapper"><h1 class="preview-main-title">' + escapeHtml(displayTitle) + '</h1><div class="blog-meta-header"><div class="blog-author-info">' + avatarHtml + '<div><div style="font-weight: 700; color: var(--text); font-size: 15px;">' + escapeHtml(authorNameText) + '</div><div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">' + dateStr + ' 發布</div></div></div><div class="blog-stats"><span><i data-lucide="eye" style="width: 15px; height: 15px;"></i> 預覽</span></div></div>' + videoHtml + '<div class="markdown-body">' + renderMarkdown(bodyMd) + '</div><div class="blog-footer-cta"><div class="newsletter-box"><div style="font-weight: 800; font-size: 16px; margin-bottom: 8px;">訂閱 ' + escapeHtml(authorNameText) + ' 電子報</div><p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">' + escapeHtml(authorBioText) + '</p><div style="display: flex; gap: 8px; flex-wrap: wrap;"><input type="email" placeholder="請輸入您的 Email..." style="flex: 1; min-width: 200px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; font-size: 14px; outline: none;"><button class="action-btn-sm action-btn-primary" style="padding: 12px 24px; border-radius: 4px; white-space: nowrap; height: 42px;">訂閱</button></div></div></div></div>';
+    const previewHtml = '<div class="blog-preview-wrapper"><h1 class="preview-main-title">' + escapeHtml(displayTitle) + '</h1><div class="blog-meta-header"><div class="blog-author-info">' + avatarHtml + '<div><div style="font-weight: 700; color: var(--text); font-size: 15px;">' + escapeHtml(authorNameText) + '</div><div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">' + dateStr + '</div></div></div><div class="blog-stats"><span><i data-lucide="eye" style="width: 15px; height: 15px;"></i> 預覽</span></div></div>' + videoHtml + '<div class="markdown-body">' + renderMarkdown(bodyMd) + '</div><div class="blog-footer-cta"><div class="newsletter-box"><div style="font-weight: 800; font-size: 16px; margin-bottom: 8px;">訂閱</div><p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">' + escapeHtml(authorBioText) + '</p><div style="display: flex; gap: 8px; flex-wrap: wrap;"><input type="email" placeholder="信箱" style="flex: 1; min-width: 200px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; font-size: 14px; outline: none;"><button class="action-btn-sm action-btn-primary" style="padding: 12px 24px; border-radius: 4px; white-space: nowrap; height: 42px;">訂閱</button></div></div></div></div>';
 
     document.getElementById('fullArticlePreview').innerHTML = previewHtml;
     lucide.createIcons();
@@ -1852,7 +1761,7 @@
     const loadChunk = async (index) => {
       if (index >= urls.length) return null;
       if (buffer[index]) return buffer[index];
-      statusEl.innerText = "⏳ 讀取 第 " + (index + 1) + " / " + urls.length + " 段...";
+      statusEl.innerText = "[讀取] " + (index + 1) + " / " + urls.length;
       try {
         const res = await api({ action: 'getVideoChunk', url: urls[index] });
         const fetchRes = await fetch("data:" + res.mimeType + ";base64," + res.base64);
@@ -1860,22 +1769,19 @@
         const blobUrl = URL.createObjectURL(blob);
         buffer[index] = blobUrl;
         return blobUrl;
-      } catch (err) { statusEl.innerText = "❌ 第 " + (index + 1) + " 段失敗: " + err.message; return null; }
+      } catch (err) { statusEl.innerText = "[失敗] " + (index + 1); return null; }
     };
 
     const playNext = async () => {
-      if (currentIndex >= urls.length) { statusEl.innerText = '✅ 播放完畢'; videoEl.dataset.playing = 'false'; return; }
-      statusEl.innerText = "⚡ 播放中: 第 " + (currentIndex + 1) + " / " + urls.length + " 段";
+      if (currentIndex >= urls.length) { statusEl.innerText = '[結束]'; videoEl.dataset.playing = 'false'; return; }
+      statusEl.innerText = "[播放] " + (currentIndex + 1) + " / " + urls.length;
       let blobUrl = buffer[currentIndex];
       if (!blobUrl) blobUrl = await loadChunk(currentIndex);
       if (blobUrl) {
         videoEl.src = blobUrl;
-        videoEl.play().catch(e => { statusEl.innerText = "⏸ 點擊畫面播放"; });
-        if (currentIndex + 1 < urls.length) loadChunk(currentIndex + 1).catch(e => console.log('背景預載失敗', e));
-        
+        videoEl.play().catch(e => { statusEl.innerText = "[暫停]"; });
+        if (currentIndex + 1 < urls.length) loadChunk(currentIndex + 1).catch(e => {});
         document.getElementById('btnCaptureCover').disabled = false;
-        document.getElementById('btnCaptureCover').title = "擷取";
-
       } else { currentIndex++; playNext(); }
     };
 
@@ -1888,17 +1794,17 @@
     const hook = document.getElementById('finalArticleHook').value.trim();
     const body = document.getElementById('finalArticleBody').value.trim();
     const ending = document.getElementById('finalArticleEnding').value.trim();
-    if (!title || !body) { alert("請確保已完成標題與內文！"); return; }
+    if (!title || !body) { alert("標題或內文缺漏"); return; }
 
     const fullMd = "# " + title + "\n\n" + hook + "\n\n---\n\n" + body + "\n\n---\n\n" + ending;
     window.currentSelectedFullMd = fullMd;
     renderBlogPreview(fullMd);
     saveCurrentStepData('full');
-    showToast("已整合");
+    showToast("整合");
   }
 
   async function saveCurrentStepData(field) {
-    if (!window.currentSelectedLog) { alert("尚未選取日誌！"); return; }
+    if (!window.currentSelectedLog) { alert("未選日誌"); return; }
     let content = "";
     if (field === 'title') content = document.getElementById('finalArticleTitle').value;
     else if (field === 'hook') content = document.getElementById('finalArticleHook').value;
@@ -1908,30 +1814,29 @@
 
     try {
       await api({ action: "saveArticleSection", logId: window.currentSelectedLog.logId, field: field, content: content });
-      showToast("儲存成功");
+      showToast("儲存");
       
       if(field === 'full') {
          window.currentSelectedLog.articleFull = content;
          window.currentSelectedLog.articleTitle = document.getElementById('finalArticleTitle').value;
       }
-    } catch (e) { alert("儲存失敗: " + e.message); }
+    } catch (e) { alert(e.message); }
   }
 
-  
   async function triggerGithubPublish(logId) {
     const email = localStorage.getItem('bvlog_user_email');
     if(!email) return;
     const btn = event.currentTarget;
     const oldHtml = btn.innerHTML;
-    btn.innerHTML = '<i data-lucide="loader" class="spin" style="width:14px; height:14px;"></i> 發布中';
+    btn.innerHTML = '<i data-lucide="loader" class="spin" style="width:14px; height:14px;"></i> 發布';
     lucide.createIcons();
     btn.disabled = true;
 
     try {
       const res = await api({ action: "pushToGithub", email: email, logId: logId });
-      showToast("發布成功！已部署至 " + res.handle + " 目錄");
+      showToast("已發布");
     } catch(e) {
-      alert("發布失敗：" + e.message);
+      alert(e.message);
     } finally {
       btn.innerHTML = oldHtml;
       lucide.createIcons();
@@ -1945,16 +1850,16 @@
   }
 
   async function deleteHistoryLog(logId) {
-    if (!confirm("確定要刪除這筆日誌嗎？")) return;
+    if (!confirm("確定刪除？")) return;
     try { 
-      showToast("刪除中..."); 
+      showToast("刪除"); 
       await api({ action: "deleteLog", logId: logId }); 
-      showToast("已刪除"); 
+      showToast("已刪"); 
       globalLogsCache = globalLogsCache.filter(l => l.logId !== logId);
       if(document.getElementById('tab-history').classList.contains('active')) loadHistoryLogs();
       if(document.getElementById('tab-dashboard').classList.contains('active')) loadDashboardLogs();
     } 
-    catch (e) { alert("刪除失敗：" + e.message); }
+    catch (e) { alert(e.message); }
   }
 
   function toggleEditMode(logId, field) {
@@ -1972,15 +1877,14 @@
     const textarea = document.getElementById('input-' + field + '-' + logId);
     const newText = textarea.value;
     const originalBtnText = btnElement.innerHTML;
-    btnElement.innerHTML = "儲存..."; btnElement.disabled = true; btnElement.style.opacity = "0.7";
+    btnElement.innerHTML = "..."; btnElement.disabled = true;
     try {
       await api({ action: "updateLog", logId: logId, field: field, newText: newText });
-      showToast("已儲存"); loadHistoryLogs();
+      showToast("儲存"); loadHistoryLogs();
     } catch (e) {
-      alert("儲存失敗：" + e.message); btnElement.innerHTML = originalBtnText; btnElement.disabled = false; btnElement.style.opacity = "1";
+      alert(e.message); btnElement.innerHTML = originalBtnText; btnElement.disabled = false;
     }
   }
-
 </script>
 
 </body>
