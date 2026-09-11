@@ -720,11 +720,6 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">專屬網頁網址</label>
-        <input type="url" id="authorOfficialWeb" class="login-input" placeholder="https://...">
-      </div>
-
-      <div class="form-group">
         <label class="form-label">簡介</label>
         <textarea id="authorBio" class="workshop-textarea" style="min-height: 80px;" maxlength="300" placeholder="簡介"></textarea>
       </div>
@@ -734,6 +729,7 @@
         <textarea id="authorSalonIntro" class="workshop-textarea" style="min-height: 120px;" maxlength="2000" placeholder="介紹"></textarea>
       </div>
 
+      
       <div class="input-row">
         <div class="input-col form-group"><input type="email" id="socialEmail" class="login-input" placeholder="信箱"></div>
         <div class="input-col form-group"><input type="url" id="socialIG" class="login-input" placeholder="IG"></div>
@@ -744,6 +740,9 @@
       </div>
       <div class="input-row">
         <div class="input-col form-group"><input type="url" id="socialPodcast" class="login-input" placeholder="播客"></div>
+        <div class="input-col form-group">
+          <input type="url" id="authorOfficialWeb" class="login-input" placeholder="官網網址 (https://...)">
+        </div>
       </div>
 
       <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
@@ -1135,7 +1134,7 @@
 
     try {
       const res = await api({ action: "saveAuthorProfile", email: email, profile: profile });
-      showToast("儲存");
+      showToast("儲存成功");
       tempAvatarBase64 = null; 
       window.currentAuthorProfile = Object.assign(window.currentAuthorProfile || {}, profile);
       if(res.avatarUrl) window.currentAuthorProfile.avatarUrl = res.avatarUrl;
@@ -1637,7 +1636,8 @@
       container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> ...</div>';
       lucide.createIcons();
       try {
-        globalLogsCache = await api({ action: "getHistoryLogs", email: email });
+        const rawRes = await api({ action: "getHistoryLogs", email: email });
+        globalLogsCache = Array.isArray(rawRes) ? rawRes : [];
         isLogsFetched = true;
         isHistoryRendered = false;
         isDashboardRendered = false;
@@ -1679,7 +1679,7 @@
 
       let playerHtml = '';
       if(urls.length > 0) {
-        playerHtml = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="play-circle" style="width: 16px; height: 16px; color: var(--accent);"></i>全片</span><button class="action-btn-sm action-btn-primary" onclick="event.stopPropagation(); window.startSeamlessPlay(\'' + item.logId + '\')"><i data-lucide="play" style="width: 14px; height: 14px;"></i> 啟動</button></summary><div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border);"><video id="player-' + item.logId + '" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block; object-fit: contain;"></video><div id="player-status-' + item.logId + '" style="padding: 12px 16px; background: #0f172a; color: #f8fafc; font-size: 14px; text-align: center;">待啟動</div></div></details>';
+        playerHtml = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="play-circle" style="width: 16px; height: 16px; color: var(--accent);"></i>全片</span><button class="action-btn-sm action-btn-primary" onclick="event.stopPropagation(); window.startSeamlessPlay(\'' + item.logId + '\')"><i data-lucide="play" style="width: 14px; height: 14px;"></i> 啟接</button></summary><div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border);"><video id="player-' + item.logId + '" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block; object-fit: contain;"></video><div id="player-status-' + item.logId + '" style="padding: 12px 16px; background: #0f172a; color: #f8fafc; font-size: 14px; text-align: center;">待啟動</div></div></details>';
       }
 
       let summaryBlock = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>提案</span><div class="flex-wrap-gap"><button type="button" id="btn-edit-summary-' + item.logId + '" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); toggleEditMode(\'' + item.logId + '\', \'summary\')" title="編輯"><i data-lucide="edit-3" style="width: 16px; height: 16px;"></i></button><button type="button" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute(\'data-text\'))" data-text="' + escapeHtml(safeSummaryRaw) + '" title="複製"><i data-lucide="copy" style="width: 16px; height: 16px;"></i></button><span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span></div></summary><div class="accordion-body"><div id="view-summary-' + item.logId + '" class="markdown-body">' + renderMarkdown(safeSummaryRaw) + '</div><div id="edit-summary-' + item.logId + '" style="display: none; flex-direction: column; gap: 12px;"><textarea id="input-summary-' + item.logId + '" class="workshop-textarea" style="min-height: 180px;">' + escapeHtml(safeSummaryRaw) + '</textarea><div style="display: flex; justify-content: flex-end; gap: 8px;"><button class="action-btn-sm action-btn-icon" onclick="toggleEditMode(\'' + item.logId + '\', \'summary\')" title="取消"><i data-lucide="x" style="width: 16px; height: 16px;"></i></button><button class="action-btn-sm action-btn-primary" onclick="saveHistoryLog(\'' + item.logId + '\', \'summary\', this)"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button></div></div></div></details>';
@@ -1696,17 +1696,18 @@
 
   
   function generateDashboardHero(profile) {
-    const displayName = profile?.authorName || '特洛伊AI賦能師';
-    const bio = profile?.bio || '尚未設定簡介...';
-    const avatarUrl = profile?.avatarUrl || 'https://ui-avatars.com/api/?name=T&background=3175B5&color=fff';
+    const p = profile || {};
+    const displayName = p.authorName || '特洛伊AI賦能師';
+    const bio = p.bio || '尚未設定簡介...';
+    const avatarUrl = p.avatarUrl || 'https://ui-avatars.com/api/?name=T&background=3175B5&color=fff';
 
-    let socialHtml = '<div class="social-links" style="justify-content: flex-start; margin-top: 16px; display:flex; gap:12px;">';
-    if(profile?.socialEmail) socialHtml += '<a href="mailto:' + profile.socialEmail.trim() + '" target="_blank" title="Email" style="color:var(--text-muted);"><i data-lucide="mail"></i></a>';
-    if(profile?.socialFB) socialHtml += '<a href="' + profile.socialFB.trim() + '" target="_blank" title="Facebook" style="color:var(--text-muted);"><i data-lucide="facebook"></i></a>';
-    if(profile?.socialIG) socialHtml += '<a href="' + profile.socialIG.trim() + '" target="_blank" title="Instagram" style="color:var(--text-muted);"><i data-lucide="instagram"></i></a>';
-    if(profile?.socialYT) socialHtml += '<a href="' + profile.socialYT.trim() + '" target="_blank" title="YouTube" style="color:var(--text-muted);"><i data-lucide="youtube"></i></a>';
-    if(profile?.socialPodcast) socialHtml += '<a href="' + profile.socialPodcast.trim() + '" target="_blank" title="Podcast" style="color:var(--text-muted);"><i data-lucide="headphones"></i></a>';
-    if(profile?.officialWeb) socialHtml += '<a href="' + profile.officialWeb.trim() + '" target="_blank" title="Official Website" style="color:var(--text-muted);"><i data-lucide="globe"></i></a>';
+    let socialHtml = '<div class="social-links" style="justify-content: flex-start; margin-top: 16px; display:flex; gap:12px; flex-wrap:wrap;">';
+    if(p.socialEmail && p.socialEmail.trim() !== '') socialHtml += '<a href="mailto:' + p.socialEmail.trim() + '" target="_blank" title="Email" style="color:var(--text-muted);"><i data-lucide="mail"></i></a>';
+    if(p.socialFB && p.socialFB.trim() !== '') socialHtml += '<a href="' + p.socialFB.trim() + '" target="_blank" title="Facebook" style="color:var(--text-muted);"><i data-lucide="facebook"></i></a>';
+    if(p.socialIG && p.socialIG.trim() !== '') socialHtml += '<a href="' + p.socialIG.trim() + '" target="_blank" title="Instagram" style="color:var(--text-muted);"><i data-lucide="instagram"></i></a>';
+    if(p.socialYT && p.socialYT.trim() !== '') socialHtml += '<a href="' + p.socialYT.trim() + '" target="_blank" title="YouTube" style="color:var(--text-muted);"><i data-lucide="youtube"></i></a>';
+    if(p.socialPodcast && p.socialPodcast.trim() !== '') socialHtml += '<a href="' + p.socialPodcast.trim() + '" target="_blank" title="Podcast" style="color:var(--text-muted);"><i data-lucide="headphones"></i></a>';
+    if(p.officialWeb && p.officialWeb.trim() !== '') socialHtml += '<a href="' + p.officialWeb.trim() + '" target="_blank" title="Official Website" style="color:var(--text-muted);"><i data-lucide="globe"></i></a>';
     socialHtml += '</div>';
 
     return `
@@ -1733,8 +1734,9 @@
 
   function renderFeedSection(sectionLogs, title, icon, color) {
     if (sectionLogs.length === 0) return '';
-    const avatarUrl = window.currentAuthorProfile?.avatarUrl || 'https://ui-avatars.com/api/?name=T&background=3175B5&color=fff';
-    const displayName = window.currentAuthorProfile?.authorName || '特洛伊AI賦能師';
+    const p = window.currentAuthorProfile || {};
+    const avatarUrl = p.avatarUrl || 'https://ui-avatars.com/api/?name=T&background=3175B5&color=fff';
+    const displayName = p.authorName || '特洛伊AI賦能師';
     
     const top5 = sectionLogs.slice(0, 5);
     const rest = sectionLogs.slice(5);
@@ -1801,7 +1803,8 @@
       const email = localStorage.getItem('bvlog_user_email');
       if(email) {
         try { 
-          globalLogsCache = await api({ action: "getHistoryLogs", email: email }); 
+          const rawRes = await api({ action: "getHistoryLogs", email: email }); 
+          globalLogsCache = Array.isArray(rawRes) ? rawRes : [];
           isLogsFetched = true;
           isHistoryRendered = false;
           isDashboardRendered = false;
@@ -1812,7 +1815,7 @@
 
     if (isDashboardRendered && !forceRefresh) return; 
 
-    const dashboardItems = globalLogsCache.filter(item => item.articleFull || item.articleTitle);
+    const dashboardItems = Array.isArray(globalLogsCache) ? globalLogsCache.filter(item => item.articleFull || item.articleTitle) : [];
     
     
     let allHtml = generateDashboardHero(window.currentAuthorProfile);
@@ -1827,7 +1830,7 @@
 
     const publicLogs = dashboardItems.filter(l => l.tier === '公開');
     const memberLogs = dashboardItems.filter(l => l.tier === '會員限定');
-    const vipLogs = dashboardItems.filter(l => l.tier === 'VIP私塾');
+    const vipLogs = dashboardItems.filter(l => l.tier === 'VIP私塾特定' || l.tier === 'VIP私塾'); 
 
     allHtml += 
       renderFeedSection(publicLogs, '公開文章', 'globe', 'var(--text)') +
