@@ -1846,8 +1846,6 @@
     const container = document.getElementById('dashboardContainer');
     const filterValue = document.getElementById('dashboardFilter') ? document.getElementById('dashboardFilter').value : 'all';
 
-    
-    
     const dashboardItems = Array.isArray(globalLogsCache) ? globalLogsCache : [];
     
     
@@ -1868,7 +1866,8 @@
       return;
     }
 
-    const publicLogs = filteredItems.filter(l => l.tier === '公開');
+    
+    const publicLogs = filteredItems.filter(l => l.tier === '公開' || !l.tier || l.tier.trim() === '');
     const memberLogs = filteredItems.filter(l => l.tier === '會員限定');
     const vipLogs = filteredItems.filter(l => l.tier === 'VIP私塾特定' || l.tier === 'VIP私塾'); 
 
