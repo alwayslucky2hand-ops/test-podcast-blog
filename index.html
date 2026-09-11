@@ -1846,7 +1846,9 @@
     const container = document.getElementById('dashboardContainer');
     const filterValue = document.getElementById('dashboardFilter') ? document.getElementById('dashboardFilter').value : 'all';
 
-    const dashboardItems = Array.isArray(globalLogsCache) ? globalLogsCache.filter(item => item.articleFull || item.articleTitle) : [];
+    
+    
+    const dashboardItems = Array.isArray(globalLogsCache) ? globalLogsCache : [];
     
     
     let filteredItems = dashboardItems;
