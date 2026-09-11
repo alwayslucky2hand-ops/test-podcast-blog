@@ -640,16 +640,26 @@
   
   <div id="tab-dashboard" class="tab-content">
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px;">
-      <div>
+      <div style="display: flex; align-items: center; gap: 12px;">
         <h3 style="font-size: 18px; font-weight: 700;">文章</h3>
+        
+        <select id="dashboardFilter" class="login-input" style="width: auto; margin-bottom: 0; padding: 4px 12px; height: 32px;" onchange="renderDashboardLogsView()">
+          <option value="all">全部文章</option>
+          <option value="published">已發布</option>
+          <option value="draft">草稿</option>
+        </select>
       </div>
       <div class="flex-wrap-gap">
         <a id="authorGitHubLink" href="#" target="_blank" class="action-btn-sm" style="display:none; color:var(--text); border-color:var(--text);"><i data-lucide="external-link" style="width:14px; height:14px;"></i> 沙龍</a>
-        
         <button id="btnSyncHome" onclick="syncHomepageToGithub()" class="action-btn-sm" style="color: var(--accent); border-color: var(--accent);"><i data-lucide="refresh-ccw" style="width: 14px; height: 14px;"></i> 同步首頁</button>
         <button onclick="loadDashboardLogs(true)" class="action-btn-sm"><i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> 重整</button>
       </div>
     </div>
+    
+    <div id="dashboardContainer" style="width: 100%;">
+      <div style="text-align: center; color: var(--text-muted); padding: 40px 0;">載入中...</div>
+    </div>
+  </div>
     
     <div id="dashboardContainer" style="width: 100%;">
       <div style="text-align: center; color: var(--text-muted); padding: 40px 0;">載入中...</div>
@@ -1584,6 +1594,10 @@
     return '<pre style="white-space:pre-wrap;">' + escapeHtml(md) + '</pre>';
   }
 
+  
+  function safeHtml(str) { return String(str || "").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function escapeHtml(str) { return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
+
   function escapeHtml(str) { return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
 
   function formatTranscriptContent(rawText, urls) {
@@ -1815,18 +1829,48 @@
 
     if (isDashboardRendered && !forceRefresh) return; 
 
+    
+    renderDashboardLogsView();
+  }
+
+  
+  function renderDashboardLogsView() {
+    const container = document.getElementById('dashboardContainer');
+    const filterValue = document.getElementById('dashboardFilter') ? document.getElementById('dashboardFilter').value : 'all';
+
     const dashboardItems = Array.isArray(globalLogsCache) ? globalLogsCache.filter(item => item.articleFull || item.articleTitle) : [];
     
     
+    let filteredItems = dashboardItems;
+    if (filterValue === 'published') {
+        filteredItems = dashboardItems.filter(l => l.status && l.status.includes('已發布'));
+    } else if (filterValue === 'draft') {
+        filteredItems = dashboardItems.filter(l => !l.status || !l.status.includes('已發布'));
+    }
+
     let allHtml = generateDashboardHero(window.currentAuthorProfile);
 
-    if(dashboardItems.length === 0) {
-      allHtml += '<div style="text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px; margin-top: 24px;">尚無文章，請至工坊發布！</div>';
+    if(filteredItems.length === 0) {
+      allHtml += '<div style="text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px; margin-top: 24px;">尚無符合條件的文章！</div>';
       container.innerHTML = allHtml;
       lucide.createIcons();
       isDashboardRendered = true;
       return;
     }
+
+    const publicLogs = filteredItems.filter(l => l.tier === '公開');
+    const memberLogs = filteredItems.filter(l => l.tier === '會員限定');
+    const vipLogs = filteredItems.filter(l => l.tier === 'VIP私塾特定' || l.tier === 'VIP私塾'); 
+
+    allHtml += 
+      renderFeedSection(publicLogs, '公開文章', 'globe', 'var(--text)') +
+      renderFeedSection(memberLogs, '會員限定', 'lock', 'var(--warning)') +
+      renderFeedSection(vipLogs, 'VIP私塾特定', 'crown', 'var(--danger)');
+
+    container.innerHTML = allHtml;
+    lucide.createIcons();
+    isDashboardRendered = true;
+  }
 
     const publicLogs = dashboardItems.filter(l => l.tier === '公開');
     const memberLogs = dashboardItems.filter(l => l.tier === '會員限定');
