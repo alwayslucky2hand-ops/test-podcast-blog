@@ -1872,20 +1872,6 @@
     isDashboardRendered = true;
   }
 
-    const publicLogs = dashboardItems.filter(l => l.tier === '公開');
-    const memberLogs = dashboardItems.filter(l => l.tier === '會員限定');
-    const vipLogs = dashboardItems.filter(l => l.tier === 'VIP私塾特定' || l.tier === 'VIP私塾'); 
-
-    allHtml += 
-      renderFeedSection(publicLogs, '公開文章', 'globe', 'var(--text)') +
-      renderFeedSection(memberLogs, '會員限定', 'lock', 'var(--warning)') +
-      renderFeedSection(vipLogs, 'VIP私塾特定', 'crown', 'var(--danger)');
-
-    container.innerHTML = allHtml;
-    lucide.createIcons();
-    isDashboardRendered = true;
-  }
-
   
   async function syncHomepageToGithub() {
     const email = localStorage.getItem('bvlog_user_email');
