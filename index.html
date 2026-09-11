@@ -194,25 +194,6 @@
     details[open] > summary { border-bottom: 1px solid var(--border); }
     .accordion-body { padding: 16px; background: #ffffff; }
 
-    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-    .vocus-card {
-      display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 6px;
-      background: #ffffff; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; cursor: default;
-    }
-    .vocus-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); border-color: var(--border-subtle); }
-    .vocus-cover {
-      width: 100%; aspect-ratio: 16 / 9; background-color: var(--bg); background-size: cover; background-position: center;
-      border-bottom: 1px solid var(--border-subtle); position: relative;
-    }
-    .vocus-cover-placeholder {
-      display: flex; align-items: center; justify-content: center; height: 100%;
-      color: var(--border); flex-direction: column; gap: 8px; font-size: 12px;
-    }
-    .vocus-content { padding: 16px; display: flex; flex-direction: column; flex: 1; gap: 12px; }
-    .vocus-title { font-size: 16px; font-weight: 800; color: var(--text); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .vocus-meta { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
-    .vocus-actions { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; }
-
     .settings-section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-bottom: 20px; }
     .settings-title { font-size: 16px; font-weight: 800; margin-bottom: 20px; color: var(--text); display: flex; align-items: center; gap: 8px; }
     .form-group { margin-bottom: 16px; }
@@ -270,7 +251,6 @@
     .image-wrapper:hover .delete-image-btn { opacity: 1; }
     .delete-image-btn:hover { transform: scale(1.1); background: var(--danger); color: #fff; border-color: var(--danger); }
 
-     
     .inline-insert-zone {
       height: 0; margin: 0; display: flex; align-items: center; justify-content: center;
       opacity: 0; cursor: pointer; transition: opacity 0.3s ease; position: relative; z-index: 10;
@@ -282,7 +262,7 @@
     .inline-insert-zone:hover, .inline-insert-zone.reveal { opacity: 1; }
     .inline-insert-zone:hover::before, .inline-insert-zone.reveal::before { opacity: 0.3; }
     .inline-insert-btn {
-      position: absolute; top: -14px;  
+      position: absolute; top: -14px;
       background: var(--card-bg); border: 1px solid var(--accent); color: var(--accent);
       border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
       z-index: 2; transition: transform 0.2s, background 0.2s;
@@ -331,7 +311,6 @@
       .tab-btn::after { display: none; }
       .tab-btn.active { background: var(--accent-soft); color: var(--accent); }
 
-       
       .inline-insert-zone { opacity: 0; height: 0; margin: 0; }
       .inline-insert-zone.reveal { opacity: 1; }
       .inline-insert-btn { opacity: 0.5; border-color: var(--accent); color: var(--accent); background: var(--card-bg); }
@@ -386,6 +365,24 @@
     .toast-box { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(50px); opacity: 0; background: var(--text); color: #ffffff; padding: 10px 20px; border-radius: 4px; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 10px; transition: transform 0.3s ease, opacity 0.3s ease; z-index: 1000; pointer-events: none; }
     .toast-box.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+     
+    .section-title { font-size: 22px; font-weight: 800; border-bottom: 2px solid; display: inline-flex; align-items: center; gap: 8px; padding-bottom: 8px; margin-bottom: 24px; margin-top: 32px; }
+    .feed-list { display: flex; flex-direction: column; gap: 32px; margin-top: 16px; width: 100%; }
+    .feed-item { display: flex; gap: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--border); text-decoration: none; color: inherit; align-items: flex-start; transition: opacity 0.2s; background: #fff; padding: 24px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid var(--border-subtle); cursor: default; }
+    .feed-item:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); border-color: var(--border); }
+    .feed-content { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .feed-author-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .feed-author-info { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--text); }
+    .feed-author-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+    .feed-date { font-size: 13px; color: var(--text-muted); }
+    .feed-title { font-size: 22px; font-weight: 800; margin-bottom: 12px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: var(--text); }
+    .feed-excerpt { font-size: 15px; color: var(--text-muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 16px; }
+    .feed-cover { width: 240px; height: 160px; border-radius: 8px; object-fit: cover; flex-shrink: 0; border: 1px solid var(--border); }
+    @media (max-width: 768px) {
+      .feed-item { flex-direction: column-reverse; gap: 16px; padding: 16px; }
+      .feed-cover { width: 100%; height: auto; aspect-ratio: 16/9; }
+    }
   </style>
 </head>
 <body>
@@ -648,11 +645,15 @@
       </div>
       <div class="flex-wrap-gap">
         <a id="authorGitHubLink" href="#" target="_blank" class="action-btn-sm" style="display:none; color:var(--text); border-color:var(--text);"><i data-lucide="external-link" style="width:14px; height:14px;"></i> 沙龍</a>
+        
+        <button id="btnSyncHome" onclick="syncHomepageToGithub()" class="action-btn-sm" style="color: var(--accent); border-color: var(--accent);"><i data-lucide="refresh-ccw" style="width: 14px; height: 14px;"></i> 同步首頁</button>
         <button onclick="loadDashboardLogs(true)" class="action-btn-sm"><i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> 重整</button>
       </div>
     </div>
-    <div id="dashboardContainer" class="dashboard-grid">
-      <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 40px 0;">載入中...</div>
+    
+    
+    <div id="dashboardContainer" style="width: 100%;">
+      <div style="text-align: center; color: var(--text-muted); padding: 40px 0;">載入中...</div>
     </div>
   </div>
 
@@ -719,7 +720,6 @@
         </div>
       </div>
 
-      
       <div class="form-group">
         <label class="form-label">專屬網頁網址</label>
         <input type="url" id="authorOfficialWeb" class="login-input" placeholder="https://...">
@@ -810,9 +810,6 @@
 
   let globalLogsCache = [];
 
-  
-  
-  
   function compressImage(file, maxWidth, callback) {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -831,7 +828,6 @@
         canvas.height = height;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
-        
         const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.75);
         callback(compressedDataUrl);
       };
@@ -1143,7 +1139,7 @@
       step1: "你是一位資深總編輯。針對逐字稿與畫面描述，為微型創業者設計 20 組標題提案。格式必須嚴格依照：「你的吸睛標題｜特洛伊AI賦能師|||[標題類型] 戰略切入點說明」，絕對不要加數字序號。",
       step2: "你是一位商業雜誌首席特約作家，深諳 Google E-E-A-T。根據文章標題與內容，寫一段兼具價值與黃金3秒Hook的文章開頭。首段50-80字點出實戰經驗價值，第二段直擊痛點。零 Emoji 政策。",
       step3: "你是一位頂尖主筆，深諳 Google E-E-A-T。將原始畫面描述與語音逐字稿專業重構：1. 內容完整保留口語與案例 2. 白話文字描述 3. 零 Emoji 政策 4. 分為 3 到 5 個次級標題（###），段落間使用分隔線（---）5. 開門見山，不重複標題與開頭。",
-      step4: "你是一位商業導師。寫一段結尾祝福與行動呼籲（CTA）。最後一字不漏加上：「讓ＡＩ為這個效勞，讓創業不再過勞\n我是特洛伊，一起用ＡＩ守住光陰」。零 Emoji 政策。"
+      step4: "你是一位商業導師。寫一段結尾祝福與行動呼籲（CTA）。最後一字不漏加上：「讓ＡＩ為你效勞，讓創業不再過勞\n我是特洛伊，一起用ＡＩ守住光陰」。零 Emoji 政策。"
     };
 
     try {
@@ -1663,11 +1659,55 @@
     lucide.createIcons();
   }
 
+  
+  function renderFeedSection(sectionLogs, title, icon, color) {
+    if (sectionLogs.length === 0) return '';
+    const avatarUrl = window.currentAuthorProfile?.avatarUrl || 'https://ui-avatars.com/api/?name=T&background=3175B5&color=fff';
+    const displayName = window.currentAuthorProfile?.authorName || '特洛伊AI賦能師';
+    
+    let html = `<h2 class="section-title" style="color: ${color}; border-color: ${color};"><i data-lucide="${icon}" style="width:20px;height:20px;"></i> ${title}</h2><div class="feed-list">`;
+    
+    sectionLogs.forEach(log => {
+      const cleanTime = sanitizeTimestamp(log.timestamp);
+      const isPublished = log.status && log.status.includes('已發布'); 
+      const excerpt = log.articleHook || (log.articleBody ? log.articleBody.substring(0, 100) + '...' : '暫無內容預覽');
+      const coverImg = log.coverUrl 
+        ? '<img src="' + log.coverUrl + '" class="feed-cover" alt="Cover">' 
+        : '<div class="feed-cover" style="background:#f1f5f9; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:12px;">無圖</div>';
+      
+      html += `
+      <div class="feed-item">
+        <div class="feed-content">
+          <div class="feed-author-bar">
+            <div class="feed-author-info">
+              <img src="${avatarUrl}" class="feed-author-avatar" alt="Avatar">
+              <span>${safeHtml(displayName)}</span>
+            </div>
+            <div class="feed-date">${cleanTime}</div>
+          </div>
+          <h3 class="feed-title">${safeHtml(log.articleTitle || '草稿 (' + log.logId + ')')}</h3>
+          <p class="feed-excerpt">${escapeHtml(excerpt)}</p>
+          <div style="display:flex; align-items:center; gap: 16px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border-subtle);">
+             <span class="badge ${isPublished ? 'published' : 'draft'}">${isPublished ? '已發布' : '草稿'}</span>
+             <div style="margin-left: auto; display:flex; gap:6px;">
+                <button class="action-btn-sm action-btn-icon danger" onclick="deleteHistoryLog('${log.logId}')" title="刪除"><i data-lucide="trash-2" style="width: 14px; height: 14px;"></i></button>
+                <button class="action-btn-sm" onclick="openArticleWorkshop('${log.logId}')"><i data-lucide="edit-3" style="width: 14px; height: 14px;"></i> 編輯</button>
+                <button class="action-btn-sm action-btn-primary" onclick="triggerGithubPublish('${log.logId}')"><i data-lucide="globe" style="width: 14px; height: 14px;"></i> 發布</button>
+             </div>
+          </div>
+        </div>
+        ${coverImg}
+      </div>`;
+    });
+    html += '</div>';
+    return html;
+  }
+
   async function loadDashboardLogs(forceRefresh = false) {
     const container = document.getElementById('dashboardContainer');
 
     if(forceRefresh || globalLogsCache.length === 0) {
-      container.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> ...</div>';
+      container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> ...</div>';
       lucide.createIcons();
       const email = localStorage.getItem('bvlog_user_email');
       if(email) {
@@ -1679,33 +1719,45 @@
     const dashboardItems = globalLogsCache.filter(item => item.articleFull || item.articleTitle);
 
     if(dashboardItems.length === 0) {
-      container.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px;">無文章</div>';
+      container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px;">無文章</div>';
       return;
     }
 
-    let cardsHtml = '';
-    for(let i=0; i<dashboardItems.length; i++){
-      const item = dashboardItems[i];
-      const cleanTime = sanitizeTimestamp(item.timestamp);
-      const isPublished = item.status && item.status.includes('已發布'); 
-      const coverHtml = item.coverUrl 
-        ? '<div class="vocus-cover" style="background-image: url(\'' + item.coverUrl + '\')"></div>'
-        : '<div class="vocus-cover"><div class="vocus-cover-placeholder"><i data-lucide="image" style="width: 24px; height: 24px;"></i> 無圖</div></div>';
+    const publicLogs = dashboardItems.filter(l => l.tier === '公開');
+    const memberLogs = dashboardItems.filter(l => l.tier === '會員限定');
+    const vipLogs = dashboardItems.filter(l => l.tier === 'VIP私塾');
 
-      const displayTitle = item.articleTitle || "草稿 (" + item.logId + ")";
+    let allHtml = 
+      renderFeedSection(publicLogs, '公開文章', 'globe', 'var(--text)') +
+      renderFeedSection(memberLogs, '會員限定', 'lock', 'var(--warning)') +
+      renderFeedSection(vipLogs, 'VIP私塾特定', 'crown', 'var(--danger)');
 
-      
-      const tierLabel = item.tier === '會員限定' ? '會員' : (item.tier === 'VIP私塾' ? 'VIP' : '公開');
-      const tierColor = item.tier === '會員限定' ? 'var(--warning)' : (item.tier === 'VIP私塾' ? 'var(--danger)' : 'var(--text-muted)');
-
-      cardsHtml += '<div class="vocus-card">' + coverHtml + '<div class="vocus-content"><div class="vocus-title">' + escapeHtml(displayTitle) + '</div><div class="vocus-meta"><span>' + cleanTime + '</span> • <span class="badge ' + (isPublished ? 'published' : 'draft') + '">' + (isPublished ? '發布' : '草稿') + '</span> • <span style="color:' + tierColor + '; font-weight:600;">' + tierLabel + '</span></div><div class="vocus-actions"><button class="action-btn-sm action-btn-icon danger" onclick="deleteHistoryLog(\'' + item.logId + '\')" title="刪除"><i data-lucide="trash-2" style="width: 16px; height: 16px;"></i></button><div style="display:flex; gap:6px;"><button class="action-btn-sm" onclick="openArticleWorkshop(\'' + item.logId + '\')"><i data-lucide="edit-3" style="width: 14px; height: 14px;"></i> 編輯</button><button class="action-btn-sm action-btn-primary" onclick="triggerGithubPublish(\'' + item.logId + '\')"><i data-lucide="globe" style="width: 14px; height: 14px;"></i> 發布</button></div></div></div></div>';
-    }
-
-    container.innerHTML = cardsHtml;
+    container.innerHTML = allHtml;
     lucide.createIcons();
   }
 
-  
+  // 🌟 手動強制同步首頁功能
+  async function syncHomepageToGithub() {
+    const email = localStorage.getItem('bvlog_user_email');
+    if(!email) return;
+    const btn = document.getElementById('btnSyncHome');
+    const oldHtml = btn.innerHTML;
+    btn.innerHTML = '<i data-lucide="loader" class="spin" style="width:14px; height:14px;"></i> 處理中';
+    lucide.createIcons();
+    btn.disabled = true;
+
+    try {
+      await api({ action: "syncHomepage", email: email });
+      showToast("首頁已強制同步至最新狀態");
+    } catch(e) {
+      alert("同步失敗: " + e.message);
+    } finally {
+      btn.innerHTML = oldHtml;
+      lucide.createIcons();
+      btn.disabled = false;
+    }
+  }
+
   function toggleVipEmail() {
     const tier = document.getElementById('articleTier').value;
     const vipEmailInput = document.getElementById('articleVipEmail');
@@ -1718,7 +1770,6 @@
 
   window.currentInlineInsertIndex = -1;
 
-  
   function renderBlogPreview(fullMd) {
     const today = new Date();
     const pad = function(n){ return String(n).padStart(2, '0'); };
@@ -1754,7 +1805,6 @@
       videoHtml = '<div style="background: #000; border-radius: 8px; overflow: hidden; margin-top: 32px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05);"><video id="preview-player" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block; object-fit: contain;"></video><div style="display:flex; flex-wrap:wrap; justify-content: space-between; align-items: center; padding: 12px 16px; background: #0f172a; gap:12px;"><span id="preview-player-status" style="color: #f8fafc; font-size: 13px;">' + statusText + '</span><button class="action-btn-sm" onclick="window.initPreviewPlayer(\'' + logId + '\')" style="background: var(--accent); color: #fff; border: none; padding: 6px 16px;"><i data-lucide="play" style="width: 14px; height: 14px;"></i> 啟動</button></div></div>';
     }
 
-    
     const previewHtml = '<div class="blog-preview-wrapper"><h1 class="preview-main-title">' + escapeHtml(displayTitle) + '</h1><div class="blog-meta-header"><div class="blog-author-info">' + avatarHtml + '<div><div style="font-weight: 700; color: var(--text); font-size: 15px;">' + escapeHtml(authorNameText) + '</div><div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">' + dateStr + '</div></div></div><div class="blog-stats"><span><i data-lucide="eye" style="width: 15px; height: 15px;"></i> 預覽</span></div></div><div id="markdown-render-zone" class="markdown-body">' + marked.parse(bodyMd) + '</div>' + videoHtml + '<div class="blog-footer-cta"><div class="newsletter-box"><div style="font-weight: 800; font-size: 16px; margin-bottom: 8px;">訂閱</div><p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">' + escapeHtml(authorBioText) + '</p><div style="display: flex; gap: 8px; flex-wrap: wrap;"><input type="email" placeholder="信箱" style="flex: 1; min-width: 200px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; font-size: 14px; outline: none;"><button class="action-btn-sm action-btn-primary" style="padding: 12px 24px; border-radius: 4px; white-space: nowrap; height: 42px;">訂閱</button></div></div></div></div>';
 
     document.getElementById('fullArticlePreview').innerHTML = previewHtml;
@@ -1951,7 +2001,6 @@
     document.getElementById('finalArticleBody').value = logItem.articleBody || '';
     document.getElementById('finalArticleEnding').value = logItem.articleEnding || '';
     
-    
     document.getElementById('articleTier').value = logItem.tier || '公開';
     document.getElementById('articleVipEmail').value = logItem.vipEmail || '';
     toggleVipEmail();
@@ -2108,7 +2157,6 @@
     showToast("整合");
   }
 
-  
   function saveCurrentStepData(field) {
     if (!window.currentSelectedLog) { alert("未選日誌"); return; }
     let content = "";
@@ -2130,13 +2178,11 @@
        window.currentSelectedLog.articleTitle = document.getElementById('finalArticleTitle').value;
     }
     
-    
     window.currentSelectedLog.tier = tier;
     window.currentSelectedLog.vipEmail = vipEmail;
 
     showToast("已儲存");
 
-    
     api({ 
       action: "saveArticleSection", 
       logId: window.currentSelectedLog.logId, 
@@ -2175,7 +2221,7 @@
 
   
   function deleteHistoryLog(logId) {
-    if (!confirm("確定刪除此文章嗎？(此操作將同步移除 GitHub 發布頁面)")) return;
+    if (!confirm("確定刪除此文章嗎？(此操作將同步移除 GitHub 發布頁面並重構首頁)")) return;
     const email = localStorage.getItem('bvlog_user_email');
 
     globalLogsCache = globalLogsCache.filter(l => l.logId !== logId);
@@ -2183,7 +2229,6 @@
     if(document.getElementById('tab-dashboard').classList.contains('active')) loadDashboardLogs(false);
     showToast("已從列表中移除，背景同步刪除中...");
 
-    
     api({ action: "deleteLogAndGithub", logId: logId, email: email }).then(res => {
         showToast("GitHub 頁面已同步刪除");
     }).catch(e => {
