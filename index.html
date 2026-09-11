@@ -1719,6 +1719,18 @@
   }
 
   
+  function getFrontendSocialIconSvg(type) {
+    const style = 'width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+    if (type === 'mail') return `<svg xmlns="http://www.w3.org/2000/svg" ${style}><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>`;
+    if (type === 'facebook') return `<svg xmlns="http://www.w3.org/2000/svg" ${style}><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>`;
+    if (type === 'instagram') return `<svg xmlns="http:
+    if (type === 'youtube') return `<svg xmlns="http://www.w3.org/2000/svg" ${style}><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg>`;
+    if (type === 'headphones') return `<svg xmlns="http://www.w3.org/2000/svg" ${style}><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></svg>`;
+    if (type === 'globe') return `<svg xmlns="http:
+    return '';
+  }
+
+  
   function generateDashboardHero(profile) {
     const p = profile || {};
     const displayName = p.authorName || '特洛伊AI賦能師';
@@ -1727,12 +1739,12 @@
 
     
     let socialHtml = '<div class="social-links" style="justify-content: flex-start; margin-top: 16px; display:flex; gap:12px; flex-wrap:wrap;">';
-    if(p.socialEmail && p.socialEmail.trim() !== '') socialHtml += '<a href="mailto:' + p.socialEmail.trim() + '" target="_blank" title="Email" style="color:var(--text-muted);"><i data-lucide="mail" style="width: 20px; height: 20px;"></i></a>';
-    if(p.socialFB && p.socialFB.trim() !== '') socialHtml += '<a href="' + p.socialFB.trim() + '" target="_blank" title="Facebook" style="color:var(--text-muted);"><i data-lucide="facebook" style="width: 20px; height: 20px;"></i></a>';
-    if(p.socialIG && p.socialIG.trim() !== '') socialHtml += '<a href="' + p.socialIG.trim() + '" target="_blank" title="Instagram" style="color:var(--text-muted);"><i data-lucide="instagram" style="width: 20px; height: 20px;"></i></a>';
-    if(p.socialYT && p.socialYT.trim() !== '') socialHtml += '<a href="' + p.socialYT.trim() + '" target="_blank" title="YouTube" style="color:var(--text-muted);"><i data-lucide="youtube" style="width: 20px; height: 20px;"></i></a>';
-    if(p.socialPodcast && p.socialPodcast.trim() !== '') socialHtml += '<a href="' + p.socialPodcast.trim() + '" target="_blank" title="Podcast" style="color:var(--text-muted);"><i data-lucide="headphones" style="width: 20px; height: 20px;"></i></a>';
-    if(p.officialWeb && p.officialWeb.trim() !== '') socialHtml += '<a href="' + p.officialWeb.trim() + '" target="_blank" title="Official Website" style="color:var(--text-muted);"><i data-lucide="globe" style="width: 20px; height: 20px;"></i></a>';
+    if(p.socialEmail && p.socialEmail.trim() !== '') socialHtml += '<a href="mailto:' + p.socialEmail.trim() + '" target="_blank" title="Email" style="color:var(--text-muted);">' + getFrontendSocialIconSvg('mail') + '</a>';
+    if(p.socialFB && p.socialFB.trim() !== '') socialHtml += '<a href="' + p.socialFB.trim() + '" target="_blank" title="Facebook" style="color:var(--text-muted);">' + getFrontendSocialIconSvg('facebook') + '</a>';
+    if(p.socialIG && p.socialIG.trim() !== '') socialHtml += '<a href="' + p.socialIG.trim() + '" target="_blank" title="Instagram" style="color:var(--text-muted);">' + getFrontendSocialIconSvg('instagram') + '</a>';
+    if(p.socialYT && p.socialYT.trim() !== '') socialHtml += '<a href="' + p.socialYT.trim() + '" target="_blank" title="YouTube" style="color:var(--text-muted);">' + getFrontendSocialIconSvg('youtube') + '</a>';
+    if(p.socialPodcast && p.socialPodcast.trim() !== '') socialHtml += '<a href="' + p.socialPodcast.trim() + '" target="_blank" title="Podcast" style="color:var(--text-muted);">' + getFrontendSocialIconSvg('headphones') + '</a>';
+    if(p.officialWeb && p.officialWeb.trim() !== '') socialHtml += '<a href="' + p.officialWeb.trim() + '" target="_blank" title="Official Website" style="color:var(--text-muted);">' + getFrontendSocialIconSvg('globe') + '</a>';
     socialHtml += '</div>';
 
     
@@ -1747,8 +1759,11 @@
           </div>
         </div>
         <div class="membership-form-box" style="margin-top: 24px; padding: 24px; border: 1px solid var(--border); border-radius: 8px; background: #f8fafc; text-align: left;">
-          <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;"><i data-lucide="mail" style="width:18px; height:18px; color:var(--accent);"></i> 申請加入會員 / 訂閱最新消息</h3>
-          <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 20px;">基礎會員 3,000元/年 | VIP私塾 30,000元/年<br>請填寫下方資料，我們將發送專屬信件介紹會員權益與付款連結。</p>
+          <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">${getFrontendSocialIconSvg('mail')} 申請加入會員 / 訂閱最新消息</h3>
+          <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6;">
+            <strong>一般會員（一個月 $250）：</strong>即可享受不限次數、不限堂數觀看會員限定課程與獲得應用程式碼。<br>
+            <strong>VIP會員（一天不到 90 元）：</strong>即可享受不受時空限制、不限次數的私塾陪跑。
+          </p>
           <form style="display: flex; flex-direction: column; gap: 12px;" onsubmit="event.preventDefault(); alert('此為後台預覽畫面，實際發布後功能才會生效！');">
             <input type="email" placeholder="您的 Email (必填)" required class="login-input" style="margin-bottom:0; background:#fff;">
             <div style="display: flex; gap: 12px; flex-wrap: wrap;">
@@ -1850,14 +1865,14 @@
     renderDashboardLogsView();
   }
 
-  // 🌟 獨立的渲染函式，供下拉選單觸發 (解除隱形封印版)
+  
   function renderDashboardLogsView() {
     const container = document.getElementById('dashboardContainer');
     const filterValue = document.getElementById('dashboardFilter') ? document.getElementById('dashboardFilter').value : 'all';
 
     const dashboardItems = Array.isArray(globalLogsCache) ? globalLogsCache : [];
     
-    // 依照下拉選單進行篩選
+    
     let filteredItems = dashboardItems;
     if (filterValue === 'published') {
         filteredItems = dashboardItems.filter(l => l.status && l.status.includes('已發布'));
@@ -1875,7 +1890,7 @@
       return;
     }
 
-    // 【關鍵修正】：如果 tier 沒填寫或空白，預設歸類到「公開文章」，絕對不讓資料隱形！
+    
     const publicLogs = filteredItems.filter(l => l.tier === '公開' || !l.tier || l.tier.trim() === '');
     const memberLogs = filteredItems.filter(l => l.tier === '會員限定');
     const vipLogs = filteredItems.filter(l => l.tier === 'VIP私塾特定' || l.tier === 'VIP私塾'); 
@@ -1890,7 +1905,7 @@
     isDashboardRendered = true;
   }
 
-  // 🌟 手動強制同步首頁功能
+  
   async function syncHomepageToGithub() {
     const email = localStorage.getItem('bvlog_user_email');
     if(!email) return;
