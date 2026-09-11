@@ -367,8 +367,13 @@
     @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
      
+    .filter-btn { padding: 8px 16px; border: 1px solid var(--border); background: #fff; color: var(--text-muted); border-radius: 20px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
     .section-title { font-size: 22px; font-weight: 800; border-bottom: 2px solid; display: inline-flex; align-items: center; gap: 8px; padding-bottom: 8px; margin-bottom: 24px; margin-top: 32px; }
     .feed-list { display: flex; flex-direction: column; gap: 32px; margin-top: 16px; width: 100%; }
+    .feed-list-more { margin-top: 32px; }
     .feed-item { display: flex; gap: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--border); text-decoration: none; color: inherit; align-items: flex-start; transition: opacity 0.2s; background: #fff; padding: 24px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid var(--border-subtle); cursor: default; }
     .feed-item:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); border-color: var(--border); }
     .feed-content { flex: 1; min-width: 0; display: flex; flex-direction: column; }
@@ -391,6 +396,11 @@
   <div class="login-box" id="loginView">
     <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">VBLOG</h2>
     <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">登入</p>
+
+    
+    <div id="corsWarning" style="display:none; background:#fef2f2; border:1px solid #f87171; color:#b91c1c; padding:12px; border-radius:6px; font-size:12.5px; margin-bottom:16px; text-align:left;">
+      <b>連線被拒絕 (CORS Error)</b><br>請確認您的 GAS 部署設定為：<br>1. 執行身分：我<br>2. 誰可以存取：<b>所有人 (Anyone)</b><br>並確認 <code>GAS_WEB_URL</code> 為最新網址。
+    </div>
 
     <input type="email" id="loginEmail" class="login-input" placeholder="信箱">
     <div style="display: flex; gap: 8px; margin-bottom: 16px;">
@@ -421,7 +431,6 @@
 
 <div class="app-shell" id="mainAppShell" style="display: none;">
 
-  
   <header style="position: relative; z-index: 2001;">
     <div style="padding: 4px 4px 0px 4px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;">
       <div style="display: flex; align-items: center; gap: 12px;">
@@ -650,6 +659,13 @@
         <button onclick="loadDashboardLogs(true)" class="action-btn-sm"><i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> 重整</button>
       </div>
     </div>
+
+    
+    <div class="dashboard-filters" style="display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 16px;">
+       <button id="filterBtnAll" class="filter-btn active" onclick="setDashboardFilter('all')">全部文章</button>
+       <button id="filterBtnPublished" class="filter-btn" onclick="setDashboardFilter('published')">已發布</button>
+       <button id="filterBtnDraft" class="filter-btn" onclick="setDashboardFilter('draft')">草稿</button>
+    </div>
     
     
     <div id="dashboardContainer" style="width: 100%;">
@@ -809,6 +825,7 @@
   window.currentAuthorProfile = null; 
 
   let globalLogsCache = [];
+  let currentDashboardFilter = 'all'; 
 
   function compressImage(file, maxWidth, callback) {
     const reader = new FileReader();
@@ -858,7 +875,12 @@
 
       api({ action: "getHistoryLogs", email: email })
         .then(logs => { globalLogsCache = logs || []; })
-        .catch(e => console.log(e));
+        .catch(e => {
+            console.log(e);
+            document.getElementById('corsWarning').style.display = 'block';
+            document.getElementById('loginOverlay').style.display = 'flex';
+            document.getElementById('mainAppShell').style.display = 'none';
+        });
 
     } else {
       document.getElementById('loginOverlay').style.display = 'flex';
@@ -900,12 +922,14 @@
 
     btn.disabled = true;
     btn.innerText = "...";
+    document.getElementById('corsWarning').style.display = 'none';
 
     try {
       await api({ action: "sendOtp", email: email, type: type });
       showToast("已發送");
       startOtpTimer(btn);
     } catch (e) {
+      document.getElementById('corsWarning').style.display = 'block';
       alert(e.message);
       btn.disabled = false;
       btn.innerHTML = '<i data-lucide="send" style="width:14px; height:14px;"></i> 發送';
@@ -920,6 +944,7 @@
 
     const btn = event.currentTarget;
     btn.innerText = "..."; btn.disabled = true;
+    document.getElementById('corsWarning').style.display = 'none';
 
     try {
       const res = await api({ action: "verifyAndLogin", email: email, otp: otp });
@@ -929,6 +954,7 @@
         checkLoginStatus();
       }
     } catch (e) {
+      document.getElementById('corsWarning').style.display = 'block';
       alert(e.message);
       btn.innerHTML = '<i data-lucide="log-in" style="width:14px; height:14px;"></i> 登入';
       btn.disabled = false;
@@ -946,6 +972,7 @@
 
     const btn = event.currentTarget;
     btn.innerText = "..."; btn.disabled = true;
+    document.getElementById('corsWarning').style.display = 'none';
 
     try {
       const res = await api({ action: "verifyAndRegister", email: email, otp: otp, name: name, birth: birth });
@@ -955,6 +982,7 @@
         checkLoginStatus();
       }
     } catch (e) {
+      document.getElementById('corsWarning').style.display = 'block';
       alert(e.message);
       btn.innerHTML = '<i data-lucide="user-plus" style="width:14px; height:14px;"></i> 註冊';
       btn.disabled = false;
@@ -994,6 +1022,7 @@
     }
   }
 
+  
   async function api(payload, retries = 2) {
     if (typeof google !== 'undefined' && google.script && google.script.run) {
       return new Promise((resolve, reject) => {
@@ -1011,6 +1040,7 @@
         try {
           const res = await fetch(GAS_WEB_URL, { 
               method: 'POST', 
+              redirect: 'follow',
               headers: { 'Content-Type': 'text/plain;charset=utf-8' },
               body: JSON.stringify(payload) 
           });
@@ -1660,22 +1690,38 @@
   }
 
   
+  function setDashboardFilter(filterMode) {
+    currentDashboardFilter = filterMode;
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+    
+    if(filterMode === 'all') document.getElementById('filterBtnAll').classList.add('active');
+    if(filterMode === 'published') document.getElementById('filterBtnPublished').classList.add('active');
+    if(filterMode === 'draft') document.getElementById('filterBtnDraft').classList.add('active');
+
+    loadDashboardLogs(false); 
+  }
+
   function renderFeedSection(sectionLogs, title, icon, color) {
     if (sectionLogs.length === 0) return '';
     const avatarUrl = window.currentAuthorProfile?.avatarUrl || 'https://ui-avatars.com/api/?name=T&background=3175B5&color=fff';
     const displayName = window.currentAuthorProfile?.authorName || '特洛伊AI賦能師';
     
-    let html = `<h2 class="section-title" style="color: ${color}; border-color: ${color};"><i data-lucide="${icon}" style="width:20px;height:20px;"></i> ${title}</h2><div class="feed-list">`;
     
-    sectionLogs.forEach(log => {
+    const top5 = sectionLogs.slice(0, 5);
+    const rest = sectionLogs.slice(5);
+    
+    let html = `<div style="margin-top: 24px;"><h2 class="section-title" style="color: ${color}; border-color: ${color};"><i data-lucide="${icon}" style="width:20px;height:20px;"></i> ${title}</h2>`;
+    html += '<div class="feed-list">';
+
+    const renderCard = (log) => {
       const cleanTime = sanitizeTimestamp(log.timestamp);
-      const isPublished = log.status && log.status.includes('已發布'); 
+      const isPublished = log.publishStatus === '已發布'; 
       const excerpt = log.articleHook || (log.articleBody ? log.articleBody.substring(0, 100) + '...' : '暫無內容預覽');
       const coverImg = log.coverUrl 
         ? '<img src="' + log.coverUrl + '" class="feed-cover" alt="Cover">' 
         : '<div class="feed-cover" style="background:#f1f5f9; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:12px;">無圖</div>';
       
-      html += `
+      return `
       <div class="feed-item">
         <div class="feed-content">
           <div class="feed-author-bar">
@@ -1687,18 +1733,37 @@
           </div>
           <h3 class="feed-title">${safeHtml(log.articleTitle || '草稿 (' + log.logId + ')')}</h3>
           <p class="feed-excerpt">${escapeHtml(excerpt)}</p>
-          <div style="display:flex; align-items:center; gap: 16px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border-subtle);">
+          <div style="display:flex; flex-wrap: wrap; align-items:center; gap: 16px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border-subtle);">
              <span class="badge ${isPublished ? 'published' : 'draft'}">${isPublished ? '已發布' : '草稿'}</span>
-             <div style="margin-left: auto; display:flex; gap:6px;">
+             <div style="margin-left: auto; display:flex; flex-wrap:wrap; gap:6px;">
                 <button class="action-btn-sm action-btn-icon danger" onclick="deleteHistoryLog('${log.logId}')" title="刪除"><i data-lucide="trash-2" style="width: 14px; height: 14px;"></i></button>
                 <button class="action-btn-sm" onclick="openArticleWorkshop('${log.logId}')"><i data-lucide="edit-3" style="width: 14px; height: 14px;"></i> 編輯</button>
+                ${isPublished ? 
+                  `<button class="action-btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="triggerUnpublish('${log.logId}')"><i data-lucide="arrow-down-circle" style="width: 14px; height: 14px;"></i> 下架</button>` : 
+                  ''}
                 <button class="action-btn-sm action-btn-primary" onclick="triggerGithubPublish('${log.logId}')"><i data-lucide="globe" style="width: 14px; height: 14px;"></i> 發布</button>
              </div>
           </div>
         </div>
         ${coverImg}
       </div>`;
-    });
+    };
+
+    top5.forEach(log => { html += renderCard(log); });
+    html += '</div>';
+
+    if (rest.length > 0) {
+      const sectionId = 'rest-dashboard-' + Math.random().toString(36).substr(2, 9);
+      html += `
+        <div id="${sectionId}" style="display:none;" class="feed-list feed-list-more">
+          ${rest.map(log => renderCard(log)).join('')}
+        </div>
+        <div style="text-align: center; margin-top: 24px;">
+          <button onclick="document.getElementById('${sectionId}').style.display='flex'; this.style.display='none';" style="background: none; border: 1px solid var(--border); padding: 10px 24px; border-radius: 20px; cursor: pointer; font-weight: 600; color: var(--muted); transition: all 0.2s;">Show More 展開更多</button>
+        </div>
+      `;
+    }
+    
     html += '</div>';
     return html;
   }
@@ -1716,7 +1781,15 @@
       }
     }
 
-    const dashboardItems = globalLogsCache.filter(item => item.articleFull || item.articleTitle);
+    // 將所有至少有產生標題/內文，或是明確在工坊的保留，這裡直接顯示所有歷史，以防萬一
+    let dashboardItems = globalLogsCache; 
+    
+    
+    if (currentDashboardFilter === 'published') {
+       dashboardItems = dashboardItems.filter(item => item.publishStatus === '已發布');
+    } else if (currentDashboardFilter === 'draft') {
+       dashboardItems = dashboardItems.filter(item => item.publishStatus !== '已發布');
+    }
 
     if(dashboardItems.length === 0) {
       container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px;">無文章</div>';
@@ -1732,11 +1805,11 @@
       renderFeedSection(memberLogs, '會員限定', 'lock', 'var(--warning)') +
       renderFeedSection(vipLogs, 'VIP私塾特定', 'crown', 'var(--danger)');
 
-    container.innerHTML = allHtml;
+    container.innerHTML = allHtml || '<div style="text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px;">無文章</div>';
     lucide.createIcons();
   }
 
-  // 🌟 手動強制同步首頁功能
+  
   async function syncHomepageToGithub() {
     const email = localStorage.getItem('bvlog_user_email');
     if(!email) return;
@@ -2204,7 +2277,11 @@
 
     try {
       const res = await api({ action: "pushToGithub", email: email, logId: logId });
-      showToast("已發布");
+      showToast("已發布成功");
+      
+      const targetLog = globalLogsCache.find(l => l.logId === logId);
+      if(targetLog) targetLog.publishStatus = '已發布';
+      loadDashboardLogs(false);
     } catch(e) {
       alert(e.message);
     } finally {
@@ -2217,6 +2294,34 @@
   function publishArticleToWeb() { 
     if(!window.currentSelectedLog) return;
     triggerGithubPublish(window.currentSelectedLog.logId);
+  }
+
+  
+  async function triggerUnpublish(logId) {
+    if (!confirm("確定要將此文章從前台網站下架嗎？\n(草稿與資料庫將會保留，僅移除 GitHub 靜態頁面)")) return;
+    const email = localStorage.getItem('bvlog_user_email');
+    if(!email) return;
+    
+    const btn = event.currentTarget;
+    const oldHtml = btn.innerHTML;
+    btn.innerHTML = '<i data-lucide="loader" class="spin" style="width:14px; height:14px;"></i> 處理中';
+    lucide.createIcons();
+    btn.disabled = true;
+
+    try {
+      await api({ action: "unpublishFromGithub", logId: logId, email: email });
+      showToast("文章已下架，轉為草稿");
+      
+      const targetLog = globalLogsCache.find(l => l.logId === logId);
+      if(targetLog) targetLog.publishStatus = '草稿';
+      loadDashboardLogs(false);
+    } catch(e) {
+      alert("下架失敗: " + e.message);
+    } finally {
+      btn.innerHTML = oldHtml;
+      lucide.createIcons();
+      btn.disabled = false;
+    }
   }
 
   
