@@ -779,6 +779,15 @@
 </div>
 
 <script>
+
+
+  
+  
+  
+  function safeHtml(str) { return String(str || "").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function escapeHtml(str) { return String(str || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
+
+
   const GAS_WEB_URL = "https://script.google.com/macros/s/AKfycbwXZVGdTBGPhxYvB8d_8jm4WRyAJiRlWS0V0CGLM9hT0k8EGdpWo_r3NwarVdyoMCrROA/exec";
   const GAS_URL = GAS_WEB_URL;
 
@@ -1716,22 +1725,17 @@
     const bio = p.bio || '尚未設定簡介...';
     const avatarUrl = p.avatarUrl || 'https://ui-avatars.com/api/?name=T&background=3175B5&color=fff';
 
+    
     let socialHtml = '<div class="social-links" style="justify-content: flex-start; margin-top: 16px; display:flex; gap:12px; flex-wrap:wrap;">';
-    
-    if(p.socialEmail && p.socialEmail.trim() !== '') socialHtml += '<a href="mailto:' + p.socialEmail.trim() + '" target="_blank" title="Email" style="color:var(--text-muted); transition: color 0.2s;" onmouseover="this.style.color=\'var(--accent)\'" onmouseout="this.style.color=\'var(--text-muted)\'"><i data-lucide="mail" style="width: 20px; height: 20px;"></i></a>';
-    
-    if(p.socialFB && p.socialFB.trim() !== '') socialHtml += '<a href="' + p.socialFB.trim() + '" target="_blank" title="Facebook" style="color:var(--text-muted); transition: color 0.2s;" onmouseover="this.style.color=\'var(--accent)\'" onmouseout="this.style.color=\'var(--text-muted)\'"><i data-lucide="facebook" style="width: 20px; height: 20px;"></i></a>';
-    
-    if(p.socialIG && p.socialIG.trim() !== '') socialHtml += '<a href="' + p.socialIG.trim() + '" target="_blank" title="Instagram" style="color:var(--text-muted); transition: color 0.2s;" onmouseover="this.style.color=\'var(--accent)\'" onmouseout="this.style.color=\'var(--text-muted)\'"><i data-lucide="instagram" style="width: 20px; height: 20px;"></i></a>';
-    
-    if(p.socialYT && p.socialYT.trim() !== '') socialHtml += '<a href="' + p.socialYT.trim() + '" target="_blank" title="YouTube" style="color:var(--text-muted); transition: color 0.2s;" onmouseover="this.style.color=\'var(--accent)\'" onmouseout="this.style.color=\'var(--text-muted)\'"><i data-lucide="youtube" style="width: 20px; height: 20px;"></i></a>';
-    
-    if(p.socialPodcast && p.socialPodcast.trim() !== '') socialHtml += '<a href="' + p.socialPodcast.trim() + '" target="_blank" title="Podcast" style="color:var(--text-muted); transition: color 0.2s;" onmouseover="this.style.color=\'var(--accent)\'" onmouseout="this.style.color=\'var(--text-muted)\'"><i data-lucide="headphones" style="width: 20px; height: 20px;"></i></a>';
-    
-    if(p.officialWeb && p.officialWeb.trim() !== '') socialHtml += '<a href="' + p.officialWeb.trim() + '" target="_blank" title="Official Website" style="color:var(--text-muted); transition: color 0.2s;" onmouseover="this.style.color=\'var(--accent)\'" onmouseout="this.style.color=\'var(--text-muted)\'"><i data-lucide="globe" style="width: 20px; height: 20px;"></i></a>';
-    
+    if(p.socialEmail && p.socialEmail.trim() !== '') socialHtml += '<a href="mailto:' + p.socialEmail.trim() + '" target="_blank" title="Email" style="color:var(--text-muted);"><i data-lucide="mail" style="width: 20px; height: 20px;"></i></a>';
+    if(p.socialFB && p.socialFB.trim() !== '') socialHtml += '<a href="' + p.socialFB.trim() + '" target="_blank" title="Facebook" style="color:var(--text-muted);"><i data-lucide="facebook" style="width: 20px; height: 20px;"></i></a>';
+    if(p.socialIG && p.socialIG.trim() !== '') socialHtml += '<a href="' + p.socialIG.trim() + '" target="_blank" title="Instagram" style="color:var(--text-muted);"><i data-lucide="instagram" style="width: 20px; height: 20px;"></i></a>';
+    if(p.socialYT && p.socialYT.trim() !== '') socialHtml += '<a href="' + p.socialYT.trim() + '" target="_blank" title="YouTube" style="color:var(--text-muted);"><i data-lucide="youtube" style="width: 20px; height: 20px;"></i></a>';
+    if(p.socialPodcast && p.socialPodcast.trim() !== '') socialHtml += '<a href="' + p.socialPodcast.trim() + '" target="_blank" title="Podcast" style="color:var(--text-muted);"><i data-lucide="headphones" style="width: 20px; height: 20px;"></i></a>';
+    if(p.officialWeb && p.officialWeb.trim() !== '') socialHtml += '<a href="' + p.officialWeb.trim() + '" target="_blank" title="Official Website" style="color:var(--text-muted);"><i data-lucide="globe" style="width: 20px; height: 20px;"></i></a>';
     socialHtml += '</div>';
 
+    
     return `
       <div class="hero" style="background: var(--card-bg); border-radius: 12px; padding: 40px; border: 1px solid var(--border); margin-bottom: 40px; display: flex; flex-direction: column; gap: 32px;">
         <div class="hero-top" style="display: flex; gap: 32px; align-items: flex-start; flex-wrap: wrap;">
@@ -1747,6 +1751,11 @@
           <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 20px;">基礎會員 3,000元/年 | VIP私塾 30,000元/年<br>請填寫下方資料，我們將發送專屬信件介紹會員權益與付款連結。</p>
           <form style="display: flex; flex-direction: column; gap: 12px;" onsubmit="event.preventDefault(); alert('此為後台預覽畫面，實際發布後功能才會生效！');">
             <input type="email" placeholder="您的 Email (必填)" required class="login-input" style="margin-bottom:0; background:#fff;">
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+              <input type="text" placeholder="姓名 / 暱稱" required class="login-input" style="margin-bottom:0; background:#fff; flex: 1; min-width: 120px;">
+              <input type="date" placeholder="出生年月日" required class="login-input" style="margin-bottom:0; background:#fff; flex: 1; min-width: 120px;">
+            </div>
+            <textarea placeholder="想加入會員的原因" class="login-input" style="margin-bottom:0; background:#fff; min-height: 80px; resize: vertical; width: 100%;"></textarea>
             <button type="submit" style="margin-top: 8px; padding: 12px; background: var(--text); color: #fff; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; transition: background 0.2s;">送出申請</button>
           </form>
         </div>
@@ -1837,18 +1846,18 @@
 
     if (isDashboardRendered && !forceRefresh) return; 
 
-    
+    // 呼叫獨立的渲染函式
     renderDashboardLogsView();
   }
 
-  
+  // 🌟 獨立的渲染函式，供下拉選單觸發 (解除隱形封印版)
   function renderDashboardLogsView() {
     const container = document.getElementById('dashboardContainer');
     const filterValue = document.getElementById('dashboardFilter') ? document.getElementById('dashboardFilter').value : 'all';
 
     const dashboardItems = Array.isArray(globalLogsCache) ? globalLogsCache : [];
     
-    
+    // 依照下拉選單進行篩選
     let filteredItems = dashboardItems;
     if (filterValue === 'published') {
         filteredItems = dashboardItems.filter(l => l.status && l.status.includes('已發布'));
@@ -1866,7 +1875,7 @@
       return;
     }
 
-    
+    // 【關鍵修正】：如果 tier 沒填寫或空白，預設歸類到「公開文章」，絕對不讓資料隱形！
     const publicLogs = filteredItems.filter(l => l.tier === '公開' || !l.tier || l.tier.trim() === '');
     const memberLogs = filteredItems.filter(l => l.tier === '會員限定');
     const vipLogs = filteredItems.filter(l => l.tier === 'VIP私塾特定' || l.tier === 'VIP私塾'); 
@@ -1881,7 +1890,7 @@
     isDashboardRendered = true;
   }
 
-  
+  // 🌟 手動強制同步首頁功能
   async function syncHomepageToGithub() {
     const email = localStorage.getItem('bvlog_user_email');
     if(!email) return;
