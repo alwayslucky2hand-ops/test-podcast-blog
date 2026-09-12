@@ -1802,7 +1802,7 @@
     isHistoryRendered = true;
   }
 
-  // 🌟 後台文章區：將 Hero 設定為靜態產生 (恢復完整的表單 UI 預覽)
+  // 後台文章區：將 Hero 設定為靜態產生 (恢復完整的表單 UI 預覽，並修正手機版日期佔位符問題)
   function generateDashboardHero(profile) {
     const p = profile || {};
     const displayName = p.authorName || '特洛伊AI賦能師';
@@ -1837,8 +1837,8 @@
           <form style="display: flex; flex-direction: column; gap: 12px;" onsubmit="event.preventDefault(); alert('此為後台預覽畫面，實際發布後功能才會生效！');">
             <input type="email" placeholder="您的 Email (必填)" required class="login-input" style="margin-bottom:0; background:#fff;">
             <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-              <input type="text" placeholder="姓名 / 暱稱" required class="login-input" style="margin-bottom:0; background:#fff; flex: 1; min-width: 120px;">
-              <input type="date" placeholder="出生年月日" required class="login-input" style="margin-bottom:0; background:#fff; flex: 1; min-width: 120px;">
+              <input type="text" placeholder="姓名 / 暱稱 (必填)" required class="login-input" style="margin-bottom:0; background:#fff; flex: 1; min-width: 120px;">
+              <input type="text" placeholder="出生年月日 (必填)" onfocus="(this.type='date')" onblur="(this.value==''?this.type='text':this.type='date')" required class="login-input" style="margin-bottom:0; background:#fff; flex: 1; min-width: 120px;">
             </div>
             <textarea placeholder="想加入會員的原因" class="login-input" style="margin-bottom:0; background:#fff; min-height: 80px; resize: vertical; width: 100%;"></textarea>
             <button type="submit" style="margin-top: 8px; padding: 12px; background: var(--text); color: #fff; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; transition: background 0.2s;">送出申請</button>
