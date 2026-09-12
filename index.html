@@ -790,7 +790,7 @@
   function escapeHtml(str) { return String(str || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
 
   
-  const GAS_WEB_URL = "https://script.google.com/macros/s/AKfycbxUzBHrGyXDBcfxcfuS57_vzi9AY9uXgDwqWJrXv3RQVQXtjAOR5iApyEsf5W8c577k9w/exec";
+  const GAS_WEB_URL = "https://script.google.com/macros/s/AKfycbyeqKhWv3TY8bpSdB9ZfWXNkR9yap66PyGxzEJqxpawWn9hZ9chfIuBPJfZHHoP91newQ/exec";
   const GAS_URL = GAS_WEB_URL;
 
   let currentStream = null;
@@ -1673,6 +1673,7 @@
       }
     }
 
+    
     if (isHistoryRendered && !forceRefresh && document.querySelector('#historyContainer .history-card')) return; 
 
     if (!globalLogsCache || globalLogsCache.length === 0) {
@@ -1690,7 +1691,6 @@
 
     for(let i=0; i<itemsToRender.length; i++) {
       const item = itemsToRender[i];
-      
       const cleanTime = sanitizeTimestamp(item.timestamp);
       const isRec = item.status && item.status.includes('錄製中');
       const urls = Array.isArray(item.urls) ? item.urls : [];
@@ -1748,26 +1748,23 @@
     return '';
   }
 
-  
   function generateDashboardHero(profile) {
     const p = profile || {};
     const displayName = p.authorName || '特洛伊AI賦能師';
     const bio = p.bio || '尚未設定簡介...';
     const avatarUrl = p.avatarUrl || 'https://ui-avatars.com/api/?name=T&background=3175B5&color=fff';
 
-    
     let socialHtml = '<div class="social-links" style="justify-content: flex-start; margin-top: 16px; display:flex; gap:12px; flex-wrap:wrap;">';
-    if(p.socialEmail && p.socialEmail.trim() !== '') socialHtml += '<a href="mailto:' + p.socialEmail.trim() + '" target="_blank" title="Email" style="color:var(--text-muted);">' + getFrontendSocialIconSvg('mail') + '</a>';
-    if(p.socialFB && p.socialFB.trim() !== '') socialHtml += '<a href="' + p.socialFB.trim() + '" target="_blank" title="Facebook" style="color:var(--text-muted);">' + getFrontendSocialIconSvg('facebook') + '</a>';
-    if(p.socialIG && p.socialIG.trim() !== '') socialHtml += '<a href="' + p.socialIG.trim() + '" target="_blank" title="Instagram" style="color:var(--text-muted);">' + getFrontendSocialIconSvg('instagram') + '</a>';
-    if(p.socialYT && p.socialYT.trim() !== '') socialHtml += '<a href="' + p.socialYT.trim() + '" target="_blank" title="YouTube" style="color:var(--text-muted);">' + getFrontendSocialIconSvg('youtube') + '</a>';
-    if(p.socialPodcast && p.socialPodcast.trim() !== '') socialHtml += '<a href="' + p.socialPodcast.trim() + '" target="_blank" title="Podcast" style="color:var(--text-muted);">' + getFrontendSocialIconSvg('headphones') + '</a>';
-    if(p.officialWeb && p.officialWeb.trim() !== '') socialHtml += '<a href="' + p.officialWeb.trim() + '" target="_blank" title="Official Website" style="color:var(--text-muted);">' + getFrontendSocialIconSvg('globe') + '</a>';
+    if(p.socialEmail && p.socialEmail.trim() !== '') socialHtml += '<a href="mailto:' + p.socialEmail.trim() + '" target="_blank" title="Email" style="color:var(--text-muted);"><i data-lucide="mail" style="width: 20px; height: 20px;"></i></a>';
+    if(p.socialFB && p.socialFB.trim() !== '') socialHtml += '<a href="' + p.socialFB.trim() + '" target="_blank" title="Facebook" style="color:var(--text-muted);"><i data-lucide="facebook" style="width: 20px; height: 20px;"></i></a>';
+    if(p.socialIG && p.socialIG.trim() !== '') socialHtml += '<a href="' + p.socialIG.trim() + '" target="_blank" title="Instagram" style="color:var(--text-muted);"><i data-lucide="instagram" style="width: 20px; height: 20px;"></i></a>';
+    if(p.socialYT && p.socialYT.trim() !== '') socialHtml += '<a href="' + p.socialYT.trim() + '" target="_blank" title="YouTube" style="color:var(--text-muted);"><i data-lucide="youtube" style="width: 20px; height: 20px;"></i></a>';
+    if(p.socialPodcast && p.socialPodcast.trim() !== '') socialHtml += '<a href="' + p.socialPodcast.trim() + '" target="_blank" title="Podcast" style="color:var(--text-muted);"><i data-lucide="headphones" style="width: 20px; height: 20px;"></i></a>';
+    if(p.officialWeb && p.officialWeb.trim() !== '') socialHtml += '<a href="' + p.officialWeb.trim() + '" target="_blank" title="Official Website" style="color:var(--text-muted);"><i data-lucide="globe" style="width: 20px; height: 20px;"></i></a>';
     socialHtml += '</div>';
 
-    
     return `
-      <div class="hero" style="background: var(--card-bg); border-radius: 12px; padding: 40px; border: 1px solid var(--border); margin-bottom: 40px; display: flex; flex-direction: column; gap: 32px;">
+      <div class="hero" style="background: var(--card-bg); border-radius: 12px; padding: 40px; border: 1px solid var(--border); margin-bottom: 24px; display: flex; flex-direction: column; gap: 32px;">
         <div class="hero-top" style="display: flex; gap: 32px; align-items: flex-start; flex-wrap: wrap;">
           <img src="${avatarUrl}" class="avatar" alt="Avatar" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); flex-shrink: 0;">
           <div class="hero-info" style="flex: 1; min-width: 200px;">
@@ -1776,50 +1773,45 @@
             ${socialHtml}
           </div>
         </div>
-        <div class="membership-form-box" style="margin-top: 24px; padding: 24px; border: 1px solid var(--border); border-radius: 8px; background: #f8fafc; text-align: left;">
-          <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">${getFrontendSocialIconSvg('mail')} 申請加入會員 / 訂閱最新消息</h3>
+        <div class="membership-form-box" style="margin-top: 16px; padding: 24px; border: 1px solid var(--border); border-radius: 8px; background: #f8fafc; text-align: left;">
+          <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;"><i data-lucide="mail" style="width:18px; height:18px; color:var(--accent);"></i> 申請加入會員 / 訂閱最新消息</h3>
           <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6;">
             <strong>一般會員（一個月 $250）：</strong>即可享受不限次數、不限堂數觀看會員限定課程與獲得應用程式碼。<br>
             <strong>VIP會員（一天不到 90 元）：</strong>即可享受不受時空限制、不限次數的私塾陪跑。
           </p>
-          <form style="display: flex; flex-direction: column; gap: 12px;" onsubmit="event.preventDefault(); alert('此為後台預覽畫面，實際發布後功能才會生效！');">
-            <input type="email" placeholder="您的 Email (必填)" required class="login-input" style="margin-bottom:0; background:#fff;">
-            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-              <input type="text" placeholder="姓名 / 暱稱" required class="login-input" style="margin-bottom:0; background:#fff; flex: 1; min-width: 120px;">
-              <input type="date" placeholder="出生年月日" required class="login-input" style="margin-bottom:0; background:#fff; flex: 1; min-width: 120px;">
-            </div>
-            <textarea placeholder="想加入會員的原因" class="login-input" style="margin-bottom:0; background:#fff; min-height: 80px; resize: vertical; width: 100%;"></textarea>
-            <button type="submit" style="margin-top: 8px; padding: 12px; background: var(--text); color: #fff; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; transition: background 0.2s;">送出申請</button>
-          </form>
+          <div style="font-size: 13px; color: var(--danger); padding: 12px; background: #fff; border: 1px dashed var(--danger);">[此為後台預覽畫面，按鈕功能已停用，請至前台檢視]</div>
         </div>
       </div>
     `;
   }
 
-  function renderFeedSection(sectionLogs, title, icon, color) {
+  // 渲染獨立區塊 (自帶防 Lag 無 JS 延遲展開機制)
+  function renderFeedSection(sectionLogs, title, iconStr, color) {
     if (sectionLogs.length === 0) return '';
     const p = window.currentAuthorProfile || {};
     const avatarUrl = p.avatarUrl || 'https://ui-avatars.com/api/?name=T&background=3175B5&color=fff';
     const displayName = p.authorName || '特洛伊AI賦能師';
-    
-    const top5 = sectionLogs.slice(0, 5);
+
+    const topN = sectionLogs.slice(0, 5); 
     const rest = sectionLogs.slice(5);
+
+    let html = `<div style="margin-top: 16px; margin-bottom: 48px;">
+                  <h2 class="section-title" style="color: ${color}; border-color: ${color};"><i data-lucide="${iconStr}" style="width:20px;height:20px;"></i> ${title}</h2>
+                  <div class="feed-list">`;
     
-    let html = `<div style="margin-top: 48px;"><h2 class="section-title" style="color: ${color}; border-color: ${color};"><i data-lucide="${icon}" style="width:20px;height:20px;"></i> ${title}</h2><div class="feed-list">`;
-    
-    top5.forEach(log => { html += generateFeedItemHtml(log, avatarUrl, displayName); });
+    topN.forEach(log => { html += generateFeedItemHtml(log, avatarUrl, displayName); });
     html += '</div>';
 
     if (rest.length > 0) {
-      const sectionId = 'rest-dashboard-' + Math.random().toString(36).substr(2, 9);
-      html += `
-        <div id="${sectionId}" style="display:none;" class="feed-list feed-list-more">
-          ${rest.map(log => generateFeedItemHtml(log, avatarUrl, displayName)).join('')}
-        </div>
-        <div style="text-align: center; margin-top: 24px;">
-          <button onclick="document.getElementById('${sectionId}').style.display='flex'; this.style.display='none';" class="action-btn-sm" style="border-radius: 20px; padding: 10px 24px;"><i data-lucide="chevron-down" style="width:14px; height:14px;"></i> 看更多</button>
-        </div>
-      `;
+      const sectionId = 'rest-dash-' + Math.random().toString(36).substr(2, 9);
+      html += `<div id="${sectionId}" style="display:none;" class="feed-list" style="margin-top: 32px;">`;
+      rest.forEach(log => { html += generateFeedItemHtml(log, avatarUrl, displayName); });
+      html += `</div>
+               <div style="text-align: center; margin-top: 24px;">
+                 <button onclick="document.getElementById('${sectionId}').style.display='flex'; this.style.display='none';" class="action-btn-sm" style="border-radius: 20px; padding: 10px 24px;">
+                   <i data-lucide="chevron-down" style="width:14px; height:14px;"></i> 看更多 (${rest.length})
+                 </button>
+               </div>`;
     }
     html += '</div>';
     return html;
@@ -1832,7 +1824,6 @@
       const coverImg = log.coverUrl 
         ? '<img src="' + log.coverUrl + '" class="feed-cover" alt="Cover">' 
         : '<div class="feed-cover" style="background:#f1f5f9; display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:12px;">無圖</div>';
-      
       
       const emails = log.vipEmail ? log.vipEmail.split(/[\n,]+/).filter(e => e.trim().length > 0) : [];
       const subCount = emails.length;
@@ -1850,7 +1841,7 @@
           <h3 class="feed-title">${safeHtml(log.articleTitle || '草稿 (' + log.logId + ')')}</h3>
           <p class="feed-excerpt">${escapeHtml(excerpt)}</p>
           
-          <!-- 新增數據指標區塊 -->
+          <!-- 後台專屬：數據指標區塊 (替換原本的發布按鈕) -->
           <div style="display: flex; gap: 16px; margin-bottom: 16px; font-size: 13px; color: var(--text-muted); flex-wrap: wrap;">
              <span style="display:flex; align-items:center; gap:4px;" title="觀看數"><i data-lucide="eye" style="width:14px;height:14px;"></i> 0</span>
              <span style="display:flex; align-items:center; gap:4px;" title="完讀數"><i data-lucide="book-open" style="width:14px;height:14px;"></i> 0</span>
@@ -1860,11 +1851,10 @@
 
           <div style="display:flex; align-items:center; gap: 16px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border-subtle);">
              <span class="badge ${isPublished ? 'published' : 'draft'}">${isPublished ? '已發布' : '草稿'}</span>
-             <span style="font-size:12px; font-weight:600; padding:2px 8px; border-radius:4px; background: #f1f5f9;">${log.tier || '公開'}</span>
+             <span style="font-size:12px; font-weight:600; padding:2px 8px; border-radius:4px; background: #f1f5f9; color: var(--text-muted);">${log.tier || '公開'}</span>
              <div style="margin-left: auto; display:flex; gap:6px;">
                 <button class="action-btn-sm action-btn-icon danger" onclick="deleteHistoryLog('${log.logId}')" title="刪除"><i data-lucide="trash-2" style="width: 14px; height: 14px;"></i></button>
                 <button class="action-btn-sm" onclick="openArticleWorkshop('${log.logId}')"><i data-lucide="edit-3" style="width: 14px; height: 14px;"></i> 編輯</button>
-                <!-- 發布按鈕已移除，整合至工坊內發布 -->
              </div>
           </div>
         </div>
@@ -1899,85 +1889,54 @@
 
   function renderDashboardLogsView() {
     const container = document.getElementById('dashboardContainer');
-    
+    const filterStatus = document.getElementById('dashboardFilter') ? document.getElementById('dashboardFilter').value : 'all';
+    const searchKeyword = document.getElementById('dashboardSearch') ? document.getElementById('dashboardSearch').value.toLowerCase().trim() : '';
+
     
     const searchHtml = `
-      <div style="display:flex; gap:12px; margin-bottom: 24px; flex-wrap: wrap;">
-        <select id="dashboardTierFilter" class="login-input" style="width: auto; margin-bottom: 0; padding: 8px 12px; height: 40px;" onchange="currentDashboardRenderCount = 10; renderDashboardLogsView()">
-          <option value="all">所有權限</option>
-          <option value="公開">公開文章</option>
-          <option value="會員限定">會員限定</option>
-          <option value="VIP">VIP專屬</option>
-        </select>
-        <input type="text" id="dashboardSearch" class="login-input" placeholder="搜尋標題、內容或日期..." style="flex:1; margin-bottom:0; height: 40px;" onkeyup="currentDashboardRenderCount = 10; renderDashboardLogsView()">
+      <div style="display:flex; gap:12px; margin-bottom: 32px; flex-wrap: wrap; background: #fff; padding: 16px; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+        <div style="display: flex; align-items: center; gap: 8px; color: var(--text-muted);">
+          <i data-lucide="search" style="width: 18px; height: 18px;"></i>
+        </div>
+        <input type="text" id="dashboardSearch" class="login-input" placeholder="輸入關鍵字搜尋標題、內容或日期..." style="flex:1; margin-bottom:0; border: none; outline: none; background: transparent; padding: 0;" onkeyup="renderDashboardLogsView()" value="${searchKeyword}" autofocus>
       </div>
     `;
 
-    const filterStatus = document.getElementById('dashboardFilter') ? document.getElementById('dashboardFilter').value : 'all';
-    const filterTier = document.getElementById('dashboardTierFilter') ? document.getElementById('dashboardTierFilter').value : 'all';
-    const searchKeyword = document.getElementById('dashboardSearch') ? document.getElementById('dashboardSearch').value.toLowerCase().trim() : '';
-
     const dashboardItems = Array.isArray(globalLogsCache) ? globalLogsCache : [];
     
-    
+    // 過濾發布狀態與關鍵字
     let filteredItems = dashboardItems.filter(l => {
-      
       let matchStatus = true;
       if (filterStatus === 'published') matchStatus = (l.status && l.status.includes('已發布'));
       else if (filterStatus === 'draft') matchStatus = (!l.status || !l.status.includes('已發布'));
 
-      
-      const logTier = l.tier || '公開';
-      let matchTier = (filterTier === 'all' || logTier.includes(filterTier));
-
-      
       const searchTarget = (l.articleTitle + " " + l.articleBody + " " + l.timestamp).toLowerCase();
       let matchKeyword = (searchKeyword === '' || searchTarget.includes(searchKeyword));
 
-      return matchStatus && matchTier && matchKeyword;
+      return matchStatus && matchKeyword;
     });
+
+    
+    const publicLogs = filteredItems.filter(l => l.tier === '公開' || !l.tier || l.tier.trim() === '');
+    const memberLogs = filteredItems.filter(l => l.tier === '會員限定');
+    const vipLogs = filteredItems.filter(l => l.tier === 'VIP私塾特定' || l.tier === 'VIP私塾');
 
     let allHtml = generateDashboardHero(window.currentAuthorProfile) + searchHtml;
 
     if(filteredItems.length === 0) {
-      allHtml += '<div style="text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px;">尚無符合條件的文章！</div>';
-      container.innerHTML = allHtml;
-      lucide.createIcons();
-      isDashboardRendered = true;
-      return;
-    }
-
-    
-    const itemsToRender = filteredItems.slice(0, currentDashboardRenderCount);
-    
-    const p = window.currentAuthorProfile || {};
-    const avatarUrl = p.avatarUrl || 'https://ui-avatars.com/api/?name=T&background=3175B5&color=fff';
-    const displayName = p.authorName || '特洛伊AI賦能師';
-
-    allHtml += '<div class="feed-list">';
-    itemsToRender.forEach(log => {
-      allHtml += generateFeedItemHtml(log, avatarUrl, displayName);
-    });
-    allHtml += '</div>';
-
-    
-    if (filteredItems.length > currentDashboardRenderCount) {
-      allHtml += `
-        <div style="text-align: center; margin-top: 24px;">
-          <button onclick="currentDashboardRenderCount += 10; renderDashboardLogsView();" class="action-btn-sm" style="border-radius: 20px; padding: 10px 24px;">
-            <i data-lucide="chevron-down" style="width:14px; height:14px;"></i> 載入更多 (${filteredItems.length - currentDashboardRenderCount})
-          </button>
-        </div>
-      `;
+      allHtml += '<div style="text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px;">沒有找到符合的結果！</div>';
+    } else {
+      allHtml += renderFeedSection(publicLogs, '公開文章', 'globe', 'var(--text)');
+      allHtml += renderFeedSection(memberLogs, '會員限定', 'lock', 'var(--warning)');
+      allHtml += renderFeedSection(vipLogs, 'VIP私塾', 'crown', 'var(--danger)');
     }
 
     container.innerHTML = allHtml;
 
-    // 恢復搜尋框的焦點 (因為重新渲染 DOM 會失去焦點)
-    if (document.getElementById('dashboardSearch')) {
-      const searchInput = document.getElementById('dashboardSearch');
+    
+    const searchInput = document.getElementById('dashboardSearch');
+    if (searchInput && searchKeyword !== '') {
       searchInput.focus();
-      
       const val = searchInput.value;
       searchInput.value = '';
       searchInput.value = val;
