@@ -643,11 +643,19 @@
       <div style="display: flex; align-items: center; gap: 12px;">
         <h3 style="font-size: 18px; font-weight: 700;">文章</h3>
         
-        <select id="dashboardFilter" class="login-input" style="width: auto; margin-bottom: 0; padding: 4px 12px; height: 32px;" onchange="renderDashboardLogsView()">
+        
+        <select id="dashboardFilter" class="login-input" style="width: auto; margin-bottom: 0; padding: 4px 12px; height: 32px;" onchange="currentDashboardRenderCount = 10; renderDashboardLogsView()">
           <option value="all">全部文章</option>
           <option value="published">已發布</option>
           <option value="draft">草稿</option>
         </select>
+        <select id="dashboardTierFilter" class="login-input" style="width: auto; margin-bottom: 0; padding: 4px 12px; height: 32px;" onchange="currentDashboardRenderCount = 10; renderDashboardLogsView()">
+          <option value="all">所有權限</option>
+          <option value="公開">公開文章</option>
+          <option value="會員限定">會員限定</option>
+          <option value="VIP">VIP專屬</option>
+        </select>
+
       </div>
       <div class="flex-wrap-gap">
         <a id="authorGitHubLink" href="#" target="_blank" class="action-btn-sm" style="display:none; color:var(--text); border-color:var(--text);"><i data-lucide="external-link" style="width:14px; height:14px;"></i> 沙龍</a>
@@ -656,11 +664,22 @@
       </div>
     </div>
     
+    
+    <div style="display:flex; gap:12px; margin-bottom: 24px; flex-wrap: wrap; background: #fff; padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border);">
+      <div style="display: flex; align-items: center; gap: 8px; color: var(--text-muted);">
+        <i data-lucide="search" style="width: 18px; height: 18px;"></i>
+      </div>
+      <input type="text" id="dashboardSearch" class="login-input" placeholder="輸入關鍵字搜尋標題、內容或日期 (如 2026/09)..." style="flex:1; margin-bottom:0; border: none; outline: none; background: transparent; padding: 0; height: 32px;" onkeyup="currentDashboardRenderCount = 10; renderDashboardLogsView()">
+    </div>
+
+    
+    <div id="dashboardHeroContainer"></div>
+
     <div id="dashboardContainer" style="width: 100%;">
       <div style="text-align: center; color: var(--text-muted); padding: 40px 0;">載入中...</div>
     </div>
   </div>
-    
+   
 
   
   <div id="tab-settings" class="tab-content">
@@ -735,7 +754,6 @@
         <textarea id="authorSalonIntro" class="workshop-textarea" style="min-height: 120px;" maxlength="2000" placeholder="介紹"></textarea>
       </div>
 
-      
       <div class="input-row">
         <div class="input-col form-group"><input type="email" id="socialEmail" class="login-input" placeholder="信箱"></div>
         <div class="input-col form-group"><input type="url" id="socialIG" class="login-input" placeholder="IG"></div>
@@ -780,6 +798,7 @@
 
 <script>
 
+  
   let currentHistoryRenderCount = 10;
   let currentDashboardRenderCount = 10;
 
@@ -1058,10 +1077,25 @@
     }
   }
 
+  
   async function loadUserAccountInfo(email) {
+    const cacheKey = 'bvlog_cache_account_' + email;
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      try {
+        const res = JSON.parse(cached);
+        document.getElementById('infoEmail').value = res.email || email;
+        document.getElementById('infoName').value = res.name || "未設";
+        document.getElementById('infoBirth').value = res.birth || "未設";
+        document.getElementById('infoReg').value = res.regTime || "未設";
+        document.getElementById('infoTier').value = res.tier || "會員";
+      } catch(e){}
+    }
+
     try {
       const res = await api({ action: "getUserAccountInfo", email: email });
       if (res) {
+        localStorage.setItem(cacheKey, JSON.stringify(res));
         document.getElementById('infoEmail').value = res.email || email;
         document.getElementById('infoName').value = res.name || "未設";
         document.getElementById('infoBirth').value = res.birth || "未設";
@@ -1069,16 +1103,48 @@
         document.getElementById('infoTier').value = res.tier || "會員";
       }
     } catch (e) {
-      document.getElementById('infoEmail').value = email;
+      if(!cached) document.getElementById('infoEmail').value = email;
     }
   }
 
   let tempAvatarBase64 = null;
 
   async function loadAuthorProfile(email) {
+    const cacheKey = 'bvlog_cache_profile_' + email;
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      try {
+        const res = JSON.parse(cached);
+        window.currentAuthorProfile = res;
+        document.getElementById('authorHandle').value = res.handle || "";
+        document.getElementById('authorDisplayName').value = res.authorName || "";
+        document.getElementById('authorBio').value = res.bio || "";
+        document.getElementById('authorSalonIntro').value = res.salonIntro || "";
+        document.getElementById('authorOfficialWeb').value = res.officialWeb || ""; 
+        document.getElementById('socialEmail').value = res.socialEmail || "";
+        document.getElementById('socialIG').value = res.socialIG || "";
+        document.getElementById('socialFB').value = res.socialFB || "";
+        document.getElementById('socialYT').value = res.socialYT || "";
+        document.getElementById('socialPodcast').value = res.socialPodcast || "";
+
+        if (res.avatarUrl) {
+          const preview = document.getElementById('authorAvatarPreview');
+          preview.style.backgroundImage = "url('" + res.avatarUrl + "')";
+          preview.innerHTML = ''; 
+        }
+
+        if(res.handle) {
+          const ghLink = document.getElementById('authorGitHubLink');
+          ghLink.href = "https://alwayslucky2hand-ops.github.io/test-podcast-blog/" + res.handle + "/";
+          ghLink.style.display = 'inline-flex';
+        }
+      } catch(e){}
+    }
+
     try {
       const res = await api({ action: "getAuthorProfile", email: email });
       if (res) {
+        localStorage.setItem(cacheKey, JSON.stringify(res));
         window.currentAuthorProfile = res;
         document.getElementById('authorHandle').value = res.handle || "";
         document.getElementById('authorDisplayName').value = res.authorName || "";
@@ -1161,7 +1227,6 @@
           ghLink.href = "https://alwayslucky2hand-ops.github.io/test-podcast-blog/" + res.handle + "/";
           ghLink.style.display = 'inline-flex';
       }
-      
       isDashboardRendered = false;
       if(document.getElementById('tab-dashboard').classList.contains('active')) loadDashboardLogs(false);
     } catch (e) {
@@ -1181,17 +1246,35 @@
       step4: "你是一位商業導師。寫一段結尾祝福與行動呼籲（CTA）。最後一字不漏加上：「讓ＡＩ為你效勞，讓創業不再過勞\n我是特洛伊，一起用ＡＩ守住光陰」。零 Emoji 政策。"
     };
 
+    const cacheKey = 'bvlog_cache_prompts_' + email;
+    const cached = localStorage.getItem(cacheKey);
+    
+    if (cached) {
+      try {
+        const res = JSON.parse(cached);
+        document.getElementById('promptStep1').value = res.step1 || fallback.step1;
+        document.getElementById('promptStep2').value = res.step2 || fallback.step2;
+        document.getElementById('promptStep3').value = res.step3 || fallback.step3;
+        document.getElementById('promptStep4').value = res.step4 || fallback.step4;
+      } catch(e) {}
+    }
+
     try {
       const res = await api({ action: "getPrompts", email: email });
-      document.getElementById('promptStep1').value = (res && res.prompts && res.prompts.step1) ? res.prompts.step1 : fallback.step1;
-      document.getElementById('promptStep2').value = (res && res.prompts && res.prompts.step2) ? res.prompts.step2 : fallback.step2;
-      document.getElementById('promptStep3').value = (res && res.prompts && res.prompts.step3) ? res.prompts.step3 : fallback.step3;
-      document.getElementById('promptStep4').value = (res && res.prompts && res.prompts.step4) ? res.prompts.step4 : fallback.step4;
+      if (res && res.prompts) {
+        localStorage.setItem(cacheKey, JSON.stringify(res.prompts));
+        document.getElementById('promptStep1').value = res.prompts.step1 || fallback.step1;
+        document.getElementById('promptStep2').value = res.prompts.step2 || fallback.step2;
+        document.getElementById('promptStep3').value = res.prompts.step3 || fallback.step3;
+        document.getElementById('promptStep4').value = res.prompts.step4 || fallback.step4;
+      }
     } catch (e) {
-      document.getElementById('promptStep1').value = fallback.step1;
-      document.getElementById('promptStep2').value = fallback.step2;
-      document.getElementById('promptStep3').value = fallback.step3;
-      document.getElementById('promptStep4').value = fallback.step4;
+      if(!cached) {
+        document.getElementById('promptStep1').value = fallback.step1;
+        document.getElementById('promptStep2').value = fallback.step2;
+        document.getElementById('promptStep3').value = fallback.step3;
+        document.getElementById('promptStep4').value = fallback.step4;
+      }
     }
   }
 
@@ -1534,9 +1617,7 @@
     document.getElementById('btnPause').style.display = 'none';
     document.getElementById('btnCloseCamera').style.display = 'flex'; 
 
-    if (activeUploadTasks.size > 0) {
-      log("[等待] 剩餘 " + activeUploadTasks.size + " 段");
-    }
+    if (activeUploadTasks.size > 0) { log("[等待] 剩餘 " + activeUploadTasks.size + " 段"); }
 
     while (activeUploadTasks.size > 0) { await Promise.all(Array.from(activeUploadTasks)); }
     log("[處理] 歸檔...");
@@ -1561,7 +1642,6 @@
       document.getElementById('btnStart').style.display = 'flex';
       document.getElementById('btnStart').disabled = false;
       lucide.createIcons();
-      
       
       isLogsFetched = false;
       isHistoryRendered = false;
@@ -1599,17 +1679,6 @@
       try { return marked.parse(md); } catch (e) { return '<pre style="white-space:pre-wrap;">' + escapeHtml(md) + '</pre>'; }
     }
     return '<pre style="white-space:pre-wrap;">' + escapeHtml(md) + '</pre>';
-  }
-
-  
-  
-  
-  function safeHtml(str) { 
-    return String(str || "").replace(/</g, "&lt;").replace(/>/g, "&gt;"); 
-  }
-  
-  function escapeHtml(str) { 
-    return String(str || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); 
   }
 
   function formatTranscriptContent(rawText, urls) {
@@ -1651,6 +1720,7 @@
     return html || '<div class="markdown-body">' + renderMarkdown(rawText) + '</div>';
   }
 
+  
   async function loadHistoryLogs(forceRefresh = false) {
     const email = localStorage.getItem('bvlog_user_email');
     if (!email) return;
@@ -1673,7 +1743,6 @@
       }
     }
 
-    
     if (isHistoryRendered && !forceRefresh && document.querySelector('#historyContainer .history-card')) return; 
 
     if (!globalLogsCache || globalLogsCache.length === 0) {
@@ -1686,7 +1755,6 @@
     window.blobBuffers = {};
 
     let listHtml = '';
-    
     const itemsToRender = globalLogsCache.slice(0, currentHistoryRenderCount);
 
     for(let i=0; i<itemsToRender.length; i++) {
@@ -1734,20 +1802,7 @@
     isHistoryRendered = true;
   }
 
-  // 🌟 將 SVG 生成器改為「單引號字串相加」防錯版本，徹底解決 xmlns 語法報錯
-  function getFrontendSocialIconSvg(type) {
-    const style = 'width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
-    
-    if (type === 'mail') return '<svg xmlns="http://www.w3.org/2000/svg" ' + style + '><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>';
-    if (type === 'facebook') return '<svg xmlns="http://www.w3.org/2000/svg" ' + style + '><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>';
-    if (type === 'instagram') return '<svg xmlns="http://www.w3.org/2000/svg" ' + style + '><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>';
-    if (type === 'youtube') return '<svg xmlns="http://www.w3.org/2000/svg" ' + style + '><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg>';
-    if (type === 'headphones') return '<svg xmlns="http://www.w3.org/2000/svg" ' + style + '><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></svg>';
-    if (type === 'globe') return '<svg xmlns="http://www.w3.org/2000/svg" ' + style + '><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>';
-    
-    return '';
-  }
-
+  // 🌟 後台文章區：將 Hero 設定為靜態產生
   function generateDashboardHero(profile) {
     const p = profile || {};
     const displayName = p.authorName || '特洛伊AI賦能師';
@@ -1785,8 +1840,86 @@
     `;
   }
 
-  // 渲染獨立區塊 (自帶防 Lag 無 JS 延遲展開機制)
-  function renderFeedSection(sectionLogs, title, iconStr, color) {
+  async function loadDashboardLogs(forceRefresh = false) {
+    const container = document.getElementById('dashboardContainer');
+
+    if(forceRefresh || !isLogsFetched) {
+      container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> ...</div>';
+      lucide.createIcons();
+      const email = localStorage.getItem('bvlog_user_email');
+      if(email) {
+        try { 
+          const rawRes = await api({ action: "getHistoryLogs", email: email }); 
+          globalLogsCache = Array.isArray(rawRes) ? rawRes : [];
+          isLogsFetched = true;
+          isHistoryRendered = false;
+          isDashboardRendered = false;
+        }
+        catch(e) { container.innerHTML = "失敗: " + e.message; return; }
+      }
+    }
+
+    if (isDashboardRendered && !forceRefresh) return; 
+
+    // 初始化 Hero 區塊 (只會執行一次，避免被覆蓋)
+    const heroContainer = document.getElementById('dashboardHeroContainer');
+    if (heroContainer && heroContainer.innerHTML.trim() === '') {
+       heroContainer.innerHTML = generateDashboardHero(window.currentAuthorProfile);
+    }
+
+    renderDashboardLogsView();
+  }
+
+  function renderDashboardLogsView() {
+    const container = document.getElementById('dashboardContainer');
+    const filterStatus = document.getElementById('dashboardFilter') ? document.getElementById('dashboardFilter').value : 'all';
+    const filterTier = document.getElementById('dashboardTierFilter') ? document.getElementById('dashboardTierFilter').value : 'all';
+    const searchKeyword = document.getElementById('dashboardSearch') ? document.getElementById('dashboardSearch').value.toLowerCase().trim() : '';
+
+    const dashboardItems = Array.isArray(globalLogsCache) ? globalLogsCache : [];
+    
+    
+    let filteredItems = dashboardItems.filter(l => {
+      let matchStatus = true;
+      if (filterStatus === 'published') matchStatus = (l.status && l.status.includes('已發布'));
+      else if (filterStatus === 'draft') matchStatus = (!l.status || !l.status.includes('已發布'));
+
+      const logTier = l.tier || '公開';
+      let matchTier = (filterTier === 'all' || logTier.includes(filterTier));
+
+      const searchTarget = (l.articleTitle + " " + l.articleBody + " " + l.timestamp).toLowerCase();
+      let matchKeyword = (searchKeyword === '' || searchTarget.includes(searchKeyword));
+
+      return matchStatus && matchTier && matchKeyword;
+    });
+
+    let allHtml = '';
+
+    if(filteredItems.length === 0) {
+      allHtml += '<div style="text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px;">沒有找到符合的文章！</div>';
+      container.innerHTML = allHtml;
+      lucide.createIcons();
+      isDashboardRendered = true;
+      return;
+    }
+
+    
+    const publicLogs = filteredItems.filter(l => l.tier === '公開' || !l.tier || l.tier.trim() === '');
+    const memberLogs = filteredItems.filter(l => l.tier === '會員限定');
+    const vipLogs = filteredItems.filter(l => l.tier === 'VIP私塾特定' || l.tier === 'VIP私塾'); 
+
+    
+    allHtml += renderDashFeedSection(publicLogs, '公開文章', 'globe', 'var(--text)', 'dash-sec-public');
+    allHtml += renderDashFeedSection(memberLogs, '會員限定', 'lock', 'var(--warning)', 'dash-sec-member');
+    allHtml += renderDashFeedSection(vipLogs, 'VIP私塾', 'crown', 'var(--danger)', 'dash-sec-vip');
+
+    container.innerHTML = allHtml;
+
+    lucide.createIcons();
+    isDashboardRendered = true;
+  }
+
+  function renderDashFeedSection(sectionLogs, title, iconStr, color, sectionId) {
     if (sectionLogs.length === 0) return '';
     const p = window.currentAuthorProfile || {};
     const avatarUrl = p.avatarUrl || 'https://ui-avatars.com/api/?name=T&background=3175B5&color=fff';
@@ -1803,12 +1936,12 @@
     html += '</div>';
 
     if (rest.length > 0) {
-      const sectionId = 'rest-dash-' + Math.random().toString(36).substr(2, 9);
-      html += `<div id="${sectionId}" style="display:none;" class="feed-list" style="margin-top: 32px;">`;
+      const restId = 'rest-' + Math.random().toString(36).substr(2, 9);
+      html += `<div id="${restId}" style="display:none;" class="feed-list" style="margin-top: 32px;">`;
       rest.forEach(log => { html += generateFeedItemHtml(log, avatarUrl, displayName); });
       html += `</div>
                <div style="text-align: center; margin-top: 24px;">
-                 <button onclick="document.getElementById('${sectionId}').style.display='flex'; this.style.display='none';" class="action-btn-sm" style="border-radius: 20px; padding: 10px 24px;">
+                 <button onclick="document.getElementById('${restId}').style.display='flex'; this.style.display='none';" class="action-btn-sm" style="border-radius: 20px; padding: 10px 24px;">
                    <i data-lucide="chevron-down" style="width:14px; height:14px;"></i> 看更多 (${rest.length})
                  </button>
                </div>`;
@@ -1862,91 +1995,7 @@
       </div>`;
   }
 
-  async function loadDashboardLogs(forceRefresh = false) {
-    const container = document.getElementById('dashboardContainer');
-
-    if(forceRefresh || !isLogsFetched) {
-      container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> ...</div>';
-      lucide.createIcons();
-      const email = localStorage.getItem('bvlog_user_email');
-      if(email) {
-        try { 
-          const rawRes = await api({ action: "getHistoryLogs", email: email }); 
-          globalLogsCache = Array.isArray(rawRes) ? rawRes : [];
-          isLogsFetched = true;
-          isHistoryRendered = false;
-          isDashboardRendered = false;
-        }
-        catch(e) { container.innerHTML = "失敗: " + e.message; return; }
-      }
-    }
-
-    if (isDashboardRendered && !forceRefresh) return; 
-
-    // 呼叫獨立的渲染函式
-    renderDashboardLogsView();
-  }
-
-  function renderDashboardLogsView() {
-    const container = document.getElementById('dashboardContainer');
-    const filterStatus = document.getElementById('dashboardFilter') ? document.getElementById('dashboardFilter').value : 'all';
-    const searchKeyword = document.getElementById('dashboardSearch') ? document.getElementById('dashboardSearch').value.toLowerCase().trim() : '';
-
-    
-    const searchHtml = `
-      <div style="display:flex; gap:12px; margin-bottom: 32px; flex-wrap: wrap; background: #fff; padding: 16px; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-        <div style="display: flex; align-items: center; gap: 8px; color: var(--text-muted);">
-          <i data-lucide="search" style="width: 18px; height: 18px;"></i>
-        </div>
-        <input type="text" id="dashboardSearch" class="login-input" placeholder="輸入關鍵字搜尋標題、內容或日期..." style="flex:1; margin-bottom:0; border: none; outline: none; background: transparent; padding: 0;" onkeyup="renderDashboardLogsView()" value="${searchKeyword}" autofocus>
-      </div>
-    `;
-
-    const dashboardItems = Array.isArray(globalLogsCache) ? globalLogsCache : [];
-    
-    // 過濾發布狀態與關鍵字
-    let filteredItems = dashboardItems.filter(l => {
-      let matchStatus = true;
-      if (filterStatus === 'published') matchStatus = (l.status && l.status.includes('已發布'));
-      else if (filterStatus === 'draft') matchStatus = (!l.status || !l.status.includes('已發布'));
-
-      const searchTarget = (l.articleTitle + " " + l.articleBody + " " + l.timestamp).toLowerCase();
-      let matchKeyword = (searchKeyword === '' || searchTarget.includes(searchKeyword));
-
-      return matchStatus && matchKeyword;
-    });
-
-    
-    const publicLogs = filteredItems.filter(l => l.tier === '公開' || !l.tier || l.tier.trim() === '');
-    const memberLogs = filteredItems.filter(l => l.tier === '會員限定');
-    const vipLogs = filteredItems.filter(l => l.tier === 'VIP私塾特定' || l.tier === 'VIP私塾');
-
-    let allHtml = generateDashboardHero(window.currentAuthorProfile) + searchHtml;
-
-    if(filteredItems.length === 0) {
-      allHtml += '<div style="text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px;">沒有找到符合的結果！</div>';
-    } else {
-      allHtml += renderFeedSection(publicLogs, '公開文章', 'globe', 'var(--text)');
-      allHtml += renderFeedSection(memberLogs, '會員限定', 'lock', 'var(--warning)');
-      allHtml += renderFeedSection(vipLogs, 'VIP私塾', 'crown', 'var(--danger)');
-    }
-
-    container.innerHTML = allHtml;
-
-    
-    const searchInput = document.getElementById('dashboardSearch');
-    if (searchInput && searchKeyword !== '') {
-      searchInput.focus();
-      const val = searchInput.value;
-      searchInput.value = '';
-      searchInput.value = val;
-    }
-
-    lucide.createIcons();
-    isDashboardRendered = true;
-  }
-
-  
+  // 🌟 手動強制同步首頁功能
   async function syncHomepageToGithub() {
     const email = localStorage.getItem('bvlog_user_email');
     if(!email) return;
