@@ -21,7 +21,7 @@
       <h1 style="font-size: 32px; font-weight: 800; line-height: 1.3; margin-bottom: 24px;">別再排隊買失望！北埔擂茶「棄老店投對面」的背後商業邏輯｜特洛伊AI賦能師</h1>
       <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 24px;">
         <div style="display: flex; align-items: center; gap: 12px;">
-          <img src="https://drive.google.com/thumbnail?id=1KuDoAil9NwRE3nMGgMeD6hby1TtR5lqA&sz=w1280" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">
+          <img src="https://drive.google.com/uc?id=1KuDoAil9NwRE3nMGgMeD6hby1TtR5lqA" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">
           <div>
             <div style="font-weight: 700; font-size: 15px;">特洛伊AI賦能師</div>
             <div style="font-size: 13px; color: #64748b;">2026/09/12 發布</div>
@@ -149,37 +149,112 @@
 我是特洛伊，一起用ＡＩ守住光陰</textarea>
       <div style="margin-top: 48px; border-top: 1px solid #e2e8f0; padding-top: 32px;">
         <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 16px;">專屬影音紀錄</h3>
-        <video id="postVideoPlayer" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 8px; margin-bottom: 16px;"></video>
-        <div id="videoStatus" style="font-size: 13px; color: #64748b; text-align: center;">準備就緒，點擊播放</div>
+        
+        <div style="background: #000; border-radius: 8px; overflow: hidden; margin-bottom: 16px;">
+          <video id="postVideoPlayer" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block;"></video>
+          <div style="display:flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #0f172a;">
+            <span id="videoStatus" style="color: #f8fafc; font-size: 13px;">準備就緒</span>
+            <button id="btnStartStream" style="background: #3175B5; color: #fff; border: none; padding: 6px 16px; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 13px;">載入並播放</button>
+          </div>
+        </div>
+
         <script>
           document.addEventListener('DOMContentLoaded', function() {
             const urls = ["https://drive.google.com/file/d/1Zj2NSpEn7sk4DkSMGRrEEQ3Rv_ot2_sc/view?usp=drivesdk","https://drive.google.com/file/d/1l-NpUUEnO4ZqtqxwsNhtx-B0XMmqNXbe/view?usp=drivesdk","https://drive.google.com/file/d/12wu0QcwLX0INhYKgQFDhUkCydV5X93n5/view?usp=drivesdk","https://drive.google.com/file/d/1HQDI0cmU-j_svpnadTFHPblPjKda4v54/view?usp=drivesdk","https://drive.google.com/file/d/1mJ31U_r-2hhxqAyvXLSypMOmxYLHlMXF/view?usp=drivesdk","https://drive.google.com/file/d/1XJCrGwrf9PuIy5i2ee9ujOufQ1AjwL2w/view?usp=drivesdk","https://drive.google.com/file/d/1qqaoL4_bZWkkv73bqHX4df3zm9NNSbui/view?usp=drivesdk"];
             if (urls.length === 0) return;
+            
             const videoEl = document.getElementById('postVideoPlayer');
             const statusEl = document.getElementById('videoStatus');
+            const btnStart = document.getElementById('btnStartStream');
+            
+            // 🌟 確保對應到你目前最新部署的 GAS 網址
+            const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbyeqKhWv3TY8bpSdB9ZfWXNkR9yap66PyGxzEJqxpawWn9hZ9chfIuBPJfZHHoP91newQ/exec';
+            
             let currentIndex = 0;
-            function playNext() {
-              if (currentIndex >= urls.length) { statusEl.innerText = '播放完畢'; return; }
-              statusEl.innerText = '載入中: 第 ' + (currentIndex + 1) + ' / ' + urls.length + ' 段...';
-              fetch('https://script.google.com/macros/s/AKfycbxUzBHrGyXDBcfxcfuS57_vzi9AY9uXgDwqWJrXv3RQVQXtjAOR5iApyEsf5W8c577k9w/exec', {
-                method: 'POST', body: JSON.stringify({ action: "getVideoChunk", url: urls[currentIndex] })
-              }).then(r => r.json()).then(res => {
+            let blobCache = {}; // 快取 Blob URL，避免重複下載
+            
+            // 背景非同步下載與轉換 Blob
+            async function loadChunkData(index) {
+              if (index >= urls.length) return null;
+              if (blobCache[index]) return blobCache[index];
+              
+              statusEl.innerText = '[背景下載] 第 ' + (index + 1) + ' / ' + urls.length + ' 段...';
+              try {
+                const response = await fetch(GAS_API_URL, {
+                  method: 'POST',
+                  // text/plain 避免觸發 GitHub Pages 的 CORS 嚴格跨域攔截
+                  headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                  body: JSON.stringify({ action: "getVideoChunk", url: urls[index] })
+                });
+                
+                const res = await response.json();
                 if(res.status === 'success') {
-                  videoEl.src = "data:" + res.data.mimeType + ";base64," + res.data.base64;
-                  videoEl.play();
-                  statusEl.innerText = '播放中: 第 ' + (currentIndex + 1) + ' / ' + urls.length + ' 段';
+                  // 將 base64 轉換為 Blob URL 以提升瀏覽器播放效能
+                  const byteCharacters = atob(res.data.base64);
+                  const byteNumbers = new Array(byteCharacters.length);
+                  for (let i = 0; i < byteCharacters.length; i++) {
+                      byteNumbers[i] = byteCharacters.charCodeAt(i);
+                  }
+                  const byteArray = new Uint8Array(byteNumbers);
+                  const blob = new Blob([byteArray], { type: res.data.mimeType });
+                  const blobUrl = URL.createObjectURL(blob);
+                  
+                  blobCache[index] = blobUrl;
+                  return blobUrl;
+                } else {
+                  throw new Error(res.message);
                 }
-              }).catch(e => statusEl.innerText = '載入失敗');
+              } catch(e) {
+                statusEl.innerText = '[下載失敗] 第 ' + (index + 1) + ' 段';
+                return null;
+              }
             }
-            videoEl.onplay = function() { if(!videoEl.src) playNext(); };
-            videoEl.onended = function() { currentIndex++; playNext(); };
+
+            async function playVideoChunk() {
+              if (currentIndex >= urls.length) { 
+                statusEl.innerText = '所有片段播放完畢'; 
+                return; 
+              }
+              
+              let targetUrl = blobCache[currentIndex];
+              if (!targetUrl) {
+                statusEl.innerText = '緩衝中: 第 ' + (currentIndex + 1) + ' 段...';
+                targetUrl = await loadChunkData(currentIndex);
+              }
+              
+              if (targetUrl) {
+                videoEl.src = targetUrl;
+                videoEl.play();
+                statusEl.innerText = '正在播放: 第 ' + (currentIndex + 1) + ' / ' + urls.length + ' 段';
+                
+                // 核心無縫機制：當前播放時，背景提早預載下一個片段
+                if (currentIndex + 1 < urls.length) {
+                  loadChunkData(currentIndex + 1).catch(e => console.log('預載異常', e));
+                }
+              } else {
+                // 如果這段壞了，跳下一段
+                currentIndex++;
+                playVideoChunk();
+              }
+            }
+
+            btnStart.addEventListener('click', function() {
+              btnStart.style.display = 'none';
+              playVideoChunk();
+            });
+
+            // 當這段影片播完，索引 +1，繼續無縫播放下一段
+            videoEl.onended = function() { 
+              currentIndex++; 
+              playVideoChunk(); 
+            };
           });
         </script>
       </div>
     
     
     <div style="margin-top: 60px; margin-bottom: 40px; padding: 40px 32px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; text-align: center;">
-      <img src="https://drive.google.com/thumbnail?id=1KuDoAil9NwRE3nMGgMeD6hby1TtR5lqA&sz=w1280" alt="Avatar" style="width: 72px; height: 72px; border-radius: 50%; margin-bottom: 16px; object-fit: cover;">
+      <img src="https://drive.google.com/uc?id=1KuDoAil9NwRE3nMGgMeD6hby1TtR5lqA" alt="Avatar" style="width: 72px; height: 72px; border-radius: 50%; margin-bottom: 16px; object-fit: cover;">
       <h4 style="font-size: 20px; font-weight: 800; margin-bottom: 12px;">特洛伊AI賦能師</h4>
       <p style="font-size: 14.5px; color: #64748b; margin-bottom: 24px;">交大電機畢業，刻骨過5次跨界微型創業、銘心過5家飲料店從出生到長大，堅持過6年的家族搬家貨運與轉型循環經濟，我很懂「校長兼撞鐘」的身不由己。追蹤我，讓系統為你效勞、讓創業不再過勞，讓創業也能兼顧伴侶和家庭生活。</p>
       <div style="display:flex; gap:12px; justify-content:center; margin-bottom:24px; flex-wrap:wrap;"><a href="mailto:biz.growthx.ai@gmail.com" target="_blank" style="color:#64748b;" title="Email"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></a><a href="https://www.facebook.com/share/1MGVhZxwUz/?mibextid=wwXIfr" target="_blank" style="color:#64748b;" title="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a><a href="https://www.instagram.com/troy.growthx.ai?stkn=cm9mbzQxZjZ0aGZw&utm_source=qr" target="_blank" style="color:#64748b;" title="Instagram"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a><a href="https://youtube.com/playlist?list=PLvqFgrghkpF7iM1PVJ_Iq46YItvqwX9VV&si=FLhCK7a9v7hh7vzg" target="_blank" style="color:#64748b;" title="YouTube"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg></a><a href="https://youtube.com/playlist?list=PLvqFgrghkpF5biyiMn3vjgpWPJyVgjEIH&si=4b5K0LnfmmmeIoVO" target="_blank" style="color:#64748b;" title="Podcast"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></svg></a><a href="https://rubybranddesign-cloud.github.io/e-line-card-share/troyAIempower/" target="_blank" style="color:#64748b;" title="Official Website"><svg xmlns="http://www.w3.org/2000/svg" style="width:20px;height:20px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg></a></div>
