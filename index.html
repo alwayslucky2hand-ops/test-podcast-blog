@@ -780,6 +780,8 @@
 
 <script>
 
+  let currentHistoryRenderCount = 10;
+  let currentDashboardRenderCount = 10;
 
   
   
@@ -1655,7 +1657,6 @@
 
     const container = document.getElementById('historyContainer');
     
-    
     if (forceRefresh || !isLogsFetched) {
       container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:32px 0;"><i data-lucide="loader" class="spin"></i> ...</div>';
       lucide.createIcons();
@@ -1665,13 +1666,14 @@
         isLogsFetched = true;
         isHistoryRendered = false;
         isDashboardRendered = false;
+        currentHistoryRenderCount = 10; 
       } catch (e) {
         container.innerHTML = '<div style="text-align:center; color:var(--danger); padding:30px 0; border:1px solid var(--danger); border-radius:4px;">失敗: ' + e.message + '</div>';
         return;
       }
     }
 
-    if (isHistoryRendered && !forceRefresh) return; 
+    if (isHistoryRendered && !forceRefresh && document.querySelector('#historyContainer .history-card')) return; 
 
     if (!globalLogsCache || globalLogsCache.length === 0) {
       container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px;">無紀錄</div>';
@@ -1683,8 +1685,12 @@
     window.blobBuffers = {};
 
     let listHtml = '';
-    for(let i=0; i<globalLogsCache.length; i++) {
-      const item = globalLogsCache[i];
+    
+    const itemsToRender = globalLogsCache.slice(0, currentHistoryRenderCount);
+
+    for(let i=0; i<itemsToRender.length; i++) {
+      const item = itemsToRender[i];
+      
       const cleanTime = sanitizeTimestamp(item.timestamp);
       const isRec = item.status && item.status.includes('錄製中');
       const urls = Array.isArray(item.urls) ? item.urls : [];
@@ -1713,12 +1719,22 @@
       listHtml += '<div class="history-card" data-row-id="' + item.logId + '"><div class="history-header"><div><div style="font-weight: 700; font-size: 16px; color: var(--text);">ID: ' + item.logId + '</div><div style="font-size: 13px; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; gap: 6px;"><i data-lucide="clock" style="width: 14px; height: 14px;"></i> ' + cleanTime + '</div></div><div class="flex-wrap-gap"><span class="badge ' + (isRec ? 'recording' : '') + '">' + item.status + '</span><button type="button" class="action-btn-sm action-btn-primary" onclick="openArticleWorkshop(\'' + item.logId + '\')"><i data-lucide="file-text" style="width: 14px; height: 14px;"></i> 工坊</button><button type="button" class="action-btn-sm action-btn-icon danger" onclick="deleteHistoryLog(\'' + item.logId + '\')" title="刪除"><i data-lucide="trash-2" style="width: 16px; height: 16px;"></i></button></div></div><div><div style="font-size: 12.5px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px;">切片 (' + urls.length + ')</div><div class="flex-wrap-gap">' + urlsHtml + '</div></div>' + playerHtml + summaryBlock + contentBlock + '</div>';
     }
 
+    if (globalLogsCache.length > currentHistoryRenderCount) {
+      listHtml += `
+        <div style="text-align: center; margin-top: 24px;">
+          <button onclick="currentHistoryRenderCount += 10; isHistoryRendered = false; loadHistoryLogs();" class="action-btn-sm" style="border-radius: 20px; padding: 10px 24px;">
+            <i data-lucide="chevron-down" style="width:14px; height:14px;"></i> 載入更多 (${globalLogsCache.length - currentHistoryRenderCount})
+          </button>
+        </div>
+      `;
+    }
+
     container.innerHTML = listHtml;
     lucide.createIcons();
     isHistoryRendered = true;
   }
 
-  
+  // 🌟 將 SVG 生成器改為「單引號字串相加」防錯版本，徹底解決 xmlns 語法報錯
   function getFrontendSocialIconSvg(type) {
     const style = 'width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
     
@@ -1817,6 +1833,10 @@
         ? '<img src="' + log.coverUrl + '" class="feed-cover" alt="Cover">' 
         : '<div class="feed-cover" style="background:#f1f5f9; display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:12px;">無圖</div>';
       
+      
+      const emails = log.vipEmail ? log.vipEmail.split(/[\n,]+/).filter(e => e.trim().length > 0) : [];
+      const subCount = emails.length;
+
       return `
       <div class="feed-item">
         <div class="feed-content">
@@ -1829,12 +1849,22 @@
           </div>
           <h3 class="feed-title">${safeHtml(log.articleTitle || '草稿 (' + log.logId + ')')}</h3>
           <p class="feed-excerpt">${escapeHtml(excerpt)}</p>
+          
+          <!-- 新增數據指標區塊 -->
+          <div style="display: flex; gap: 16px; margin-bottom: 16px; font-size: 13px; color: var(--text-muted); flex-wrap: wrap;">
+             <span style="display:flex; align-items:center; gap:4px;" title="觀看數"><i data-lucide="eye" style="width:14px;height:14px;"></i> 0</span>
+             <span style="display:flex; align-items:center; gap:4px;" title="完讀數"><i data-lucide="book-open" style="width:14px;height:14px;"></i> 0</span>
+             <span style="display:flex; align-items:center; gap:4px;" title="點播數"><i data-lucide="play-circle" style="width:14px;height:14px;"></i> 0</span>
+             <span style="display:flex; align-items:center; gap:4px; color: var(--accent); font-weight:600;" title="經由此文章收集的訂閱數"><i data-lucide="users" style="width:14px;height:14px;"></i> ${subCount}</span>
+          </div>
+
           <div style="display:flex; align-items:center; gap: 16px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border-subtle);">
              <span class="badge ${isPublished ? 'published' : 'draft'}">${isPublished ? '已發布' : '草稿'}</span>
+             <span style="font-size:12px; font-weight:600; padding:2px 8px; border-radius:4px; background: #f1f5f9;">${log.tier || '公開'}</span>
              <div style="margin-left: auto; display:flex; gap:6px;">
                 <button class="action-btn-sm action-btn-icon danger" onclick="deleteHistoryLog('${log.logId}')" title="刪除"><i data-lucide="trash-2" style="width: 14px; height: 14px;"></i></button>
                 <button class="action-btn-sm" onclick="openArticleWorkshop('${log.logId}')"><i data-lucide="edit-3" style="width: 14px; height: 14px;"></i> 編輯</button>
-                <button class="action-btn-sm action-btn-primary" onclick="triggerGithubPublish('${log.logId}')"><i data-lucide="globe" style="width: 14px; height: 14px;"></i> 發布</button>
+                <!-- 發布按鈕已移除，整合至工坊內發布 -->
              </div>
           </div>
         </div>
@@ -1867,25 +1897,50 @@
     renderDashboardLogsView();
   }
 
-  
   function renderDashboardLogsView() {
     const container = document.getElementById('dashboardContainer');
-    const filterValue = document.getElementById('dashboardFilter') ? document.getElementById('dashboardFilter').value : 'all';
+    
+    
+    const searchHtml = `
+      <div style="display:flex; gap:12px; margin-bottom: 24px; flex-wrap: wrap;">
+        <select id="dashboardTierFilter" class="login-input" style="width: auto; margin-bottom: 0; padding: 8px 12px; height: 40px;" onchange="currentDashboardRenderCount = 10; renderDashboardLogsView()">
+          <option value="all">所有權限</option>
+          <option value="公開">公開文章</option>
+          <option value="會員限定">會員限定</option>
+          <option value="VIP">VIP專屬</option>
+        </select>
+        <input type="text" id="dashboardSearch" class="login-input" placeholder="搜尋標題、內容或日期..." style="flex:1; margin-bottom:0; height: 40px;" onkeyup="currentDashboardRenderCount = 10; renderDashboardLogsView()">
+      </div>
+    `;
+
+    const filterStatus = document.getElementById('dashboardFilter') ? document.getElementById('dashboardFilter').value : 'all';
+    const filterTier = document.getElementById('dashboardTierFilter') ? document.getElementById('dashboardTierFilter').value : 'all';
+    const searchKeyword = document.getElementById('dashboardSearch') ? document.getElementById('dashboardSearch').value.toLowerCase().trim() : '';
 
     const dashboardItems = Array.isArray(globalLogsCache) ? globalLogsCache : [];
     
     
-    let filteredItems = dashboardItems;
-    if (filterValue === 'published') {
-        filteredItems = dashboardItems.filter(l => l.status && l.status.includes('已發布'));
-    } else if (filterValue === 'draft') {
-        filteredItems = dashboardItems.filter(l => !l.status || !l.status.includes('已發布'));
-    }
+    let filteredItems = dashboardItems.filter(l => {
+      
+      let matchStatus = true;
+      if (filterStatus === 'published') matchStatus = (l.status && l.status.includes('已發布'));
+      else if (filterStatus === 'draft') matchStatus = (!l.status || !l.status.includes('已發布'));
 
-    let allHtml = generateDashboardHero(window.currentAuthorProfile);
+      
+      const logTier = l.tier || '公開';
+      let matchTier = (filterTier === 'all' || logTier.includes(filterTier));
+
+      
+      const searchTarget = (l.articleTitle + " " + l.articleBody + " " + l.timestamp).toLowerCase();
+      let matchKeyword = (searchKeyword === '' || searchTarget.includes(searchKeyword));
+
+      return matchStatus && matchTier && matchKeyword;
+    });
+
+    let allHtml = generateDashboardHero(window.currentAuthorProfile) + searchHtml;
 
     if(filteredItems.length === 0) {
-      allHtml += '<div style="text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px; margin-top: 24px;">尚無符合條件的文章！</div>';
+      allHtml += '<div style="text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px;">尚無符合條件的文章！</div>';
       container.innerHTML = allHtml;
       lucide.createIcons();
       isDashboardRendered = true;
@@ -1893,16 +1948,41 @@
     }
 
     
-    const publicLogs = filteredItems.filter(l => l.tier === '公開' || !l.tier || l.tier.trim() === '');
-    const memberLogs = filteredItems.filter(l => l.tier === '會員限定');
-    const vipLogs = filteredItems.filter(l => l.tier === 'VIP私塾特定' || l.tier === 'VIP私塾'); 
+    const itemsToRender = filteredItems.slice(0, currentDashboardRenderCount);
+    
+    const p = window.currentAuthorProfile || {};
+    const avatarUrl = p.avatarUrl || 'https://ui-avatars.com/api/?name=T&background=3175B5&color=fff';
+    const displayName = p.authorName || '特洛伊AI賦能師';
 
-    allHtml += 
-      renderFeedSection(publicLogs, '公開文章', 'globe', 'var(--text)') +
-      renderFeedSection(memberLogs, '會員限定', 'lock', 'var(--warning)') +
-      renderFeedSection(vipLogs, 'VIP私塾特定', 'crown', 'var(--danger)');
+    allHtml += '<div class="feed-list">';
+    itemsToRender.forEach(log => {
+      allHtml += generateFeedItemHtml(log, avatarUrl, displayName);
+    });
+    allHtml += '</div>';
+
+    
+    if (filteredItems.length > currentDashboardRenderCount) {
+      allHtml += `
+        <div style="text-align: center; margin-top: 24px;">
+          <button onclick="currentDashboardRenderCount += 10; renderDashboardLogsView();" class="action-btn-sm" style="border-radius: 20px; padding: 10px 24px;">
+            <i data-lucide="chevron-down" style="width:14px; height:14px;"></i> 載入更多 (${filteredItems.length - currentDashboardRenderCount})
+          </button>
+        </div>
+      `;
+    }
 
     container.innerHTML = allHtml;
+
+    // 恢復搜尋框的焦點 (因為重新渲染 DOM 會失去焦點)
+    if (document.getElementById('dashboardSearch')) {
+      const searchInput = document.getElementById('dashboardSearch');
+      searchInput.focus();
+      
+      const val = searchInput.value;
+      searchInput.value = '';
+      searchInput.value = val;
+    }
+
     lucide.createIcons();
     isDashboardRendered = true;
   }
