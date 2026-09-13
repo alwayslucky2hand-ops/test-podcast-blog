@@ -494,7 +494,7 @@
       <div style="display: flex; flex-direction: column; gap: 16px;">
         <details class="history-accordion" open>
           <summary>
-            <span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>提案</span>
+            <span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>總結</span>
             <span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span>
           </summary>
           <div class="accordion-body"><div id="archiveSummary" class="markdown-body"></div></div>
@@ -777,6 +777,8 @@
         <div class="settings-title" style="margin-bottom: 0;"><i data-lucide="bot" style="width: 18px; height: 18px; color: var(--accent);"></i> 指令</div>
         <button class="action-btn-sm action-btn-primary" onclick="saveAllPrompts(this)"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button>
       </div>
+      
+      <div class="form-group"><label class="form-label">日誌總結</label><textarea id="promptStep0" class="workshop-textarea" style="min-height: 250px; font-size: 13.5px;" placeholder="請輸入影片錄製完畢後，系統自動執行的全局重點摘要提示詞..."></textarea></div>
       <div class="form-group"><label class="form-label">提案</label><textarea id="promptStep1" class="workshop-textarea" style="min-height: 120px; font-size: 13.5px;" placeholder="提案"></textarea></div>
       <div class="form-group"><label class="form-label">開頭</label><textarea id="promptStep2" class="workshop-textarea" style="min-height: 120px; font-size: 13.5px;" placeholder="開頭"></textarea></div>
       <div class="form-group"><label class="form-label">內文</label><textarea id="promptStep3" class="workshop-textarea" style="min-height: 120px; font-size: 13.5px;" placeholder="內文"></textarea></div>
@@ -1240,7 +1242,7 @@
 
   async function loadPrompts(email) {
     const fallback = {
-      step1: "你是一位資深總編輯。針對逐字稿與畫面描述，為微型創業者設計 20 組標題提案。格式必須嚴格依照：「你的吸睛標題｜特洛伊AI賦能師|||[標題類型] 戰略切入點說明」，絕對不要加數字序號。",
+      step1: "你是一位資深總編輯。針對逐字稿與畫面描述，為微型創業者設計 10 組標題提案。格式必須嚴格依照：「你的吸睛標題｜特洛伊AI賦能師|||[標題類型] 戰略切入點說明」，絕對不要加數字序號。",
       step2: "你是一位商業雜誌首席特約作家，深諳 Google E-E-A-T。根據文章標題與內容，寫一段兼具價值與黃金3秒Hook的文章開頭。首段50-80字點出實戰經驗價值，第二段直擊痛點。零 Emoji 政策。",
       step3: "你是一位頂尖主筆，深諳 Google E-E-A-T。將原始畫面描述與語音逐字稿專業重構：1. 內容完整保留口語與案例 2. 白話文字描述 3. 零 Emoji 政策 4. 分為 3 到 5 個次級標題（###），段落間使用分隔線（---）5. 開門見山，不重複標題與開頭。",
       step4: "你是一位商業導師。寫一段結尾祝福與行動呼籲（CTA）。最後一字不漏加上：「讓ＡＩ為你效勞，讓創業不再過勞\n我是特洛伊，一起用ＡＩ守住光陰」。零 Emoji 政策。"
@@ -1252,6 +1254,7 @@
     if (cached) {
       try {
         const res = JSON.parse(cached);
+        document.getElementById('promptStep0').value = res.step0 || ""; 
         document.getElementById('promptStep1').value = res.step1 || fallback.step1;
         document.getElementById('promptStep2').value = res.step2 || fallback.step2;
         document.getElementById('promptStep3').value = res.step3 || fallback.step3;
@@ -1263,6 +1266,7 @@
       const res = await api({ action: "getPrompts", email: email });
       if (res && res.prompts) {
         localStorage.setItem(cacheKey, JSON.stringify(res.prompts));
+        document.getElementById('promptStep0').value = res.prompts.step0 || ""; 
         document.getElementById('promptStep1').value = res.prompts.step1 || fallback.step1;
         document.getElementById('promptStep2').value = res.prompts.step2 || fallback.step2;
         document.getElementById('promptStep3').value = res.prompts.step3 || fallback.step3;
@@ -1270,6 +1274,7 @@
       }
     } catch (e) {
       if(!cached) {
+        document.getElementById('promptStep0').value = ""; 
         document.getElementById('promptStep1').value = fallback.step1;
         document.getElementById('promptStep2').value = fallback.step2;
         document.getElementById('promptStep3').value = fallback.step3;
@@ -1288,6 +1293,7 @@
     btn.disabled = true;
 
     const prompts = {
+      step0: document.getElementById('promptStep0').value, 
       step1: document.getElementById('promptStep1').value,
       step2: document.getElementById('promptStep2').value,
       step3: document.getElementById('promptStep3').value,
@@ -1775,16 +1781,33 @@
         urlsHtml = '<span style="font-size:12.5px; color:var(--text-muted);">無</span>';
       }
 
-      let playerHtml = '';
+      
+      
+      
+      let chunksBlock = '';
       if(urls.length > 0) {
-        playerHtml = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="play-circle" style="width: 16px; height: 16px; color: var(--accent);"></i>全片</span><button class="action-btn-sm action-btn-primary" onclick="event.stopPropagation(); window.startSeamlessPlay(\'' + item.logId + '\')"><i data-lucide="play" style="width: 14px; height: 14px;"></i> 啟接</button></summary><div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border);"><video id="player-' + item.logId + '" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block; object-fit: contain;"></video><div id="player-status-' + item.logId + '" style="padding: 12px 16px; background: #0f172a; color: #f8fafc; font-size: 14px; text-align: center;">待啟動</div></div></details>';
+        chunksBlock = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="link" style="width: 15px; height: 15px; color: var(--text-muted);"></i>雲端切片下載 (' + urls.length + ')</span><span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span></summary><div class="accordion-body"><div class="flex-wrap-gap">' + urlsHtml + '</div></div></details>';
       }
 
-      let summaryBlock = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>提案</span><div class="flex-wrap-gap"><button type="button" id="btn-edit-summary-' + item.logId + '" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); toggleEditMode(\'' + item.logId + '\', \'summary\')" title="編輯"><i data-lucide="edit-3" style="width: 16px; height: 16px;"></i></button><button type="button" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute(\'data-text\'))" data-text="' + escapeHtml(safeSummaryRaw) + '" title="複製"><i data-lucide="copy" style="width: 16px; height: 16px;"></i></button><span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span></div></summary><div class="accordion-body"><div id="view-summary-' + item.logId + '" class="markdown-body">' + renderMarkdown(safeSummaryRaw) + '</div><div id="edit-summary-' + item.logId + '" style="display: none; flex-direction: column; gap: 12px;"><textarea id="input-summary-' + item.logId + '" class="workshop-textarea" style="min-height: 180px;">' + escapeHtml(safeSummaryRaw) + '</textarea><div style="display: flex; justify-content: flex-end; gap: 8px;"><button class="action-btn-sm action-btn-icon" onclick="toggleEditMode(\'' + item.logId + '\', \'summary\')" title="取消"><i data-lucide="x" style="width: 16px; height: 16px;"></i></button><button class="action-btn-sm action-btn-primary" onclick="saveHistoryLog(\'' + item.logId + '\', \'summary\', this)"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button></div></div></div></details>';
+      let playerHtml = '';
+      if(urls.length > 0) {
+        playerHtml = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="play-circle" style="width: 16px; height: 16px; color: var(--accent);"></i>全片預覽</span><button class="action-btn-sm action-btn-primary" onclick="event.stopPropagation(); window.startSeamlessPlay(\'' + item.logId + '\')"><i data-lucide="play" style="width: 14px; height: 14px;"></i> 啟接</button></summary><div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border);"><video id="player-' + item.logId + '" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block; object-fit: contain;"></video><div id="player-status-' + item.logId + '" style="padding: 12px 16px; background: #0f172a; color: #f8fafc; font-size: 14px; text-align: center;">待啟動</div></div></details>';
+      }
+
+      let summaryBlock = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>總結</span><div class="flex-wrap-gap"><button type="button" id="btn-edit-summary-' + item.logId + '" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); toggleEditMode(\'' + item.logId + '\', \'summary\')" title="編輯"><i data-lucide="edit-3" style="width: 16px; height: 16px;"></i></button><button type="button" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute(\'data-text\'))" data-text="' + escapeHtml(safeSummaryRaw) + '" title="複製"><i data-lucide="copy" style="width: 16px; height: 16px;"></i></button><span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span></div></summary><div class="accordion-body"><div id="view-summary-' + item.logId + '" class="markdown-body">' + renderMarkdown(safeSummaryRaw) + '</div><div id="edit-summary-' + item.logId + '" style="display: none; flex-direction: column; gap: 12px;"><textarea id="input-summary-' + item.logId + '" class="workshop-textarea" style="min-height: 180px;">' + escapeHtml(safeSummaryRaw) + '</textarea><div style="display: flex; justify-content: flex-end; gap: 8px;"><button class="action-btn-sm action-btn-icon" onclick="toggleEditMode(\'' + item.logId + '\', \'summary\')" title="取消"><i data-lucide="x" style="width: 16px; height: 16px;"></i></button><button class="action-btn-sm action-btn-primary" onclick="saveHistoryLog(\'' + item.logId + '\', \'summary\', this)"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button></div></div></div></details>';
 
       let contentBlock = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="file-text" style="width: 15px; height: 15px; color: var(--text-muted);"></i>內容</span><div class="flex-wrap-gap"><button type="button" id="btn-edit-content-' + item.logId + '" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); toggleEditMode(\'' + item.logId + '\', \'content\')" title="編輯"><i data-lucide="edit-3" style="width: 16px; height: 16px;"></i></button><button type="button" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute(\'data-text\'))" data-text="' + escapeHtml(safeContentRaw) + '" title="複製"><i data-lucide="copy" style="width: 16px; height: 16px;"></i></button><span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span></div></summary><div class="accordion-body"><div id="view-content-' + item.logId + '">' + formatTranscriptContent(safeContentRaw, urls) + '</div><div id="edit-content-' + item.logId + '" style="display: none; flex-direction: column; gap: 12px;"><textarea id="input-content-' + item.logId + '" class="workshop-textarea" style="min-height: 250px;">' + escapeHtml(safeContentRaw) + '</textarea><div style="display: flex; justify-content: flex-end; gap: 8px;"><button class="action-btn-sm action-btn-icon" onclick="toggleEditMode(\'' + item.logId + '\', \'content\')" title="取消"><i data-lucide="x" style="width: 16px; height: 16px;"></i></button><button class="action-btn-sm action-btn-primary" onclick="saveHistoryLog(\'' + item.logId + '\', \'content\', this)"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button></div></div></div></details>';
 
-      listHtml += '<div class="history-card" data-row-id="' + item.logId + '"><div class="history-header"><div><div style="font-weight: 700; font-size: 16px; color: var(--text);">ID: ' + item.logId + '</div><div style="font-size: 13px; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; gap: 6px;"><i data-lucide="clock" style="width: 14px; height: 14px;"></i> ' + cleanTime + '</div></div><div class="flex-wrap-gap"><span class="badge ' + (isRec ? 'recording' : '') + '">' + item.status + '</span><button type="button" class="action-btn-sm action-btn-primary" onclick="openArticleWorkshop(\'' + item.logId + '\')"><i data-lucide="file-text" style="width: 14px; height: 14px;"></i> 工坊</button><button type="button" class="action-btn-sm action-btn-icon danger" onclick="deleteHistoryLog(\'' + item.logId + '\')" title="刪除"><i data-lucide="trash-2" style="width: 16px; height: 16px;"></i></button></div></div><div><div style="font-size: 12.5px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px;">切片 (' + urls.length + ')</div><div class="flex-wrap-gap">' + urlsHtml + '</div></div>' + playerHtml + summaryBlock + contentBlock + '</div>';
+      
+      listHtml += '<div class="history-card" data-row-id="' + item.logId + '">' +
+                  '<div class="history-header"><div><div style="font-weight: 700; font-size: 16px; color: var(--text);">ID: ' + item.logId + '</div><div style="font-size: 13px; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; gap: 6px;"><i data-lucide="clock" style="width: 14px; height: 14px;"></i> ' + cleanTime + '</div></div><div class="flex-wrap-gap"><span class="badge ' + (isRec ? 'recording' : '') + '">' + item.status + '</span><button type="button" class="action-btn-sm action-btn-primary" onclick="openArticleWorkshop(\'' + item.logId + '\')"><i data-lucide="file-text" style="width: 14px; height: 14px;"></i> 工坊</button><button type="button" class="action-btn-sm action-btn-icon danger" onclick="deleteHistoryLog(\'' + item.logId + '\')" title="刪除"><i data-lucide="trash-2" style="width: 16px; height: 16px;"></i></button></div></div>' +
+                  chunksBlock +
+                  playerHtml +
+                  contentBlock +
+                  summaryBlock +
+                  '</div>';
+                  
+      
     }
 
     if (globalLogsCache.length > currentHistoryRenderCount) {
@@ -1845,10 +1868,18 @@
         <div class="membership-form-box" style="margin-top: 16px; padding: 24px; border: 1px solid var(--border); border-radius: 8px; background: #f8fafc; text-align: left;">
           <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">${getFrontendSocialIconSvg('mail')} 申請加入會員 / 訂閱最新消息</h3>
           <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6;">
-            <strong>一般會員（一個月 $250）：</strong>即可享受不限次數、不限堂數觀看會員限定課程與獲得應用程式碼。<br>
-            <strong>VIP會員（一天不到 90 元）：</strong>即可享受不受時空限制、不限次數的私塾陪跑。
+            <strong>會員訂閱（$198/月）：</strong>即可享受不限次數、不限堂數觀看會員限定課程與獲得應用程式碼。<br>
+            <strong>VIP私塾（$1980/月）：</strong>即可享受不受時空限制、不限次數的私塾陪跑。
           </p>
           <form style="display: flex; flex-direction: column; gap: 12px;" onsubmit="event.preventDefault(); alert('此為後台預覽畫面，實際發布後功能才會生效！');">
+            
+            <!-- 🌟 新增的下拉式選單 -->
+            <select required class="login-input" style="margin-bottom:0; background:#fff; cursor: pointer;">
+              <option value="" disabled selected>請選擇您想申請的方案 (必填)</option>
+              <option value="會員訂閱">會員訂閱：$198/月</option>
+              <option value="VIP私塾">VIP私塾：$1980/月</option>
+            </select>
+            
             <input type="email" placeholder="您的 Email (必填)" required class="login-input" style="margin-bottom:0; background:#fff;">
             <div style="display: flex; gap: 12px; flex-wrap: wrap;">
               <input type="text" placeholder="姓名 / 暱稱 (必填)" required class="login-input" style="margin-bottom:0; background:#fff; flex: 1; min-width: 120px;">
