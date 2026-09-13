@@ -6,7 +6,6 @@
   <title>只要開口就能日更？揭秘微型創業者「不寫稿」也能霸榜 Google 的隱藏邏輯｜特洛伊AI賦能師 | 特洛伊AI賦能師</title>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
-    /* 🛡️ CSS 防護層：禁止文字與圖片被選取、禁止手機長按呼叫選單 */
     body { 
       font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
       background: #ffffff; color: #0f172a; line-height: 1.8; margin: 0; padding: 0; 
@@ -17,11 +16,10 @@
       -webkit-user-select: auto; user-select: auto;
     }
     img, video {
-      pointer-events: none; /* 防止直接拖曳圖片 */
+      pointer-events: none; 
     }
-    video { pointer-events: auto; /* 恢復影片播放器的點擊控制 */ }
+    video { pointer-events: auto; }
 
-    /* 🛡️ 失焦防護遮罩樣式 */
     .secure-overlay {
       display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(255,255,255,0.98); z-index: 2147483647; 
@@ -35,11 +33,20 @@
     .markdown-body { font-size: 17px; line-height: 2.1; color: #1e293b; }
     .markdown-body h2 { font-size: 24px; margin: 40px 0 16px 0; font-weight: 800; }
     .markdown-body h3 { font-size: 20px; color: #3175B5; margin: 32px 0 16px 0; font-weight: 800; }
-    .markdown-body img { max-width: 100%; height: auto; border-radius: 8px; margin: 32px 0; }
+    
+    .markdown-body img { 
+      max-width: 100%; 
+      height: auto; 
+      object-fit: contain; 
+      border-radius: 8px; 
+      display: block; 
+      margin: 32px auto; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      pointer-events: none; 
+    }
   </style>
 </head>
 <body>
-  <!-- 🛡️ 失焦防護遮罩元件 -->
   <div id="secureOverlay" class="secure-overlay">
     <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
     <div class="secure-overlay-title">為保護智慧財產權，已暫停顯示內容</div>
@@ -150,7 +157,7 @@ AI 會保留你最原始的說話口吻。
 *   建立內容分層機制，將一般心得設為公開文章，將核心教學或線上課程設為會員限定內容。
 *   針對 VIP 或私塾學員提供「客製化解答」，學員提出問題後，直接錄製一段回覆並轉化成專屬文章。
 
-![插圖](https://drive.google.com/uc?id=1axce-qn5w60a60gCa5Jdn2shHXilZRuq&amp;t=1789304268716)
+![插圖](https://drive.google.com/thumbnail?id=1axce-qn5w60a60gCa5Jdn2shHXilZRuq&amp;sz=w1280&amp;t=1789304268716)
 
 這種做法能幫你留下數位足跡，將每一份產出的內容都轉化為可長期獲利的資產。透過 AI 賦能教學，你不再是獨自苦戰，而是擁有一支高效的數位內容團隊。我是特洛伊，讓我們一起用 AI 守護光陰，累積屬於你的品牌權威。
 
@@ -237,7 +244,7 @@ AI 會保留你最原始的說話口吻。
         <strong>會員訂閱（$198/月）：</strong>即可享受不限次數、不限堂數觀看會員限定課程與獲得應用程式碼。<br>
         <strong>VIP私塾（$1980/月）：</strong>即可享受不受時空限制、不限次數的私塾陪跑。
       </p>
-      <form style="display: flex; flex-direction: column; gap: 12px;" onsubmit="event.preventDefault(); alert('申請已送出！');">
+      <form style="display: flex; flex-direction: column; gap: 12px;" onsubmit="event.preventDefault(); window.sendMetricData('subscribe'); alert('申請已送出！我們將盡快與您聯繫。');">
         <select required style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; width: 100%; box-sizing: border-box; font-family: inherit; font-size: 14px; background: #fff; cursor: pointer;">
           <option value="" disabled selected>請選擇您想申請的方案 (必填)</option>
           <option value="會員訂閱">會員訂閱：$198/月</option>
@@ -257,6 +264,26 @@ AI 會保留你最原始的說話口吻。
   
   </div>
   <script>
+    // 📊 數據追蹤腳本 (靜默背景傳送)
+    window.sendMetricData = function(metricType) {
+      fetch("https://script.google.com/macros/s/AKfycbyeqKhWv3TY8bpSdB9ZfWXNkR9yap66PyGxzEJqxpawWn9hZ9chfIuBPJfZHHoP91newQ/exec", {
+        method: "POST",
+        body: JSON.stringify({ action: "incrementMetric", logId: "2bf6f1e7", metricType: metricType })
+      }).catch(e => {}); 
+    };
+
+    // 🚀 1. 觀看數 (View)
+    setTimeout(() => window.sendMetricData('view'), 1500);
+
+    // 🚀 2. 完讀數 (Read)
+    let readSent = false;
+    window.addEventListener('scroll', () => {
+      if (!readSent && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 300) {
+        window.sendMetricData('read');
+        readSent = true;
+      }
+    });
+
     
     function bindVideoLogic(urls) {
       if (!urls || urls.length === 0) return;
@@ -354,6 +381,7 @@ AI 會保留你最原始的說話口吻。
         btnStart.style.display = 'none';
         selector.disabled = false;
         playVideoChunk(0);
+        window.sendMetricData('play'); 
       });
       
       btnPrev.addEventListener('click', function() {
@@ -381,24 +409,20 @@ AI 會保留你最原始的說話口吻。
   
     
     document.addEventListener("DOMContentLoaded", function() {
-      // 🛡️ JS 防護層 1：禁止右鍵選單與拖曳選取
       document.addEventListener('contextmenu', e => e.preventDefault());
       document.addEventListener('selectstart', e => {
-        if(e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') e.preventDefault();
+        if(e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'SELECT') e.preventDefault();
       });
       
-      // 🛡️ JS 防護層 2：禁止複製與剪下
       document.addEventListener('copy', e => { e.preventDefault(); alert('版權所有，禁止複製！'); });
       document.addEventListener('cut', e => { e.preventDefault(); });
       
-      // 🛡️ JS 防護層 3：禁止列印與部分快捷鍵
       document.addEventListener('keydown', e => {
         if (e.key === 'PrintScreen' || (e.ctrlKey && e.key === 'p') || (e.metaKey && e.key === 'p') || (e.ctrlKey && e.key === 's') || (e.metaKey && e.key === 's')) {
           e.preventDefault();
         }
       });
       
-      // 🛡️ JS 防護層 4：視窗失焦偵測 (防截圖防錄影)
       const overlay = document.getElementById('secureOverlay');
       const showOverlay = () => { overlay.style.display = 'flex'; };
       const hideOverlay = () => { overlay.style.display = 'none'; };
@@ -435,7 +459,6 @@ AI 會保留你最原始的說話口吻。
       }
     });
     
-    // 會員解鎖驗證流程
     let authState = "email";
     window.handleAuthAction = function(logId) {
       const btn = document.getElementById("btnAuthAction");
