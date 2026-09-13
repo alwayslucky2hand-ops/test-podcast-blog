@@ -2054,12 +2054,12 @@
           <h3 class="feed-title">${safeHtml(log.articleTitle || '草稿 (' + log.logId + ')')}</h3>
           <p class="feed-excerpt">${escapeHtml(excerpt)}</p>
           
-          <!-- 後台專屬：數據指標區塊 (替換原本的發布按鈕) -->
+          <!-- 後台專屬：數據指標區塊 -->
           <div style="display: flex; gap: 16px; margin-bottom: 16px; font-size: 13px; color: var(--text-muted); flex-wrap: wrap;">
-             <span style="display:flex; align-items:center; gap:4px;" title="觀看數"><i data-lucide="eye" style="width:14px;height:14px;"></i> 0</span>
-             <span style="display:flex; align-items:center; gap:4px;" title="完讀數"><i data-lucide="book-open" style="width:14px;height:14px;"></i> 0</span>
-             <span style="display:flex; align-items:center; gap:4px;" title="點播數"><i data-lucide="play-circle" style="width:14px;height:14px;"></i> 0</span>
-             <span style="display:flex; align-items:center; gap:4px; color: var(--accent); font-weight:600;" title="經由此文章收集的訂閱數"><i data-lucide="users" style="width:14px;height:14px;"></i> ${subCount}</span>
+             <span style="display:flex; align-items:center; gap:4px;" title="觀看數"><i data-lucide="eye" style="width:14px;height:14px;"></i> ${log.viewCount || 0}</span>
+             <span style="display:flex; align-items:center; gap:4px;" title="完讀數"><i data-lucide="book-open" style="width:14px;height:14px;"></i> ${log.readCount || 0}</span>
+             <span style="display:flex; align-items:center; gap:4px;" title="點播數"><i data-lucide="play-circle" style="width:14px;height:14px;"></i> ${log.playCount || 0}</span>
+             <span style="display:flex; align-items:center; gap:4px; color: var(--accent); font-weight:600;" title="經由此文章收集的訂閱數"><i data-lucide="users" style="width:14px;height:14px;"></i> ${log.subCount || 0}</span>
           </div>
 
           <div style="display:flex; align-items:center; gap: 16px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border-subtle);">
