@@ -244,7 +244,7 @@ AI 會保留你最原始的說話口吻。
         <strong>會員訂閱（$198/月）：</strong>即可享受不限次數、不限堂數觀看會員限定課程與獲得應用程式碼。<br>
         <strong>VIP私塾（$1980/月）：</strong>即可享受不受時空限制、不限次數的私塾陪跑。
       </p>
-      <form style="display: flex; flex-direction: column; gap: 12px;" onsubmit="event.preventDefault(); window.sendMetricData('subscribe'); alert('申請已送出！我們將盡快與您聯繫。');">
+      <form style="display: flex; flex-direction: column; gap: 12px;" onsubmit="event.preventDefault(); window.sendMetricData('subscribe'); window.submitSubForm(this, '2bf6f1e7', 'alwayslucky2hand@gmail.com');">
         <select required style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; width: 100%; box-sizing: border-box; font-family: inherit; font-size: 14px; background: #fff; cursor: pointer;">
           <option value="" disabled selected>請選擇您想申請的方案 (必填)</option>
           <option value="會員訂閱">會員訂閱：$198/月</option>
@@ -264,6 +264,27 @@ AI 會保留你最原始的說話口吻。
   
   </div>
   <script>
+
+    window.submitSubForm = function(form, logId, authorEmail) {
+      const plan = form.querySelector('select').value;
+      const email = form.querySelector('input[type="email"]').value;
+      const btn = form.querySelector('button[type="submit"]');
+      const oldText = btn.innerHTML;
+      
+      btn.innerHTML = "處理中..."; btn.disabled = true;
+
+      fetch("https://script.google.com/macros/s/AKfycbyeqKhWv3TY8bpSdB9ZfWXNkR9yap66PyGxzEJqxpawWn9hZ9chfIuBPJfZHHoP91newQ/exec", {
+        method: "POST",
+        body: JSON.stringify({ action: "submitSubscription", logId: logId, authorEmail: authorEmail, plan: plan, subscriberEmail: email })
+      }).then(r => r.json()).then(res => {
+        alert("申請已送出！我們將盡快與您聯繫。");
+        form.reset();
+      }).catch(e => alert("送出失敗，請稍後再試")).finally(() => {
+        btn.innerHTML = oldText; btn.disabled = false;
+      });
+    };
+
+
     // 📊 數據追蹤腳本 (靜默背景傳送)
     window.sendMetricData = function(metricType) {
       fetch("https://script.google.com/macros/s/AKfycbyeqKhWv3TY8bpSdB9ZfWXNkR9yap66PyGxzEJqxpawWn9hZ9chfIuBPJfZHHoP91newQ/exec", {
