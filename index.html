@@ -383,6 +383,61 @@
       .feed-item { flex-direction: column-reverse; gap: 16px; padding: 16px; }
       .feed-cover { width: 100%; height: auto; aspect-ratio: 16/9; }
     }
+
+     
+    .medium-link-tooltip {
+      position: absolute;
+      display: none;
+      background: #1e293b;
+      padding: 6px 12px;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      z-index: 3000;
+      align-items: center;
+      gap: 8px;
+      transform: translateX(-50%);
+      margin-top: -12px;
+    }
+     
+    .medium-link-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -6px;
+      border-width: 6px;
+      border-style: solid;
+      border-color: #1e293b transparent transparent transparent;
+    }
+    .medium-link-tooltip input {
+      background: transparent;
+      border: none;
+      color: #fff;
+      outline: none;
+      width: 220px;
+      font-size: 14px;
+      padding: 4px;
+    }
+    .medium-link-tooltip input::placeholder {
+      color: #94a3b8;
+    }
+    .medium-link-tooltip button {
+      background: transparent;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+    .medium-link-tooltip button:hover {
+      background: rgba(255,255,255,0.15);
+      color: var(--accent);
+    }
+
   </style>
 </head>
 <body>
@@ -791,6 +846,13 @@
 
 <canvas id="captureCanvas" style="display: none;"></canvas>
 <input type="file" id="inlineImageUpload" accept="image/*" style="display: none;" onchange="executeInlineImageUpload(event)">
+
+
+<div id="linkTooltip" class="medium-link-tooltip">
+  <input type="url" id="linkInput" placeholder="貼上網址 (如 https://...)" onkeydown="if(event.key === 'Enter') applyLink()" />
+  <button onclick="applyLink()" title="套用"><i data-lucide="check" style="width:16px;height:16px;"></i></button>
+  <button onclick="closeLinkTooltip()" title="取消"><i data-lucide="x" style="width:16px;height:16px;"></i></button>
+</div>
 
 <div id="toast" class="toast-box">
   <i data-lucide="check" style="width: 16px; height: 16px;"></i>
@@ -2323,6 +2385,87 @@
     saveCurrentStepData('full');
     renderBlogPreview(window.currentSelectedFullMd);
     showToast("[刪除]");
+  };
+
+  
+  let currentSelectedText = "";
+
+  
+  document.addEventListener('mouseup', function(e) {
+    const renderZone = document.getElementById('markdown-render-zone');
+    const tooltip = document.getElementById('linkTooltip');
+    
+    
+    if (!renderZone || !renderZone.contains(e.target)) {
+      
+      if (tooltip && tooltip.contains(e.target)) return;
+      closeLinkTooltip();
+      return;
+    }
+
+    
+    const selection = window.getSelection();
+    const selectedText = selection.toString().trim();
+
+    
+    if (selectedText.length > 0) {
+      currentSelectedText = selectedText;
+      
+      
+      const range = selection.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+      
+      
+      tooltip.style.left = (rect.left + rect.width / 2 + window.scrollX) + 'px';
+      tooltip.style.top = (rect.top + window.scrollY - 45) + 'px';
+      tooltip.style.display = 'flex';
+      
+      
+      const input = document.getElementById('linkInput');
+      input.value = '';
+      setTimeout(() => input.focus(), 50);
+    } else {
+      closeLinkTooltip();
+    }
+  });
+
+  
+  window.closeLinkTooltip = function() {
+    const tooltip = document.getElementById('linkTooltip');
+    if (tooltip) {
+      tooltip.style.display = 'none';
+      currentSelectedText = "";
+    }
+  };
+
+  
+  window.applyLink = function() {
+    const url = document.getElementById('linkInput').value.trim();
+    if (!url) {
+      showToast("請輸入網址");
+      return;
+    }
+    if (!currentSelectedText) return;
+
+    
+    let finalUrl = url;
+    if (!finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
+      finalUrl = 'https://' + finalUrl;
+    }
+
+    
+    const linkMarkdown = `[${currentSelectedText}](${finalUrl})`;
+    
+    
+    window.currentSelectedFullMd = window.currentSelectedFullMd.replace(currentSelectedText, linkMarkdown);
+    
+    
+    renderBlogPreview(window.currentSelectedFullMd);
+    saveCurrentStepData('full');
+    
+    showToast("已成功加入超連結！");
+    closeLinkTooltip();
+    lucide.createIcons();
   };
 
   function openArticleWorkshop(logId) {
