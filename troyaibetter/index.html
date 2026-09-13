@@ -8,6 +8,7 @@
     body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #f8fafc; color: #0f172a; margin:0; padding:0; }
     .container { max-width: 960px; margin: 0 auto; padding: 40px 20px; }
     
+    /* 搜尋列 */
     .filter-bar { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 40px; padding: 16px; background: #fff; border-radius: 8px; border: 1px solid #e2e8f0; }
     .search-input { flex: 1; min-width: 200px; padding: 10px 16px; border-radius: 4px; border: none; font-size: 14px; outline: none; background: transparent; }
     
@@ -25,7 +26,7 @@
   <div class="container">
     <div style="background: #ffffff; border-radius: 12px; padding: 40px; border: 1px solid #e2e8f0; margin-bottom: 24px;">
       <div style="display: flex; gap: 32px; align-items: flex-start; flex-wrap: wrap;">
-        <img src="https://lh3.googleusercontent.com/d/1KuDoAil9NwRE3nMGgMeD6hby1TtR5lqA" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0;">
+        <img src="https://drive.google.com/thumbnail?id=1KuDoAil9NwRE3nMGgMeD6hby1TtR5lqA&sz=w1280" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0;">
         <div style="flex: 1; min-width: 200px;">
           <h1 style="font-size: 28px; font-weight: 800; margin-bottom: 12px;">特洛伊AI賦能師</h1>
           <p style="font-size: 15px; color: #64748b; margin-bottom: 24px;">交大電機畢業，刻骨過5次跨界微型創業、銘心過5家飲料店從出生到長大，堅持過6年的家族搬家貨運與轉型循環經濟，我很懂「校長兼撞鐘」的身不由己。追蹤我，讓系統為你效勞、讓創業不再過勞，讓創業也能兼顧伴侶和家庭生活。</p>
@@ -48,24 +49,28 @@
         <strong>會員訂閱（$198/月）：</strong>即可享受不限次數、不限堂數觀看會員限定課程與獲得應用程式碼。<br>
         <strong>VIP私塾（$1980/月）：</strong>即可享受不受時空限制、不限次數的私塾陪跑。
       </p>
-      <form id="membershipForm" style="display: flex; flex-direction: column; gap: 12px; visibility:visible !important;" onsubmit="submitMembershipForm(event, 'homepage')">
-        <select id="subTier" required class="form-input" style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; width: 100%; box-sizing: border-box; background: #fff; cursor: pointer;">
+      <form style="display: flex; flex-direction: column; gap: 12px; visibility:visible !important;" onsubmit="event.preventDefault(); alert('申請已送出！我們將盡快與您聯繫。');">
+        
+        <!-- 🌟 新增的下拉式選單 -->
+        <select required class="form-input" style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; width: 100%; box-sizing: border-box; background: #fff; cursor: pointer;">
           <option value="" disabled selected>請選擇您想申請的方案 (必填)</option>
           <option value="會員訂閱">會員訂閱：$198/月</option>
           <option value="VIP私塾">VIP私塾：$1980/月</option>
         </select>
-        <input type="email" id="subEmail" placeholder="您的 Email (必填)" required class="form-input" style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; width: 100%; box-sizing: border-box;">
+        
+        <input type="email" placeholder="您的 Email (必填)" required class="form-input" style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; width: 100%; box-sizing: border-box;">
         <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-          <input type="text" id="subName" placeholder="姓名 / 暱稱 (必填)" required class="form-input" style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; flex: 1; min-width: 120px;">
-          <input type="text" id="subBirth" placeholder="出生年月日 (必填)" onfocus="(this.type='date')" onblur="(this.value==''?this.type='text':this.type='date')" required class="form-input" style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; flex: 1; min-width: 120px;">
+          <input type="text" placeholder="姓名 / 暱稱 (必填)" required class="form-input" style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; flex: 1; min-width: 120px;">
+          <input type="text" placeholder="出生年月日 (必填)" onfocus="(this.type='date')" onblur="(this.value==''?this.type='text':this.type='date')" required class="form-input" style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; flex: 1; min-width: 120px;">
         </div>
-        <textarea id="subReason" placeholder="想加入會員的原因" class="form-input" style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; min-height: 80px; width: 100%; box-sizing: border-box;"></textarea>
+        <textarea placeholder="想加入會員的原因" class="form-input" style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; min-height: 80px; width: 100%; box-sizing: border-box;"></textarea>
         <button type="submit" style="margin-top: 8px; padding: 12px; background: #0f172a; color: #fff; border: none; border-radius: 4px; font-weight: 700; cursor: pointer;">送出申請</button>
       </form>
     </div>
-   
+  
     </div>
 
+    <!-- 關鍵字搜尋列 -->
     <div class="filter-bar">
       <div style="color: #64748b; display:flex; align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
       <input type="text" id="frontendSearch" class="search-input" placeholder="輸入關鍵字搜尋標題、內容或日期 (如 2026/09)..." onkeyup="filterArticles()">
@@ -78,6 +83,107 @@
           <svg xmlns="http://www.w3.org/2000/svg" style="width:20px;height:20px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg> 公開文章
         </h2>
         <div class="feed-list">
+    <a href="2bf6f1e7.html" class="feed-item" data-search="只要開口就能日更？揭秘微型創業者「不寫稿」也能霸榜 google 的隱藏邏輯｜特洛伊ai賦能師 我實測一套思維轉化系統，透過三十秒切片與 ai 梳理，將口述轉化為符合搜尋規範的 seo 文章。這是我縮短創作路徑、實現數位資產規模化的實戰心得，助你在有限時間內高效率累積品牌影響力。
+
+想做個人品牌，卻卡在寫不出好文章。
+每天埋頭在瑣碎的營運工作中。
+你根本沒有多餘的兩小時對著電腦發呆。
+盯著螢幕上閃爍的游標。
+這是多數微型創業者最真實的痛點。
+
+你想分享專業價值。
+你想累積搜尋引擎的權威感。
+但寫作這道門檻。
+讓你始終無法達成穩定的內容日更。
+
+其實，你不需要強迫自己成為作家。
+只要你會說話。
+只要你有一部手機。
+就能啟動一套自動化的數位資產生產線。
+
+這套邏輯的核心在於思維即內容。
+透過雲端每三十秒自動切片與 ai 結構化。
+將你的所見所思。
+快速轉化為有趣、有料、有共鳴的長篇文章。
+
+這不只是在節省你的創作時間。
+更是在堆疊 google 最看重的權威分數。
+讓你的實戰經驗。
+自動變成搜尋引擎認可的專家證據。
+
+你不需要從零開始構思架構。
+ai 會保留你最原始的說話口吻。
+讓文字具備靈魂。
+同時精準嵌入具備排名的 seo 關鍵字。
+
+微型創業者的每一秒鐘都極其珍貴。
+別再讓瑣碎的打字過程。
+消磨掉你最具價值的商業智慧。
+現在開始，用你的聲音。
+守護你的時間。
+更守護你的數位足跡。 2026/09/13" style="display: flex; gap: 32px; padding: 24px; border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; text-decoration: none; color: inherit; transition: transform 0.2s, box-shadow 0.2s;">
+      <div class="feed-content" style="flex: 1; min-width: 0; display: flex; flex-direction: column;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px;">
+            <img src="https://drive.google.com/thumbnail?id=1KuDoAil9NwRE3nMGgMeD6hby1TtR5lqA&sz=w1280" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
+            <span>特洛伊AI賦能師</span>
+          </div>
+          <div style="font-size: 13px; color: #64748b;">2026/09/13</div>
+        </div>
+        <h3 style="font-size: 22px; font-weight: 800; margin-bottom: 12px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">只要開口就能日更？揭秘微型創業者「不寫稿」也能霸榜 Google 的隱藏邏輯｜特洛伊AI賦能師</h3>
+        <p style="font-size: 15px; color: #64748b; line-height: 1.6; margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">我實測一套思維轉化系統，透過三十秒切片與 AI 梳理，將口述轉化為符合搜尋規範的 SEO 文章。這是我縮短創作路徑、實現數位資產規模化的實戰心得，助你在有限時間內高效率累積品牌影響力。
+
+想做個人品牌，卻卡在寫不出好文章。
+每天埋頭在瑣碎的營運工作中。
+你根本沒有多餘的兩小時對著電腦發呆。
+盯著螢幕上閃爍的游標。
+這是多數微型創業者最真實的痛點。
+
+你想分享專業價值。
+你想累積搜尋引擎的權威感。
+但寫作這道門檻。
+讓你始終無法達成穩定的內容日更。
+
+其實，你不需要強迫自己成為作家。
+只要你會說話。
+只要你有一部手機。
+就能啟動一套自動化的數位資產生產線。
+
+這套邏輯的核心在於思維即內容。
+透過雲端每三十秒自動切片與 AI 結構化。
+將你的所見所思。
+快速轉化為有趣、有料、有共鳴的長篇文章。
+
+這不只是在節省你的創作時間。
+更是在堆疊 Google 最看重的權威分數。
+讓你的實戰經驗。
+自動變成搜尋引擎認可的專家證據。
+
+你不需要從零開始構思架構。
+AI 會保留你最原始的說話口吻。
+讓文字具備靈魂。
+同時精準嵌入具備排名的 SEO 關鍵字。
+
+微型創業者的每一秒鐘都極其珍貴。
+別再讓瑣碎的打字過程。
+消磨掉你最具價值的商業智慧。
+現在開始，用你的聲音。
+守護你的時間。
+更守護你的數位足跡。</p>
+        
+        <div style="display: flex; gap: 16px; margin-bottom: 16px; font-size: 13px; color: #64748b; flex-wrap: wrap;">
+           <span style="display:flex; align-items:center; gap:4px;" title="觀看數"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> 0</span>
+           <span style="display:flex; align-items:center; gap:4px;" title="完讀數"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> 0</span>
+           <span style="display:flex; align-items:center; gap:4px;" title="點播數"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg> 0</span>
+           <span style="display:flex; align-items:center; gap:4px; color: #3175B5; font-weight:600;" title="經由此文章收集的訂閱數"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> 0</span>
+        </div>
+
+        <div style="display:flex; align-items:center; gap: 16px; margin-top: auto; padding-top: 12px; border-top: 1px solid #e2e8f0;">
+           <span style="font-size:12px; font-weight:600; padding:4px 10px; border-radius:4px; background: #f1f5f9; color: #475569;">公開</span>
+        </div>
+      </div>
+      <div style="width: 240px; height: 160px; border-radius: 8px; overflow: hidden; flex-shrink: 0; border: 1px solid #e2e8f0;"><img src="https://drive.google.com/thumbnail?id=1XKFl5US6uhCDi2iKz-q4ff2G4zMfpsUn&sz=w1280" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: block;" alt="Cover"></div>
+    </a>
     <a href="e4525307.html" class="feed-item" data-search="別再排隊買失望！北埔擂茶「棄老店投對面」的背後商業邏輯｜特洛伊ai賦能師 我親赴北埔老街，實測名店與對面小店的體感差異。從濃郁飽滿的擂茶風味到細膩的場域服務，我歸納出微型創業者如何避開品牌光環陷阱，靠著「產品飽滿度」與「高留客環境」在老牌聚落中精準截流的生存實戰課。
 
 許多創業者最怕遇到巷口那間開了五十年的老字號。
@@ -108,7 +214,7 @@
       <div class="feed-content" style="flex: 1; min-width: 0; display: flex; flex-direction: column;">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
           <div style="display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px;">
-            <img src="https://lh3.googleusercontent.com/d/1KuDoAil9NwRE3nMGgMeD6hby1TtR5lqA" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
+            <img src="https://drive.google.com/thumbnail?id=1KuDoAil9NwRE3nMGgMeD6hby1TtR5lqA&sz=w1280" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
             <span>特洛伊AI賦能師</span>
           </div>
           <div style="font-size: 13px; color: #64748b;">2026/09/12</div>
@@ -143,8 +249,8 @@
 不排隊的驚喜，永遠比排隊後的失望更具變現力。</p>
         
         <div style="display: flex; gap: 16px; margin-bottom: 16px; font-size: 13px; color: #64748b; flex-wrap: wrap;">
-           <span style="display:flex; align-items:center; gap:4px;" title="觀看數"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> 3</span>
-           <span style="display:flex; align-items:center; gap:4px;" title="完讀數"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> 3</span>
+           <span style="display:flex; align-items:center; gap:4px;" title="觀看數"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> 0</span>
+           <span style="display:flex; align-items:center; gap:4px;" title="完讀數"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> 0</span>
            <span style="display:flex; align-items:center; gap:4px;" title="點播數"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg> 0</span>
            <span style="display:flex; align-items:center; gap:4px; color: #3175B5; font-weight:600;" title="經由此文章收集的訂閱數"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> 0</span>
         </div>
@@ -153,7 +259,7 @@
            <span style="font-size:12px; font-weight:600; padding:4px 10px; border-radius:4px; background: #f1f5f9; color: #475569;">公開</span>
         </div>
       </div>
-      <div style="width: 240px; height: 160px; border-radius: 8px; overflow: hidden; flex-shrink: 0; border: 1px solid #e2e8f0;"><img src="https://lh3.googleusercontent.com/d/1H4vngZBRHZK2j_i3qsuH6q-ScCXkYZ15" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: block;" alt="Cover"></div>
+      <div style="width: 240px; height: 160px; border-radius: 8px; overflow: hidden; flex-shrink: 0; border: 1px solid #e2e8f0;"><img src="https://drive.google.com/thumbnail?id=1H4vngZBRHZK2j_i3qsuH6q-ScCXkYZ15&sz=w1280" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: block;" alt="Cover"></div>
     </a>
     <a href="fa7d19f4.html" class="feed-item" data-search="進銷存管理不需要開發半年，這就是 ai 賦能師的速度｜特洛伊ai賦能師 我親身走訪生技公司，從梳理複雜的分潤制度到串接金流，憑藉 ai 賦能技術，僅用一天便完成傳統需耗時數月的進銷存管理系統原型。這是一場將冗長開發流程轉化為商務即戰力的真實紀錄，驗證了 ai 落地實踐的極速價值。
 
@@ -200,7 +306,7 @@
       <div class="feed-content" style="flex: 1; min-width: 0; display: flex; flex-direction: column;">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
           <div style="display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px;">
-            <img src="https://lh3.googleusercontent.com/d/1KuDoAil9NwRE3nMGgMeD6hby1TtR5lqA" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
+            <img src="https://drive.google.com/thumbnail?id=1KuDoAil9NwRE3nMGgMeD6hby1TtR5lqA&sz=w1280" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
             <span>特洛伊AI賦能師</span>
           </div>
           <div style="font-size: 13px; color: #64748b;">2026/09/11</div>
@@ -250,9 +356,9 @@
 讓數位工具跟上你的商業直覺。</p>
         
         <div style="display: flex; gap: 16px; margin-bottom: 16px; font-size: 13px; color: #64748b; flex-wrap: wrap;">
-           <span style="display:flex; align-items:center; gap:4px;" title="觀看數"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> 2</span>
-           <span style="display:flex; align-items:center; gap:4px;" title="完讀數"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> 2</span>
-           <span style="display:flex; align-items:center; gap:4px;" title="點播數"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg> 1</span>
+           <span style="display:flex; align-items:center; gap:4px;" title="觀看數"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> 0</span>
+           <span style="display:flex; align-items:center; gap:4px;" title="完讀數"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> 0</span>
+           <span style="display:flex; align-items:center; gap:4px;" title="點播數"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg> 0</span>
            <span style="display:flex; align-items:center; gap:4px; color: #3175B5; font-weight:600;" title="經由此文章收集的訂閱數"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> 0</span>
         </div>
 
@@ -260,7 +366,7 @@
            <span style="font-size:12px; font-weight:600; padding:4px 10px; border-radius:4px; background: #f1f5f9; color: #475569;">公開</span>
         </div>
       </div>
-      <div style="width: 240px; height: 160px; border-radius: 8px; overflow: hidden; flex-shrink: 0; border: 1px solid #e2e8f0;"><img src="https://lh3.googleusercontent.com/d/1yTwksmYI7bsNwBPsId1FxF3fbQbDCTES" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: block;" alt="Cover"></div>
+      <div style="width: 240px; height: 160px; border-radius: 8px; overflow: hidden; flex-shrink: 0; border: 1px solid #e2e8f0;"><img src="https://drive.google.com/thumbnail?id=1yTwksmYI7bsNwBPsId1FxF3fbQbDCTES&sz=w1280" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: block;" alt="Cover"></div>
     </a></div></div>
       <div class="tier-section" id="sec-member" style="margin-top: 48px;">
         <h2 style="font-size: 22px; font-weight: 800; border-bottom: 2px solid #f59e0b; color: #f59e0b; display: inline-flex; align-items: center; gap: 8px; padding-bottom: 8px; margin-bottom: 24px;">
@@ -303,7 +409,7 @@ ai 不該取代你的真實性。
       <div class="feed-content" style="flex: 1; min-width: 0; display: flex; flex-direction: column;">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
           <div style="display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px;">
-            <img src="https://lh3.googleusercontent.com/d/1KuDoAil9NwRE3nMGgMeD6hby1TtR5lqA" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
+            <img src="https://drive.google.com/thumbnail?id=1KuDoAil9NwRE3nMGgMeD6hby1TtR5lqA&sz=w1280" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
             <span>特洛伊AI賦能師</span>
           </div>
           <div style="font-size: 13px; color: #64748b;">2026/09/10</div>
@@ -354,7 +460,7 @@ AI 不該取代你的真實性。
            <span style="font-size:12px; font-weight:600; padding:4px 10px; border-radius:4px; background: #f1f5f9; color: #475569;">會員限定</span>
         </div>
       </div>
-      <div style="width: 240px; height: 160px; border-radius: 8px; overflow: hidden; flex-shrink: 0; border: 1px solid #e2e8f0;"><img src="https://lh3.googleusercontent.com/d/1rNrNjUdQJy74hXp-uE9mx4kbBLb1P1ug" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: block;" alt="Cover"></div>
+      <div style="width: 240px; height: 160px; border-radius: 8px; overflow: hidden; flex-shrink: 0; border: 1px solid #e2e8f0;"><img src="https://drive.google.com/thumbnail?id=1rNrNjUdQJy74hXp-uE9mx4kbBLb1P1ug&sz=w1280" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: block;" alt="Cover"></div>
     </a></div></div>
       <div class="tier-section" id="sec-vip" style="margin-top: 48px;">
         <h2 style="font-size: 22px; font-weight: 800; border-bottom: 2px solid #ef4444; color: #ef4444; display: inline-flex; align-items: center; gap: 8px; padding-bottom: 8px; margin-bottom: 24px;">
@@ -392,7 +498,7 @@ AI 不該取代你的真實性。
       <div class="feed-content" style="flex: 1; min-width: 0; display: flex; flex-direction: column;">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
           <div style="display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px;">
-            <img src="https://lh3.googleusercontent.com/d/1KuDoAil9NwRE3nMGgMeD6hby1TtR5lqA" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
+            <img src="https://drive.google.com/thumbnail?id=1KuDoAil9NwRE3nMGgMeD6hby1TtR5lqA&sz=w1280" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
             <span>特洛伊AI賦能師</span>
           </div>
           <div style="font-size: 13px; color: #64748b;">2026/09/08</div>
@@ -431,56 +537,20 @@ AI 不該取代你的真實性。
            <span style="display:flex; align-items:center; gap:4px;" title="觀看數"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> 0</span>
            <span style="display:flex; align-items:center; gap:4px;" title="完讀數"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> 0</span>
            <span style="display:flex; align-items:center; gap:4px;" title="點播數"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg> 0</span>
-           <span style="display:flex; align-items:center; gap:4px; color: #3175B5; font-weight:600;" title="經由此文章收集的訂閱數"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> 0</span>
+           <span style="display:flex; align-items:center; gap:4px; color: #3175B5; font-weight:600;" title="經由此文章收集的訂閱數"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> 1</span>
         </div>
 
         <div style="display:flex; align-items:center; gap: 16px; margin-top: auto; padding-top: 12px; border-top: 1px solid #e2e8f0;">
            <span style="font-size:12px; font-weight:600; padding:4px 10px; border-radius:4px; background: #f1f5f9; color: #475569;">VIP私塾</span>
         </div>
       </div>
-      <div style="width: 240px; height: 160px; border-radius: 8px; overflow: hidden; flex-shrink: 0; border: 1px solid #e2e8f0;"><img src="https://lh3.googleusercontent.com/d/1ykjHEtC70sh4hI91IofZ-dvxWam78Ux4" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: block;" alt="Cover"></div>
+      <div style="width: 240px; height: 160px; border-radius: 8px; overflow: hidden; flex-shrink: 0; border: 1px solid #e2e8f0;"><img src="https://drive.google.com/thumbnail?id=1ykjHEtC70sh4hI91IofZ-dvxWam78Ux4&sz=w1280" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: block;" alt="Cover"></div>
     </a></div></div>
     </div>
   </div>
   
   <script>
-    
-  function submitMembershipForm(e, source) {
-    e.preventDefault();
-    const form = e.target;
-    const btn = form.querySelector('button[type="submit"]');
-    btn.innerText = '處理中...';
-    btn.disabled = true;
-
-    const payload = {
-      action: 'submitSubscriptionForm',
-      tier: form.querySelector('#subTier').value,
-      email: form.querySelector('#subEmail').value,
-      name: form.querySelector('#subName').value,
-      birth: form.querySelector('#subBirth').value,
-      reason: form.querySelector('#subReason').value,
-      source: source
-    };
-
-    fetch("https://script.google.com/macros/s/AKfycbyeqKhWv3TY8bpSdB9ZfWXNkR9yap66PyGxzEJqxpawWn9hZ9chfIuBPJfZHHoP91newQ/exec", {
-      method: "POST",
-      body: JSON.stringify(payload)
-    }).then(r => r.json()).then(res => {
-      if (res.status === 'success') {
-        alert('申請已送出！我們將盡快與您聯繫。');
-        form.reset();
-      } else {
-        alert('送出失敗：' + res.message);
-      }
-    }).catch(() => {
-      alert('系統忙碌中，請稍後再試。');
-    }).finally(() => {
-      btn.innerText = '送出申請';
-      btn.disabled = false;
-    });
-  }
-
-    
+    // 即時關鍵字搜尋邏輯 (過濾三個區塊內的所有卡片)
     function filterArticles() {
       const searchKeyword = document.getElementById('frontendSearch').value.toLowerCase().trim();
       const sections = document.querySelectorAll('.tier-section');
@@ -501,6 +571,7 @@ AI 不該取代你的真實性。
           }
         });
         
+        // 區塊內無資料時，隱藏標題
         section.style.display = secVisible > 0 ? 'block' : 'none';
       });
       
