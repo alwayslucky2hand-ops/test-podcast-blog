@@ -1029,6 +1029,18 @@
     checkLoginStatus();
   }
 
+  window.submitSubForm = function(form, logId, authorEmail) {
+    const plan = form.querySelector('select').value;
+    const email = form.querySelector('input[type="email"]').value;
+    const btn = form.querySelector('button[type="submit"]');
+    const oldText = btn.innerHTML;
+    btn.innerHTML = "處理中..."; btn.disabled = true;
+    api({ action: "submitSubscription", logId: logId, authorEmail: authorEmail, plan: plan, subscriberEmail: email })
+      .then(res => { alert("後台預覽測試：已成功寫入資料庫！"); form.reset(); })
+      .catch(e => alert(e.message))
+      .finally(() => { btn.innerHTML = oldText; btn.disabled = false; });
+  };
+
   window.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
     checkLoginStatus();
@@ -1900,7 +1912,7 @@
             <strong>會員訂閱（$198/月）：</strong>即可享受不限次數、不限堂數觀看會員限定課程與獲得應用程式碼。<br>
             <strong>VIP私塾（$1980/月）：</strong>即可享受不受時空限制、不限次數的私塾陪跑。
           </p>
-          <form style="display: flex; flex-direction: column; gap: 12px;" onsubmit="event.preventDefault(); alert('此為後台預覽畫面，實際發布後功能才會生效！');">
+          <form style="display: flex; flex-direction: column; gap: 12px;" onsubmit="event.preventDefault(); window.submitSubForm(this, 'home', '${p.email}');">
             
             <select required class="login-input" style="margin-bottom:0; background:#fff; cursor: pointer;">
               <option value="" disabled selected>請選擇您想申請的方案 (必填)</option>
