@@ -180,10 +180,18 @@
         申請加入會員 / 訂閱最新消息
       </h3>
       <p style="font-size: 14px; color: #475569; margin-bottom: 20px; line-height: 1.6;">
-        <strong>一般會員（一個月 $250）：</strong>即可享受不限次數、不限堂數觀看會員限定課程與獲得應用程式碼。<br>
-        <strong>VIP會員（一天不到 90 元）：</strong>即可享受不受時空限制、不限次數的私塾陪跑。
+        <strong>會員訂閱（$198/月）：</strong>即可享受不限次數、不限堂數觀看會員限定課程與獲得應用程式碼。<br>
+        <strong>VIP私塾（$1980/月）：</strong>即可享受不受時空限制、不限次數的私塾陪跑。
       </p>
       <form style="display: flex; flex-direction: column; gap: 12px;" onsubmit="event.preventDefault(); alert('申請已送出！');">
+        
+        <!-- 🌟 新增的下拉式選單 -->
+        <select required style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; width: 100%; box-sizing: border-box; font-family: inherit; font-size: 14px; background: #fff; cursor: pointer;">
+          <option value="" disabled selected>請選擇您想申請的方案 (必填)</option>
+          <option value="會員訂閱">會員訂閱：$198/月</option>
+          <option value="VIP私塾">VIP私塾：$1980/月</option>
+        </select>
+        
         <input type="email" placeholder="您的 Email (必填)" required style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; width: 100%; box-sizing: border-box; font-family: inherit; font-size: 14px;">
         <div style="display: flex; gap: 12px; flex-wrap: wrap;">
           <input type="text" placeholder="姓名 / 暱稱 (必填)" required style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; flex: 1; min-width: 120px; font-family: inherit; font-size: 14px;">
