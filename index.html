@@ -1844,6 +1844,7 @@
     const p = profile || {};
     const displayName = p.authorName || '特洛伊AI賦能師';
     const bio = p.bio || '尚未設定簡介...';
+    const salonIntro = p.salonIntro || ''; 
     const avatarUrl = p.avatarUrl || 'https://ui-avatars.com/api/?name=T&background=3175B5&color=fff';
 
     let socialHtml = '<div class="social-links" style="justify-content: flex-start; margin-top: 16px; display:flex; gap:12px; flex-wrap:wrap;">';
@@ -1855,6 +1856,32 @@
     if(p.officialWeb && p.officialWeb.trim() !== '') socialHtml += '<a href="' + p.officialWeb.trim() + '" target="_blank" title="Official Website" style="color:var(--text-muted);">' + getFrontendSocialIconSvg('globe') + '</a>';
     socialHtml += '</div>';
 
+    
+    let introHtml = '';
+    if (salonIntro) {
+      introHtml = `
+        <div class="intro-container" style="position: relative; margin-bottom: 24px;">
+          <div style="max-height: 100px; overflow: hidden; position: relative; transition: max-height 0.3s ease;">
+            <p class="intro" style="white-space: pre-wrap; font-size: 15px; color: var(--text); line-height: 1.8; margin: 0;">` + safeHtml(salonIntro) + `</p>
+            <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 40px; background: linear-gradient(transparent, var(--card-bg));"></div>
+          </div>
+          <button onclick="
+            const wrapper = this.previousElementSibling;
+            const gradient = wrapper.querySelector('div');
+            if(wrapper.style.maxHeight === '100px') {
+              wrapper.style.maxHeight = wrapper.scrollHeight + 'px';
+              gradient.style.display = 'none';
+              this.innerHTML = '收起介紹';
+            } else {
+              wrapper.style.maxHeight = '100px';
+              gradient.style.display = 'block';
+              this.innerHTML = '閱讀完整介紹';
+            }
+          " style="background: none; border: none; color: var(--accent); font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 8px; display: flex; align-items: center; gap: 4px; padding: 0;">閱讀完整介紹</button>
+        </div>
+      `;
+    }
+
     return `
       <div class="hero" style="background: var(--card-bg); border-radius: 12px; padding: 40px; border: 1px solid var(--border); margin-bottom: 24px; display: flex; flex-direction: column; gap: 32px;">
         <div class="hero-top" style="display: flex; gap: 32px; align-items: flex-start; flex-wrap: wrap;">
@@ -1862,6 +1889,7 @@
           <div class="hero-info" style="flex: 1; min-width: 200px;">
             <h1 style="font-size: 28px; font-weight: 800; margin-bottom: 12px; color: var(--text);">${safeHtml(displayName)}</h1>
             <p class="bio" style="font-size: 15px; color: var(--text-muted); margin-bottom: 24px;">${safeHtml(bio)}</p>
+            ${introHtml} <!-- 🌟 3. 新增：將介紹區塊 HTML 注入到簡介的下方 -->
             ${socialHtml}
           </div>
         </div>
@@ -1873,7 +1901,6 @@
           </p>
           <form style="display: flex; flex-direction: column; gap: 12px;" onsubmit="event.preventDefault(); alert('此為後台預覽畫面，實際發布後功能才會生效！');">
             
-            <!-- 🌟 新增的下拉式選單 -->
             <select required class="login-input" style="margin-bottom:0; background:#fff; cursor: pointer;">
               <option value="" disabled selected>請選擇您想申請的方案 (必填)</option>
               <option value="會員訂閱">會員訂閱：$198/月</option>
