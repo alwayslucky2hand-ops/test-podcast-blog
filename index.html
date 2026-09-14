@@ -342,6 +342,17 @@
     .markdown-body blockquote { border-left: 3px solid var(--accent); padding: 16px 20px; background: rgba(49, 117, 181, 0.04); border-radius: 0 6px 6px 0; margin-bottom: 24px; color: #334155; font-style: normal; }
     .markdown-body hr { border: 0; height: 1px; background: var(--border); margin: 40px 0; }
 
+     
+    .markdown-body a { 
+      color: var(--accent); 
+      text-decoration: underline; 
+      font-weight: 700; 
+      cursor: pointer; 
+    }
+    .markdown-body a:hover {
+      opacity: 0.8;
+    }
+
     .minute-chunk-card { border: 1px solid var(--border); border-radius: 4px; background: #ffffff; margin-bottom: 16px; overflow: hidden; }
     .minute-chunk-header { padding: 12px 16px; background: var(--bg); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
     .minute-chunk-title { font-size: 14px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
@@ -437,7 +448,6 @@
       background: rgba(255,255,255,0.15);
       color: var(--accent);
     }
-
   </style>
 </head>
 <body>
@@ -850,8 +860,15 @@
 
 <div id="linkTooltip" class="medium-link-tooltip">
   <input type="url" id="linkInput" placeholder="貼上網址 (如 https://...)" onkeydown="if(event.key === 'Enter') applyLink()" />
+  
+  
   <button onclick="applyLink()" title="套用"><i data-lucide="check" style="width:16px;height:16px;"></i></button>
-  <button onclick="closeLinkTooltip()" title="取消"><i data-lucide="x" style="width:16px;height:16px;"></i></button>
+  
+  
+  <button onclick="removeLink()" title="取消超連結"><i data-lucide="unlink" style="width:16px;height:16px;"></i></button>
+  
+  
+  <button onclick="closeLinkTooltip()" title="關閉"><i data-lucide="x" style="width:16px;height:16px;"></i></button>
 </div>
 
 <div id="toast" class="toast-box">
@@ -1971,15 +1988,15 @@
         <div class="membership-form-box" style="margin-top: 16px; padding: 24px; border: 1px solid var(--border); border-radius: 8px; background: #f8fafc; text-align: left;">
           <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">${getFrontendSocialIconSvg('mail')} 申請加入會員 / 訂閱最新消息</h3>
           <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6;">
-            <strong>會員訂閱（$198/月）：</strong>即可享受不限次數、不限堂數觀看會員限定課程與獲得應用程式碼。<br>
-            <strong>VIP私塾（$1980/月）：</strong>即可享受不受時空限制、不限次數的私塾陪跑。
+            <strong>會員訂閱（$699/月）：</strong>即可享受不限次數、不限堂數觀看會員限定課程與獲得應用程式碼。<br>
+            <strong>VIP私塾（$6990/年）：</strong>除了一般會員權益，還可享受不受時空限制、不限次數的私塾陪跑。
           </p>
           <form style="display: flex; flex-direction: column; gap: 12px;" onsubmit="event.preventDefault(); window.submitSubForm(this, 'home', '${p.email}');">
             
             <select required class="login-input" style="margin-bottom:0; background:#fff; cursor: pointer;">
               <option value="" disabled selected>請選擇您想申請的方案 (必填)</option>
-              <option value="會員訂閱">會員訂閱：$198/月</option>
-              <option value="VIP私塾">VIP私塾：$1980/月</option>
+              <option value="會員訂閱">會員訂閱：$699/月</option>
+              <option value="VIP私塾">VIP私塾：$6990/年</option>
             </select>
             
             <input type="email" placeholder="您的 Email (必填)" required class="login-input" style="margin-bottom:0; background:#fff;">
@@ -2439,6 +2456,7 @@
   };
 
   
+  
   window.applyLink = function() {
     const url = document.getElementById('linkInput').value.trim();
     if (!url) {
@@ -2457,15 +2475,78 @@
     const linkMarkdown = `[${currentSelectedText}](${finalUrl})`;
     
     
-    window.currentSelectedFullMd = window.currentSelectedFullMd.replace(currentSelectedText, linkMarkdown);
+    const textareas = ['finalArticleHook', 'finalArticleBody', 'finalArticleEnding'];
+    let replaced = false;
+    
+    textareas.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.value.includes(currentSelectedText)) {
+        
+        el.value = el.value.replace(currentSelectedText, linkMarkdown);
+        replaced = true;
+        
+        
+        const fieldMap = { 'finalArticleHook': 'hook', 'finalArticleBody': 'body', 'finalArticleEnding': 'ending' };
+        saveCurrentStepData(fieldMap[id]);
+      }
+    });
+
+    
+    if (!replaced) {
+      alert("找不到指定的文字，請確保您反白的是完整的純文字！");
+      return;
+    }
+
     
     
-    renderBlogPreview(window.currentSelectedFullMd);
-    saveCurrentStepData('full');
+    assembleFullArticle();
     
-    showToast("已成功加入超連結！");
     closeLinkTooltip();
-    lucide.createIcons();
+  };
+
+  
+  window.removeLink = function() {
+    if (!currentSelectedText) {
+      showToast("請先選取要取消超連結的文字");
+      return;
+    }
+
+    
+    const escapedText = currentSelectedText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    
+    
+    
+    const regex = new RegExp(`\\[${escapedText}\\]\\([^)]+\\)`, 'g');
+    
+    const textareas = ['finalArticleHook', 'finalArticleBody', 'finalArticleEnding'];
+    let replaced = false;
+
+    textareas.forEach(id => {
+      const el = document.getElementById(id);
+      
+      if (el && regex.test(el.value)) {
+        
+        el.value = el.value.replace(regex, currentSelectedText);
+        replaced = true;
+        
+        
+        const fieldMap = { 'finalArticleHook': 'hook', 'finalArticleBody': 'body', 'finalArticleEnding': 'ending' };
+        saveCurrentStepData(fieldMap[id]);
+      }
+    });
+
+    
+    if (!replaced) {
+      alert("找不到對應的超連結，請確保您反白的是完整的超連結文字！");
+      return;
+    }
+
+    
+    assembleFullArticle();
+    
+    closeLinkTooltip();
+    showToast("已取消超連結！");
+    lucide.createIcons(); 
   };
 
   function openArticleWorkshop(logId) {
