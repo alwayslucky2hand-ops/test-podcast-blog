@@ -234,21 +234,14 @@
         申請加入會員 / 訂閱最新消息
       </h3>
       <p style="font-size: 14px; color: #475569; margin-bottom: 20px; line-height: 1.6;">
-        <strong>會員訂閱（$699/月）：</strong>即可享受不限次數、不限堂數觀看會員限定課程與獲得應用程式碼。<br>
-        <strong>VIP私塾（$6990/年）：</strong>除了享有一般會員權益，還可享受不受時空限制、不限次數的私塾陪跑。
+        請留下資訊，我們將寄發訂閱信給您：
       </p>
       <form style="display: flex; flex-direction: column; gap: 12px; visibility:visible !important;" onsubmit="event.preventDefault(); window.submitSubForm(this, 'home', 'alwayslucky2hand@gmail.com');">
-        <select required style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; width: 100%; box-sizing: border-box; font-family: inherit; font-size: 14px; background: #fff; cursor: pointer;">
-          <option value="" disabled selected>請選擇您想申請的方案 (必填)</option>
-          <option value="會員訂閱">會員訂閱：$699/月</option>
-          <option value="VIP私塾">VIP私塾：$6990/年</option>
-        </select>
-        <input type="email" placeholder="您的 Email (必填)" required style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; width: 100%; box-sizing: border-box; font-family: inherit; font-size: 14px;">
+        <input type="email" placeholder="您的 Email (必填)" required style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; width: 100%; box-sizing: border-box; font-family: inherit; font-size: 14px; background: #fff;">
         <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-          <input type="text" placeholder="姓名 / 暱稱 (必填)" required style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; flex: 1; min-width: 120px; font-family: inherit; font-size: 14px;">
-          <input type="text" placeholder="出生年月日 (必填)" onfocus="(this.type='date')" onblur="(this.value==''?this.type='text':this.type='date')" required style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; flex: 1; min-width: 120px; font-family: inherit; font-size: 14px;">
+          <input type="text" placeholder="姓名 / 暱稱 (必填)" required style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; flex: 1; min-width: 120px; font-family: inherit; font-size: 14px; background: #fff;">
+          <input type="text" placeholder="出生年月日 (必填)" onfocus="(this.type='date')" onblur="(this.value==''?this.type='text':this.type='date')" required style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; flex: 1; min-width: 120px; font-family: inherit; font-size: 14px; background: #fff;">
         </div>
-        <textarea placeholder="想加入會員的原因" style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; min-height: 80px; width: 100%; box-sizing: border-box; font-family: inherit; font-size: 14px; resize: vertical;"></textarea>
         <button type="submit" style="margin-top: 8px; padding: 12px; background: #0f172a; color: #fff; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 14px; transition: background 0.2s;">送出申請</button>
       </form>
     </div>
