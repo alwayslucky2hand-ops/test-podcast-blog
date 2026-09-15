@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 會寫程式，但它不能為你的結果負責！為什麼在自動化時代，你反而更需要這門「軟體必修課」？｜特洛伊AI賦能師 | 特洛伊AI賦能師</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+      background: #ffffff; color: #0f172a; line-height: 1.8; margin: 0; padding: 0; 
+      -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+      -webkit-touch-callout: none;
+    }
+    input, textarea, select, button {
+      -webkit-user-select: auto; user-select: auto;
+    }
+    img, video {
+      pointer-events: none; 
+    }
+    video { pointer-events: auto; }
+
+    .secure-overlay {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(255,255,255,0.98); z-index: 2147483647; 
+      justify-content: center; align-items: center; text-align: center;
+      flex-direction: column; gap: 16px; padding: 20px;
+    }
+    .secure-overlay-title { font-size: 22px; font-weight: 800; color: #ef4444; }
+    .secure-overlay-desc { font-size: 15px; color: #64748b; }
+
+    .container { max-width: 720px; margin: 0 auto; padding: 32px 20px 60px 20px; }
+    .markdown-body { font-size: 17px; line-height: 2.1; color: #1e293b; }
+    .markdown-body h2 { font-size: 24px; margin: 40px 0 16px 0; font-weight: 800; }
+    .markdown-body h3 { font-size: 20px; color: #3175B5; margin: 32px 0 16px 0; font-weight: 800; }
+    
+    .markdown-body img { 
+      max-width: 100%; 
+      height: auto; 
+      object-fit: contain; 
+      border-radius: 8px; 
+      display: block; 
+      margin: 32px auto; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      pointer-events: none; 
+    }
+  </style>
+</head>
+<body>
+  <div id="secureOverlay" class="secure-overlay">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+    <div class="secure-overlay-title">為保護智慧財產權，已暫停顯示內容</div>
+    <div class="secure-overlay-desc">系統偵測到視窗切換、截圖或錄影行為。<br>請點擊畫面或返回本視窗繼續閱讀。</div>
+  </div>
+
+  <div class="container">
+    <a href="index.html" style="color:#64748b; text-decoration:none; font-weight:600; display:inline-block; margin-bottom:24px;">← 返回沙龍</a>
+    <div style="margin-bottom: 32px;">
+      <h1 style="font-size: 32px; font-weight: 800; line-height: 1.3; margin-bottom: 24px;">AI 會寫程式，但它不能為你的結果負責！為什麼在自動化時代，你反而更需要這門「軟體必修課」？｜特洛伊AI賦能師</h1>
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 24px;">
+        
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <img src="https://drive.google.com/thumbnail?id=1KuDoAil9NwRE3nMGgMeD6hby1TtR5lqA&sz=w1280" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; pointer-events: auto;">
+          <div>
+            <div style="font-weight: 700; font-size: 15px;">特洛伊AI賦能師</div>
+            <div style="font-size: 13px; color: #64748b;">2026/09/15 發布</div>
+          </div>
+        </div>
+
+        <div style="padding: 4px 10px; border-radius: 4px; font-size: 13px; font-weight: 700; color: #fff; background: #64748b;">公開</div>
+      </div>
+    </div>
+    
+      <div id="content" class="markdown-body"></div>
+      <textarea id="raw-md" style="display:none;"># AI 會寫程式，但它不能為你的結果負責！為什麼在自動化時代，你反而更需要這門「軟體必修課」？｜特洛伊AI賦能師
+
+本文深度解析矽谷正瘋傳的「迴圈工程」後，我發現 AI 已從單向對話轉向自主開發。掌握系統邏輯而非單純下指令，是微型創業者將點子轉化為獲利產品的關鍵。本文帶你洞察 AI 代理人時代，如何透過基本功建立競爭壁壘。
+
+許多微型創業者正陷入一種危險的集體樂觀：認為只要擁有 ChatGPT 或 Claude，就等於擁有了整支開發團隊。
+
+事實上，在「一鍵生成應用程式」的炫目包裝下，多數人並未意識到，生成出來的程式碼若無法部署、不具資安防護、不懂串接金流，它終究只是一段留在你電腦裡的數位廢料，無法為你創造任何實質商業價值。
+
+當黃仁勳與矽谷菁英開始討論「迴圈工程」時，軟體開發的範式已經發生了階梯式的跨越。現在的挑戰不再是「如何寫出程式碼」，而是你是否具備那一雙能判斷系統對錯的眼睛。
+
+如果不懂 API 的運作邏輯，你將無法掌握數據的流動與串接。
+如果不懂資安與部署，你產出的工具可能成為駭客的跳板，甚至導致商業信譽受損。
+如果不懂系統架構，你將永遠被困在與 AI 的低效對話中，卻做不出一個真正能交到客戶手中、穩定收錢的產品。
+
+微型創業者最稀缺的資源是時間。盲目嘗試各種指令（Prompt）只是在原地踏步，真正的賦能是回到軟體工程的本質，理解那些被 AI 抽離掉的底層邏輯。
+
+唯有理解伺服器、前端與後端如何溝通，你才能真正驅動 AI 代理人（AI Agent）為你全天候工作，而不是被工具產出的隨機結果牽著鼻子走。在 AI 寫程式比人類更快的時代，你對「結果」的負責能力，才是決定產品能否變現的護城河。
+
+---
+
+### 軟體開發的範式轉移：從「對話機器人」進化為「數位代理人」
+
+根據產業觀察，軟體開發正經歷一場階梯式的跨越。過去我們將 AI 視為聊天機器人，它僅能協助完成約百分之二十的程式碼撰寫。但在 Anthropic 推出 Claude 3 Opus 之後，AI 已經正式轉型為 AI Agent，也就是數位代理人。
+
+這意味著在開發網頁或應用程式時，開發者甚至可以完全不碰鍵盤，將所有繁瑣的執行過程交給代理人處理。
+
+一個顯著的產業案例發生在晶片領域。過去 NVIDIA 的 CUDA 運算架構擁有極深的競爭護城河，因為將程式碼移植到其他晶片需要頂尖工程師花費半年以上進行優化。
+
+然而，當 AI 代理人介入後，它能自動針對 AMD 的機台進行程式碼迭代與修復。僅僅花費一個週末的時間，效能曲線就產生了爆炸性的成長。這證明了 AI 處理底層複雜邏輯的能力，已經超越了傳統的人力極限。
+
+---
+
+### 矽谷瘋傳的迴圈工程：定義目標讓 AI 自我進化
+
+目前矽谷最熱門的核心能力稱為「迴圈工程」。這不是傳統的一對一指令對話，而是由人類定義一個明確的目標與驗證標準，剩下的工作則交給 AI 在迴圈中持續運作，直到達成結果為止。
+
+這種運作模式通常被稱為「氛圍開發」。開發者不再需要一行行撰寫程式碼，而是透過下達指令，讓 AI 自動拆解步驟、執行任務並自我檢查。
+
+當編寫程式的門檻降低到人人都會時，真正的差距在於你是否具備系統思維。雖然工具不斷抽離底層細節，但軟體工程的本質始終沒變：如何建立一個可運作、有用且安全的系統。
+
+如果你跳過了學習過程，直接使用生成結果，你將失去判斷對錯的能力。在自動化時代，人類的角色更像是系統的監製，必須具備看穿問題核心的眼睛。
+
+---
+
+### 從做出原型到真正能賣：那道難以跨越的技術紅溝
+
+許多創業者能用 AI 在一分鐘內做出 App 原型，但這份作品往往只能停留在自己的電腦裡，無法真正交到客戶手上換取現金。
+
+這中間存在著一道巨大的溝壑，包含了部署、資安、API 串接與版本控制等基本功。
+
+如果不懂得如何將程式碼部署到雲端，產品就無法上線。
+如果不懂得如何隱藏 API 金鑰，你的帳戶可能會被盜刷。
+如果不懂得資安防護，你產出的工具可能成為駭客攻擊的跳板。
+
+AI 可以幫你寫完程式，但它無法為你的產品結果負責。如果你完全不懂軟體運作的邏輯，即使 AI 幫你做完了產品，你也不敢讓它正式上線收錢，因為你無法掌握其中的風險。這就是為什麼在 AI 時代，理解軟體工程的基本邏輯反而變得比以往更加重要。
+
+---
+
+### 建立變現護城河：掌握軟體邏輯帶來的商業價值
+
+要縮短「點子」與「獲利」之間的距離，微型創業者必須回歸底層邏輯的學習。例如透過互動式的學習平台，理解前端、後端與 API 之間是如何傳遞資訊的。
+
+當你理解了伺服器實際上在做什麼，你就能更精準地驅動 AI 代理人為你工作。
+
+成功的產業案例已經出現。例如知名 YouTube 頻道「壹加壹」利用 AI 開發的字幕工具，上線一天就吸引了超過一萬人使用。這並非單純靠運氣，而是因為創作者理解開發邏輯，知道如何將 AI 生成的片段組合成一個穩定的商業產品。
+
+無論你是想創業還是提升競爭力，懂軟體工程邏輯都能讓你從盲目下指令，轉變為有意識地控管品質。這種掌握全局的能力，才是 AI 時代最難被取代、最能直接變現的護城河。
+
+---
+
+在數位轉型的洪流中，技術可以不斷迭代，但一個領導者的遠見與對結果的終極承諾，是任何演算邏輯都無法賦予的溫暖與力量。願你手中的ＡＩ不再只是冷冰冰的指令，而是你開疆闢土時最堅實的後盾；願你在追逐卓越的道路上，依然保有那份因承擔責任而生的定力與從容。
+
+此篇內容為影音觀後感，衷心推薦您完整觀看這段影音內容，從中內化更深層的技術思維與管理洞見。若這份見解在你的創業或職場路上點燃了些許光亮，請按下收藏或將其轉發給同樣在路上奮鬥的夥伴，讓我們在變革中併肩前行。
+
+讓ＡＩ為你效勞，讓創業不再過勞。
+我是特洛伊，一起用ＡＩ守住光陰。</textarea>
+      
+        <div style="margin-top: 48px; border-top: 1px solid #e2e8f0; padding-top: 32px;">
+          <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 16px;">YouTube 影音紀錄</h3>
+          <div style="background: #000; border-radius: 8px; overflow: hidden; margin-bottom: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            <iframe src="https://www.youtube.com/embed/IVmQrtC_ul0" frameborder="0" allowfullscreen style="width: 100%; aspect-ratio: 16/9; display: block;"></iframe>
+          </div>
+        </div>
+    
+    
+    <div style="margin-top: 60px; margin-bottom: 40px; background: #ffffff; border-radius: 12px; padding: 40px; border: 1px solid #e2e8f0;">
+      <div style="display: flex; gap: 32px; align-items: flex-start; flex-wrap: wrap;">
+        <img src="https://drive.google.com/thumbnail?id=1KuDoAil9NwRE3nMGgMeD6hby1TtR5lqA&sz=w1280" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0;">
+        <div style="flex: 1; min-width: 200px; text-align: left;">
+          <h1 style="font-size: 28px; font-weight: 800; margin-bottom: 12px; color: #0f172a;">特洛伊AI賦能師</h1>
+          <p style="font-size: 15px; color: #64748b; margin-bottom: 16px; line-height: 1.6;">交大電機畢業，刻骨過5次跨界微型創業、銘心過5家飲料店從出生到長大，堅持過6年的家族搬家貨運與轉型循環經濟，我很懂「校長兼撞鐘」的身不由己。追蹤我，讓系統為你效勞、讓創業不再過勞，讓創業也能兼顧伴侶和家庭生活。</p>
+          <div class="social-links" style="display:flex; gap:12px; margin-top:16px; flex-wrap:wrap;"><a href="mailto:biz.growthx.ai@gmail.com" target="_blank" style="color:#64748b;" title="Email"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></a><a href="https://www.facebook.com/share/1MGVhZxwUz/?mibextid=wwXIfr" target="_blank" style="color:#64748b;" title="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a><a href="https://www.instagram.com/troy.growthx.ai?stkn=cm9mbzQxZjZ0aGZw&utm_source=qr" target="_blank" style="color:#64748b;" title="Instagram"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a><a href="https://youtube.com/playlist?list=PLvqFgrghkpF7iM1PVJ_Iq46YItvqwX9VV&si=FLhCK7a9v7hh7vzg" target="_blank" style="color:#64748b;" title="YouTube"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg></a><a href="https://youtube.com/playlist?list=PLvqFgrghkpF5biyiMn3vjgpWPJyVgjEIH&si=4b5K0LnfmmmeIoVO" target="_blank" style="color:#64748b;" title="Podcast"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></svg></a><a href="https://rubybranddesign-cloud.github.io/e-line-card-share/troyAIempower/" target="_blank" style="color:#64748b;" title="Official Website"><svg xmlns="http://www.w3.org/2000/svg" style="width:20px;height:20px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg></a></div>
+        </div>
+      </div>
+      
+    <div class="membership-form-box" style="display:block !important; visibility:visible !important; margin-top: 24px; padding: 24px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc; text-align: left;">
+      <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; color: #0f172a;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        申請加入會員 / 訂閱最新消息
+      </h3>
+      <p style="font-size: 14px; color: #475569; margin-bottom: 20px; line-height: 1.6;">
+        <strong>會員訂閱（$699/月）：</strong>即可享受不限次數、不限堂數觀看會員限定課程與獲得應用程式碼。<br>
+        <strong>VIP私塾（$6990/年）：</strong>除了享有一般會員權益，還可享受不受時空限制、不限次數的私塾陪跑。
+      </p>
+      <form style="display: flex; flex-direction: column; gap: 12px; visibility:visible !important;" onsubmit="event.preventDefault(); window.submitSubForm(this, 'home', 'alwayslucky2hand@gmail.com');">
+        <select required style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; width: 100%; box-sizing: border-box; font-family: inherit; font-size: 14px; background: #fff; cursor: pointer;">
+          <option value="" disabled selected>請選擇您想申請的方案 (必填)</option>
+          <option value="會員訂閱">會員訂閱：$699/月</option>
+          <option value="VIP私塾">VIP私塾：$6990/年</option>
+        </select>
+        <input type="email" placeholder="您的 Email (必填)" required style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; width: 100%; box-sizing: border-box; font-family: inherit; font-size: 14px;">
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <input type="text" placeholder="姓名 / 暱稱 (必填)" required style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; flex: 1; min-width: 120px; font-family: inherit; font-size: 14px;">
+          <input type="text" placeholder="出生年月日 (必填)" onfocus="(this.type='date')" onblur="(this.value==''?this.type='text':this.type='date')" required style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; flex: 1; min-width: 120px; font-family: inherit; font-size: 14px;">
+        </div>
+        <textarea placeholder="想加入會員的原因" style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; min-height: 80px; width: 100%; box-sizing: border-box; font-family: inherit; font-size: 14px; resize: vertical;"></textarea>
+        <button type="submit" style="margin-top: 8px; padding: 12px; background: #0f172a; color: #fff; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 14px; transition: background 0.2s;">送出申請</button>
+      </form>
+    </div>
+  
+    </div>
+  
+  </div>
+  <script>
+
+    window.submitSubForm = function(form, logId, authorEmail) {
+      const plan = "一般訂閱"; // 預設值
+      const email = form.querySelector('input[type="email"]').value;
+      const btn = form.querySelector('button[type="submit"]');
+      const oldText = btn.innerHTML;
+      
+      btn.innerHTML = "處理中..."; btn.disabled = true;
+
+      fetch("https://script.google.com/macros/s/AKfycbyeqKhWv3TY8bpSdB9ZfWXNkR9yap66PyGxzEJqxpawWn9hZ9chfIuBPJfZHHoP91newQ/exec", {
+        method: "POST",
+        body: JSON.stringify({ action: "submitSubscription", logId: logId, authorEmail: authorEmail, plan: plan, subscriberEmail: email })
+      }).then(r => r.json()).then(res => {
+        alert("申請已送出！我們將盡快與您聯繫。");
+        form.reset();
+      }).catch(e => alert("送出失敗，請稍後再試")).finally(() => {
+        btn.innerHTML = oldText; btn.disabled = false;
+      });
+    };
+
+
+    // 📊 數據追蹤腳本 (靜默背景傳送)
+    window.sendMetricData = function(metricType) {
+      fetch("https://script.google.com/macros/s/AKfycbyeqKhWv3TY8bpSdB9ZfWXNkR9yap66PyGxzEJqxpawWn9hZ9chfIuBPJfZHHoP91newQ/exec", {
+        method: "POST",
+        body: JSON.stringify({ action: "incrementMetric", logId: "3ad15d06", metricType: metricType })
+      }).catch(e => {}); 
+    };
+
+    // 🚀 1. 觀看數 (View)
+    setTimeout(() => window.sendMetricData('view'), 1500);
+
+    // 🚀 2. 完讀數 (Read)
+    let readSent = false;
+    window.addEventListener('scroll', () => {
+      if (!readSent && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 300) {
+        window.sendMetricData('read');
+        readSent = true;
+      }
+    });
+
+    
+    function bindVideoLogic(urls) {
+      if (!urls || urls.length === 0) return;
+      const videoEl = document.getElementById('postVideoPlayer');
+      const statusEl = document.getElementById('videoStatus');
+      const btnStart = document.getElementById('btnStartStream');
+      const btnPrev = document.getElementById('btnPrevChunk');
+      const btnNext = document.getElementById('btnNextChunk');
+      const selector = document.getElementById('chunkSelector');
+      
+      const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbyeqKhWv3TY8bpSdB9ZfWXNkR9yap66PyGxzEJqxpawWn9hZ9chfIuBPJfZHHoP91newQ/exec';
+      
+      let currentIndex = 0;
+      let blobCache = {}; 
+      
+      selector.innerHTML = '';
+      urls.forEach((url, i) => {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.innerText = '片段 ' + (i + 1);
+        selector.appendChild(opt);
+      });
+      selector.disabled = true;
+      
+      function updateControls() {
+        selector.value = currentIndex;
+        btnPrev.disabled = (currentIndex === 0);
+        btnNext.disabled = (currentIndex === urls.length - 1);
+        
+        btnPrev.style.opacity = btnPrev.disabled ? '0.4' : '1';
+        btnNext.style.opacity = btnNext.disabled ? '0.4' : '1';
+        btnPrev.style.cursor = btnPrev.disabled ? 'not-allowed' : 'pointer';
+        btnNext.style.cursor = btnNext.disabled ? 'not-allowed' : 'pointer';
+      }
+
+      async function loadChunkData(index) {
+        if (index >= urls.length || index < 0) return null;
+        if (blobCache[index]) return blobCache[index];
+        statusEl.innerText = '[下載] ' + (index + 1) + '/' + urls.length + '...';
+        try {
+          const response = await fetch(GAS_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: "getVideoChunk", url: urls[index] })
+          });
+          const res = await response.json();
+          if(res.status === 'success') {
+            const byteCharacters = atob(res.data.base64);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: res.data.mimeType });
+            const blobUrl = URL.createObjectURL(blob);
+            blobCache[index] = blobUrl;
+            return blobUrl;
+          } else { throw new Error(res.message); }
+        } catch(e) {
+          statusEl.innerText = '[失敗] 片段 ' + (index + 1);
+          return null;
+        }
+      }
+
+      async function playVideoChunk(targetIndex) {
+        if (targetIndex !== undefined) {
+           currentIndex = targetIndex;
+        }
+        
+        if (currentIndex >= urls.length) { 
+          statusEl.innerText = '播放完畢'; 
+          return; 
+        }
+        
+        updateControls();
+        
+        let targetUrl = blobCache[currentIndex];
+        if (!targetUrl) {
+          statusEl.innerText = '緩衝中: ' + (currentIndex + 1) + '...';
+          targetUrl = await loadChunkData(currentIndex);
+        }
+        
+        if (targetUrl) {
+          videoEl.src = targetUrl;
+          videoEl.play().catch(e => console.log("自動播放被阻擋", e));
+          statusEl.innerText = '播放中: ' + (currentIndex + 1) + ' / ' + urls.length;
+          
+          if (currentIndex + 1 < urls.length) {
+            loadChunkData(currentIndex + 1).catch(e => console.log('預載異常', e));
+          }
+        }
+      }
+
+      btnStart.addEventListener('click', function() {
+        btnStart.style.display = 'none';
+        selector.disabled = false;
+        playVideoChunk(0);
+        window.sendMetricData('play'); 
+      });
+      
+      btnPrev.addEventListener('click', function() {
+        if (currentIndex > 0) playVideoChunk(currentIndex - 1);
+      });
+      
+      btnNext.addEventListener('click', function() {
+        if (currentIndex < urls.length - 1) playVideoChunk(currentIndex + 1);
+      });
+      
+      selector.addEventListener('change', function() {
+        playVideoChunk(parseInt(this.value, 10));
+      });
+
+      videoEl.onended = function() { 
+        if (currentIndex < urls.length - 1) {
+          playVideoChunk(currentIndex + 1);
+        } else {
+          statusEl.innerText = '播放完畢';
+        }
+      };
+      
+      updateControls();
+    }
+  
+    
+    document.addEventListener("DOMContentLoaded", function() {
+      document.addEventListener('contextmenu', e => e.preventDefault());
+      document.addEventListener('selectstart', e => {
+        if(e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'SELECT') e.preventDefault();
+      });
+      
+      document.addEventListener('copy', e => { e.preventDefault(); alert('版權所有，禁止複製！'); });
+      document.addEventListener('cut', e => { e.preventDefault(); });
+      
+      document.addEventListener('keydown', e => {
+        if (e.key === 'PrintScreen' || (e.ctrlKey && e.key === 'p') || (e.metaKey && e.key === 'p') || (e.ctrlKey && e.key === 's') || (e.metaKey && e.key === 's')) {
+          e.preventDefault();
+        }
+      });
+      
+      const overlay = document.getElementById('secureOverlay');
+      const showOverlay = () => { overlay.style.display = 'flex'; };
+      const hideOverlay = () => { overlay.style.display = 'none'; };
+
+      window.addEventListener('blur', showOverlay);
+      window.addEventListener('focus', hideOverlay);
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) showOverlay(); else hideOverlay();
+      });
+
+      let rawMdEl = document.getElementById("raw-md");
+      if (rawMdEl && rawMdEl.value) {
+        let rawMd = rawMdEl.value.replace(/^#\s+.+\n/, '');
+        document.getElementById("content").innerHTML = marked.parse(rawMd);
+      }
+      
+      
+      
+      const wrapper = document.getElementById("salonIntroWrapper");
+      const btn = document.getElementById("expandIntroBtn");
+      const gradient = document.getElementById("introGradient");
+      if(wrapper && btn && gradient) {
+        if(wrapper.scrollHeight <= 100) {
+          btn.style.display = "none"; gradient.style.display = "none";
+        } else {
+          btn.addEventListener("click", function() {
+            if(wrapper.style.maxHeight === "100px") {
+              wrapper.style.maxHeight = wrapper.scrollHeight + "px"; gradient.style.display = "none"; btn.innerHTML = "收起介紹";
+            } else {
+              wrapper.style.maxHeight = "100px"; gradient.style.display = "block"; btn.innerHTML = "閱讀完整介紹";
+            }
+          });
+        }
+      }
+    });
+    
+    let authState = "email";
+    window.handleAuthAction = function(logId) {
+      const btn = document.getElementById("btnAuthAction");
+      const msg = document.getElementById("authMsg");
+      const email = document.getElementById("authEmail").value.trim();
+      const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyeqKhWv3TY8bpSdB9ZfWXNkR9yap66PyGxzEJqxpawWn9hZ9chfIuBPJfZHHoP91newQ/exec";
+      
+      if (authState === "email") {
+        if(!email || !email.includes("@")) { msg.innerText = "請輸入正確的 Email 格式"; msg.style.color = "#ef4444"; return; }
+        
+        btn.disabled = true; btn.innerText = "發送中..."; msg.innerText = "";
+        
+        fetch(GAS_API_URL, {
+          method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ action: "sendOtp", email: email, type: "login" })
+        }).then(r => r.json()).then(res => {
+          if(res.status === "success") {
+            authState = "otp";
+            document.getElementById("otpInputArea").style.display = "flex";
+            document.getElementById("authEmail").disabled = true;
+            btn.innerText = "驗證並解鎖文章";
+            msg.innerText = "驗證碼已發送，請於5分鐘內輸入。"; msg.style.color = "#10b981";
+          } else { msg.innerText = res.message || "發送失敗"; msg.style.color = "#ef4444"; btn.innerText = "發送驗證碼"; }
+        }).catch(e => { msg.innerText = e.message; msg.style.color = "#ef4444"; btn.innerText = "發送驗證碼"; })
+        .finally(() => { btn.disabled = false; });
+        
+      } else if (authState === "otp") {
+        const otp = document.getElementById("authOtp").value.trim();
+        if(!otp) { msg.innerText = "請輸入驗證碼"; msg.style.color = "#ef4444"; return; }
+        
+        btn.disabled = true; btn.innerText = "驗證中..."; msg.innerText = "";
+        
+        fetch(GAS_API_URL, {
+          method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ action: "verifyArticleAccess", email: email, otp: otp, logId: logId })
+        }).then(r => r.json()).then(res => {
+          if(res.status === "success") {
+             document.getElementById("lockedContentArea").style.display = "none";
+             document.getElementById("unlockedContentArea").style.display = "block";
+             
+             let rawMd = res.data.articleFull.replace(/^#\s+.+\n/, "");
+             document.getElementById("content").innerHTML = marked.parse(rawMd);
+             
+             if (res.data.urls && res.data.urls.length > 0) {
+               const vHtml = `
+        <div style="margin-top: 48px; border-top: 1px solid #e2e8f0; padding-top: 32px;">
+          <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 16px;">YouTube 影音紀錄</h3>
+          <div style="background: #000; border-radius: 8px; overflow: hidden; margin-bottom: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            <iframe src="https://www.youtube.com/embed/IVmQrtC_ul0" frameborder="0" allowfullscreen style="width: 100%; aspect-ratio: 16/9; display: block;"></iframe>
+          </div>
+        </div>`;
+               document.getElementById("dynamicVideoPlayerArea").innerHTML = vHtml;
+               
+             }
+          } else {
+            msg.innerText = res.message || "驗證失敗"; msg.style.color = "#ef4444";
+            btn.innerText = "驗證並解鎖文章"; btn.disabled = false;
+          }
+        }).catch(e => {
+          msg.innerText = e.message; msg.style.color = "#ef4444";
+          btn.innerText = "驗證並解鎖文章"; btn.disabled = false;
+        });
+      }
+    };
+  </script>
+</body>
+</html>
