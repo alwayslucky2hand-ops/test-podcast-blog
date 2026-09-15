@@ -251,23 +251,41 @@
     .image-wrapper:hover .delete-image-btn { opacity: 1; }
     .delete-image-btn:hover { transform: scale(1.1); background: var(--danger); color: #fff; border-color: var(--danger); }
 
+     
     .inline-insert-zone {
-      height: 24px; margin: 8px 0; display: flex; align-items: center; justify-content: center;
-      opacity: 0; cursor: pointer; transition: opacity 0.3s ease; position: relative; z-index: 10;
+      height: 2px;  
+      margin: 0; 
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; cursor: pointer; position: relative; z-index: 10;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+     
+    .inline-insert-zone::after {
+      content: ''; position: absolute; top: -16px; bottom: -16px; left: 0; right: 0;
     }
     .inline-insert-zone::before {
       content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px;
       background: var(--accent); opacity: 0; transition: opacity 0.2s;
     }
-    .inline-insert-zone:hover { opacity: 1; }
-    .inline-insert-zone:hover::before { opacity: 0.2; }
+    
     .inline-insert-btn {
+      transform: scale(0);  
       background: #f8fafc; border: 1px dashed var(--border); color: var(--text-muted);
       border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
-      z-index: 2; transition: all 0.2s ease;
+      z-index: 2; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .inline-insert-zone:hover .inline-insert-btn { 
-      transform: scale(1.1); background: var(--accent-soft); color: var(--accent); border-color: var(--accent); 
+
+     
+    @media (min-width: 769px) {
+      .inline-insert-zone:hover {
+        height: 48px; margin: 12px 0; opacity: 1;
+      }
+      .inline-insert-zone:hover::before { opacity: 0.2; }
+      .inline-insert-zone:hover .inline-insert-btn { transform: scale(1); }
+      .inline-insert-zone:hover .inline-insert-btn:hover { 
+        transform: scale(1.1); background: var(--accent-soft); color: var(--accent); border-color: var(--accent); 
+      }
     }
 
      
@@ -310,10 +328,19 @@
       .tab-btn::after { display: none; }
       .tab-btn.active { background: var(--accent-soft); color: var(--accent); }
 
-      .inline-insert-zone { opacity: 1; height: 24px; margin: 8px 0; }
-      .inline-insert-zone::before { opacity: 0.1; }
-      .inline-insert-btn { background: #f8fafc; border: 1px dashed var(--border); color: var(--border); }
-      .inline-insert-zone:active .inline-insert-btn { transform: scale(1.1); background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+       
+      .inline-insert-zone { opacity: 0; height: 2px; margin: 0; }
+      .inline-insert-zone.is-centered {
+        height: 48px; margin: 12px 0; opacity: 1;
+      }
+      .inline-insert-zone.is-centered::before { opacity: 0.1; }
+      .inline-insert-zone.is-centered .inline-insert-btn {
+        transform: scale(1); background: #f8fafc; border-color: var(--border); color: var(--border);
+      }
+      .inline-insert-zone.is-centered:active .inline-insert-btn {
+        transform: scale(1.1); background: var(--accent-soft); color: var(--accent); border-color: var(--accent);
+      }
+      
       .delete-image-btn { opacity: 1; }
 
       .viewport-container { 
@@ -342,7 +369,6 @@
     .markdown-body blockquote { border-left: 3px solid var(--accent); padding: 16px 20px; background: rgba(49, 117, 181, 0.04); border-radius: 0 6px 6px 0; margin-bottom: 24px; color: #334155; font-style: normal; }
     .markdown-body hr { border: 0; height: 1px; background: var(--border); margin: 40px 0; }
 
-     
     .markdown-body a { 
       color: var(--accent); 
       text-decoration: underline; 
@@ -376,7 +402,6 @@
     .toast-box.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
     
-
      
     .section-title { font-size: 22px; font-weight: 800; border-bottom: 2px solid; display: inline-flex; align-items: center; gap: 8px; padding-bottom: 8px; margin-bottom: 24px; margin-top: 32px; }
     .feed-list { display: flex; flex-direction: column; gap: 32px; margin-top: 16px; width: 100%; }
@@ -389,7 +414,9 @@
     .feed-date { font-size: 13px; color: var(--text-muted); }
     .feed-title { font-size: 22px; font-weight: 800; margin-bottom: 12px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: var(--text); }
     .feed-excerpt { font-size: 15px; color: var(--text-muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 16px; }
-    .feed-cover { width: 240px; height: 160px; border-radius: 8px; object-fit: cover; flex-shrink: 0; border: 1px solid var(--border); }
+    
+    .feed-cover { width: 240px; aspect-ratio: 16 / 9; height: auto; border-radius: 8px; object-fit: cover; flex-shrink: 0; border: 1px solid var(--border); }
+    
     @media (max-width: 768px) {
       .feed-item { flex-direction: column-reverse; gap: 16px; padding: 16px; }
       .feed-cover { width: 100%; height: auto; aspect-ratio: 16/9; }
@@ -409,7 +436,6 @@
       transform: translateX(-50%);
       margin-top: -12px;
     }
-     
     .medium-link-tooltip::after {
       content: '';
       position: absolute;
@@ -522,6 +548,18 @@
 
   
   <div id="tab-live" class="tab-content active">
+
+    
+    <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+      <div class="input-group" style="flex: 1;">
+        <span class="input-group-addon"><i data-lucide="youtube" style="width: 16px; height: 16px; color: var(--danger);"></i></span>
+        <input type="url" id="ytUrlInput" class="login-input" placeholder="貼上 YouTube 連結 (支援 Shorts 與長影音)..." style="margin-bottom: 0; border: none; width: 100%;">
+      </div>
+      <button id="btnProcessYT" class="action-btn-sm action-btn-primary" style="height: 42px; white-space: nowrap;" onclick="processYouTubeLink()">
+        <i data-lucide="sparkles" style="width:14px; height:14px;"></i> 提取
+      </button>
+    </div>
+
     <div class="viewport-container" id="videoWrapper" onmousemove="wakeControls()" ontouchstart="wakeControls()">
       <div class="camera-grid" id="cameraGrid" style="display: none;"></div>
 
@@ -891,7 +929,7 @@
   function escapeHtml(str) { return window.escapeHtml(str); }
 
   
-  const GAS_WEB_URL = "https://script.google.com/macros/s/AKfycbyeqKhWv3TY8bpSdB9ZfWXNkR9yap66PyGxzEJqxpawWn9hZ9chfIuBPJfZHHoP91newQ/exec";
+  const GAS_WEB_URL = "https://script.google.com/macros/s/AKfycbxQBW3X4GsjwkCCGsL2fv5VB57Mf6Liqix_qFfMacEadOQC8PBQ0G-d65fdBfpDGdrNMQ/exec";
   const GAS_URL = GAS_WEB_URL;
 
   let currentStream = null;
@@ -1109,13 +1147,15 @@
   }
 
   window.submitSubForm = function(form, logId, authorEmail) {
-    const plan = form.querySelector('select').value;
+    const plan = "一般訂閱"; 
     const email = form.querySelector('input[type="email"]').value;
     const btn = form.querySelector('button[type="submit"]');
     const oldText = btn.innerHTML;
+    
     btn.innerHTML = "處理中..."; btn.disabled = true;
+    
     api({ action: "submitSubscription", logId: logId, authorEmail: authorEmail, plan: plan, subscriberEmail: email })
-      .then(res => { alert("後台預覽測試：已成功寫入資料庫！"); form.reset(); })
+      .then(res => { alert("申請已送出！我們將盡快與您聯繫。"); form.reset(); })
       .catch(e => alert(e.message))
       .finally(() => { btn.innerHTML = oldText; btn.disabled = false; });
   };
@@ -1576,6 +1616,57 @@
     wakeControls();
   }
 
+  
+  
+  
+  async function processYouTubeLink() {
+    const email = localStorage.getItem('bvlog_user_email');
+    if (!email) { alert("請先登入"); return; }
+    
+    const urlInput = document.getElementById('ytUrlInput');
+    const url = urlInput.value.trim();
+    
+    
+    if (!url || (!url.includes('youtube.com') && !url.includes('youtu.be'))) {
+      showToast("請輸入有效的 YouTube 連結");
+      return;
+    }
+
+    const btn = document.getElementById('btnProcessYT');
+    const originalHtml = btn.innerHTML;
+    
+    
+    btn.innerHTML = '<i data-lucide="loader" class="spin" style="width:14px; height:14px;"></i> 提取中...';
+    lucide.createIcons();
+    btn.disabled = true;
+    log("[系統] 開始分析 YouTube 影片，這可能需要幾十秒鐘的時間...");
+    urlInput.disabled = true;
+
+    try {
+      
+      await api({ action: "processYouTube", url: url, email: email });
+      
+      showToast("提取歸檔完成！");
+      log("[系統] YouTube 分析完成");
+      urlInput.value = '';
+
+      
+      isLogsFetched = false;
+      const historyTabBtn = document.querySelectorAll('.tab-btn')[1]; 
+      switchTab('tab-history', historyTabBtn);
+
+    } catch (e) {
+      alert("分析失敗: " + e.message);
+      log("[錯誤] YouTube 分析失敗");
+    } finally {
+      
+      btn.innerHTML = originalHtml;
+      lucide.createIcons();
+      btn.disabled = false;
+      urlInput.disabled = false;
+    }
+  }
+
   async function startRecording() {
     const email = localStorage.getItem('bvlog_user_email');
     if (!email) { alert("請登入"); return; }
@@ -1883,7 +1974,13 @@
 
       let playerHtml = '';
       if(urls.length > 0) {
-        playerHtml = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="play-circle" style="width: 16px; height: 16px; color: var(--accent);"></i>全片預覽</span><button class="action-btn-sm action-btn-primary" onclick="event.stopPropagation(); window.startSeamlessPlay(\'' + item.logId + '\')"><i data-lucide="play" style="width: 14px; height: 14px;"></i> 啟接</button></summary><div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border);"><video id="player-' + item.logId + '" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block; object-fit: contain;"></video><div id="player-status-' + item.logId + '" style="padding: 12px 16px; background: #0f172a; color: #f8fafc; font-size: 14px; text-align: center;">待啟動</div></div></details>';
+        if (urls[0].includes('youtube.com') || urls[0].includes('youtu.be')) {
+           const ytMatch = urls[0].match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))((\w|-){11})/);
+           const ytId = ytMatch ? ytMatch[1] : '';
+           playerHtml = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="youtube" style="width: 16px; height: 16px; color: var(--danger);"></i>YouTube 影片</span><span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span></summary><div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border);"><iframe src="https://www.youtube.com/embed/' + ytId + '" frameborder="0" allowfullscreen style="width: 100%; aspect-ratio: 16/9; display: block;"></iframe></div></details>';
+        } else {
+           playerHtml = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="play-circle" style="width: 16px; height: 16px; color: var(--accent);"></i>全片預覽</span><button class="action-btn-sm action-btn-primary" onclick="event.stopPropagation(); window.startSeamlessPlay(\'' + item.logId + '\')"><i data-lucide="play" style="width: 14px; height: 14px;"></i> 啟接</button></summary><div class="accordion-body" style="padding: 0; background: #000; border-top: 1px solid var(--border);"><video id="player-' + item.logId + '" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block; object-fit: contain;"></video><div id="player-status-' + item.logId + '" style="padding: 12px 16px; background: #0f172a; color: #f8fafc; font-size: 14px; text-align: center;">待啟動</div></div></details>';
+        }
       }
 
       let summaryBlock = '<details class="history-accordion"><summary><span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="sparkles" style="width: 15px; height: 15px; color: var(--accent);"></i>總結</span><div class="flex-wrap-gap"><button type="button" id="btn-edit-summary-' + item.logId + '" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); toggleEditMode(\'' + item.logId + '\', \'summary\')" title="編輯"><i data-lucide="edit-3" style="width: 16px; height: 16px;"></i></button><button type="button" class="action-btn-sm action-btn-icon" onclick="event.stopPropagation(); copyTextToClipboard(this.getAttribute(\'data-text\'))" data-text="' + escapeHtml(safeSummaryRaw) + '" title="複製"><i data-lucide="copy" style="width: 16px; height: 16px;"></i></button><span class="accordion-toggle-icon"><i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i></span></div></summary><div class="accordion-body"><div id="view-summary-' + item.logId + '" class="markdown-body">' + renderMarkdown(safeSummaryRaw) + '</div><div id="edit-summary-' + item.logId + '" style="display: none; flex-direction: column; gap: 12px;"><textarea id="input-summary-' + item.logId + '" class="workshop-textarea" style="min-height: 180px;">' + escapeHtml(safeSummaryRaw) + '</textarea><div style="display: flex; justify-content: flex-end; gap: 8px;"><button class="action-btn-sm action-btn-icon" onclick="toggleEditMode(\'' + item.logId + '\', \'summary\')" title="取消"><i data-lucide="x" style="width: 16px; height: 16px;"></i></button><button class="action-btn-sm action-btn-primary" onclick="saveHistoryLog(\'' + item.logId + '\', \'summary\', this)"><i data-lucide="save" style="width: 14px; height: 14px;"></i> 儲存</button></div></div></div></details>';
@@ -1988,23 +2085,14 @@
         <div class="membership-form-box" style="margin-top: 16px; padding: 24px; border: 1px solid var(--border); border-radius: 8px; background: #f8fafc; text-align: left;">
           <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">${getFrontendSocialIconSvg('mail')} 申請加入會員 / 訂閱最新消息</h3>
           <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6;">
-            <strong>會員訂閱（$699/月）：</strong>即可享受不限次數、不限堂數觀看會員限定課程與獲得應用程式碼。<br>
-            <strong>VIP私塾（$6990/年）：</strong>除了一般會員權益，還可享受不受時空限制、不限次數的私塾陪跑。
+            請留下資訊，我們將寄發訂閱信給您：
           </p>
           <form style="display: flex; flex-direction: column; gap: 12px;" onsubmit="event.preventDefault(); window.submitSubForm(this, 'home', '${p.email}');">
-            
-            <select required class="login-input" style="margin-bottom:0; background:#fff; cursor: pointer;">
-              <option value="" disabled selected>請選擇您想申請的方案 (必填)</option>
-              <option value="會員訂閱">會員訂閱：$699/月</option>
-              <option value="VIP私塾">VIP私塾：$6990/年</option>
-            </select>
-            
             <input type="email" placeholder="您的 Email (必填)" required class="login-input" style="margin-bottom:0; background:#fff;">
             <div style="display: flex; gap: 12px; flex-wrap: wrap;">
               <input type="text" placeholder="姓名 / 暱稱 (必填)" required class="login-input" style="margin-bottom:0; background:#fff; flex: 1; min-width: 120px;">
               <input type="text" placeholder="出生年月日 (必填)" onfocus="(this.type='date')" onblur="(this.value==''?this.type='text':this.type='date')" required class="login-input" style="margin-bottom:0; background:#fff; flex: 1; min-width: 120px;">
             </div>
-            <textarea placeholder="想加入會員的原因" class="login-input" style="margin-bottom:0; background:#fff; min-height: 80px; resize: vertical; width: 100%;"></textarea>
             <button type="submit" style="margin-top: 8px; padding: 12px; background: var(--text); color: #fff; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; transition: background 0.2s;">送出申請</button>
           </form>
         </div>
@@ -2033,7 +2121,7 @@
 
     if (isDashboardRendered && !forceRefresh) return; 
 
-    
+    // 初始化 Hero 區塊 (只會執行一次，避免被覆蓋)
     const heroContainer = document.getElementById('dashboardHeroContainer');
     if (heroContainer && heroContainer.innerHTML.trim() === '') {
        heroContainer.innerHTML = generateDashboardHero(window.currentAuthorProfile);
@@ -2231,9 +2319,15 @@
 
     let videoHtml = '';
     if (urls && urls.length > 0) {
-      const isPreloaded = window.blobBuffers[logId] && window.blobBuffers[logId][0];
-      const statusText = isPreloaded ? "[就緒]" : "[載入]";
-      videoHtml = '<div style="background: #000; border-radius: 8px; overflow: hidden; margin-top: 32px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05);"><video id="preview-player" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block; object-fit: contain;"></video><div style="display:flex; flex-wrap:wrap; justify-content: space-between; align-items: center; padding: 12px 16px; background: #0f172a; gap:12px;"><span id="preview-player-status" style="color: #f8fafc; font-size: 13px;">' + statusText + '</span><button class="action-btn-sm" onclick="window.initPreviewPlayer(\'' + logId + '\')" style="background: var(--accent); color: #fff; border: none; padding: 6px 16px;"><i data-lucide="play" style="width: 14px; height: 14px;"></i> 啟動</button></div></div>';
+      if (urls[0].includes('youtube.com') || urls[0].includes('youtu.be')) {
+        const ytMatch = urls[0].match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))((\w|-){11})/);
+        const ytId = ytMatch ? ytMatch[1] : '';
+        videoHtml = '<div style="background: #000; border-radius: 8px; overflow: hidden; margin-top: 32px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05);"><iframe src="https://www.youtube.com/embed/' + ytId + '" frameborder="0" allowfullscreen style="width: 100%; aspect-ratio: 16/9; display: block;"></iframe></div>';
+      } else {
+        const isPreloaded = window.blobBuffers[logId] && window.blobBuffers[logId][0];
+        const statusText = isPreloaded ? "[就緒]" : "[載入]";
+        videoHtml = '<div style="background: #000; border-radius: 8px; overflow: hidden; margin-top: 32px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05);"><video id="preview-player" controls playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block; object-fit: contain;"></video><div style="display:flex; flex-wrap:wrap; justify-content: space-between; align-items: center; padding: 12px 16px; background: #0f172a; gap:12px;"><span id="preview-player-status" style="color: #f8fafc; font-size: 13px;">' + statusText + '</span><button class="action-btn-sm" onclick="window.initPreviewPlayer(\'' + logId + '\')" style="background: var(--accent); color: #fff; border: none; padding: 6px 16px;"><i data-lucide="play" style="width: 14px; height: 14px;"></i> 啟動</button></div></div>';
+      }
     }
 
     
@@ -2261,9 +2355,42 @@
 
     
     lucide.createIcons();
-    if (urls && urls.length > 0 && window.blobBuffers[logId] && window.blobBuffers[logId][0]) {
+    
+    if (urls && urls.length > 0 && !(urls[0].includes('youtube.com') || urls[0].includes('youtu.be')) && window.blobBuffers[logId] && window.blobBuffers[logId][0]) {
       document.getElementById('preview-player').src = window.blobBuffers[logId][0];
     }
+
+    
+    
+    if (window.insertZoneObserver) {
+      window.insertZoneObserver.disconnect();
+    }
+    
+    
+    const observerOptions = {
+      root: null,
+      rootMargin: '-35% 0px -35% 0px',
+      threshold: 0
+    };
+    
+    window.insertZoneObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          
+          entry.target.classList.add('is-centered');
+        } else {
+          
+          entry.target.classList.remove('is-centered');
+        }
+      });
+    }, observerOptions);
+    
+    
+    const insertZones = document.querySelectorAll('.inline-insert-zone');
+    insertZones.forEach(zone => window.insertZoneObserver.observe(zone));
+    
+
+    lucide.createIcons(); 
   }
 
   window.triggerInlineUpload = function(index) {
@@ -2582,18 +2709,22 @@
     btnCapture.disabled = true; 
 
     if (urls && urls.length > 0) {
-      if (!window.blobBuffers[logItem.logId]) window.blobBuffers[logItem.logId] = [];
-      if (!window.blobBuffers[logItem.logId][0]) {
-        api({ action: 'getVideoChunk', url: urls[0] }).then(res => {
-          fetch("data:" + res.mimeType + ";base64," + res.base64).then(r => r.blob()).then(blob => {
-            window.blobBuffers[logItem.logId][0] = URL.createObjectURL(blob);
-            const previewStatus = document.getElementById('preview-player-status');
-            if (previewStatus) previewStatus.innerText = "[就緒]";
-            btnCapture.disabled = false;
-          }).catch(e => console.log(e));
-        }).catch(e => console.log(e));
+      if (urls[0].includes('youtube.com') || urls[0].includes('youtu.be')) {
+        btnCapture.disabled = true; 
       } else {
-         btnCapture.disabled = false;
+        if (!window.blobBuffers[logItem.logId]) window.blobBuffers[logItem.logId] = [];
+        if (!window.blobBuffers[logItem.logId][0]) {
+          api({ action: 'getVideoChunk', url: urls[0] }).then(res => {
+            fetch("data:" + res.mimeType + ";base64," + res.base64).then(r => r.blob()).then(blob => {
+              window.blobBuffers[logItem.logId][0] = URL.createObjectURL(blob);
+              const previewStatus = document.getElementById('preview-player-status');
+              if (previewStatus) previewStatus.innerText = "[就緒]";
+              btnCapture.disabled = false;
+            }).catch(e => console.log(e));
+          }).catch(e => console.log(e));
+        } else {
+          btnCapture.disabled = false;
+        }
       }
     }
 
