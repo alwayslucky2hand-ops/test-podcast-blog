@@ -2408,35 +2408,48 @@
     }
 
     
+    
     if (window.insertZoneObserver) {
       window.insertZoneObserver.disconnect();
     }
+    if (window.mobileScrollHandler) {
+      window.removeEventListener('scroll', window.mobileScrollHandler, true);
+      window.removeEventListener('touchmove', window.mobileScrollHandler, true);
+    }
     
-    const observerOptions = {
-      root: null,
-      rootMargin: '-45% 0px -45% 0px',
-      threshold: 0
-    };
-    
-    window.insertZoneObserver = new IntersectionObserver((entries) => {
+    window.mobileScrollHandler = function() {
       
       if (window.innerWidth > 768) {
-        entries.forEach(entry => entry.target.classList.remove('is-centered'));
+        document.querySelectorAll('.inline-insert-zone').forEach(el => el.classList.remove('is-centered'));
         return;
       }
       
+      const zones = document.querySelectorAll('.inline-insert-zone');
+      const centerY = window.innerHeight / 2; 
+      const triggerRange = 60; 
       
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-centered');
+      zones.forEach(zone => {
+        const rect = zone.getBoundingClientRect();
+        
+        if (rect.height === 0 && rect.width === 0) return;
+        
+        const zoneCenter = rect.top + (rect.height / 2);
+        
+        
+        if (zoneCenter > (centerY - triggerRange) && zoneCenter < (centerY + triggerRange)) {
+          zone.classList.add('is-centered');
         } else {
-          entry.target.classList.remove('is-centered');
+          zone.classList.remove('is-centered');
         }
       });
-    }, observerOptions);
+    };
     
-    const insertZones = document.querySelectorAll('.inline-insert-zone');
-    insertZones.forEach(zone => window.insertZoneObserver.observe(zone));
+    
+    window.addEventListener('scroll', window.mobileScrollHandler, true);
+    window.addEventListener('touchmove', window.mobileScrollHandler, true);
+    
+    
+    setTimeout(window.mobileScrollHandler, 100);
     
 
     lucide.createIcons(); 
