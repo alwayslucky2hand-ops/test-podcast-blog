@@ -253,41 +253,65 @@
 
      
     .inline-insert-zone {
-      height: 2px;  
-      margin: 0; 
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0; cursor: pointer; position: relative; z-index: 10;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: inline-flex !important;
+      align-items: center !important;
+      vertical-align: middle !important;
+      margin-left: 8px !important; 
+      opacity: 0 !important;  
+      visibility: hidden !important;  
+      pointer-events: none !important; 
+      transition: opacity 0.2s ease, visibility 0.2s ease !important;
+      z-index: 10;
     }
     
-     
-    .inline-insert-zone::after {
-      content: ''; position: absolute; top: -16px; bottom: -16px; left: 0; right: 0;
-    }
-    .inline-insert-zone::before {
-      content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px;
-      background: var(--accent); opacity: 0; transition: opacity 0.2s;
+    .inline-insert-actions {
+      display: inline-flex;
+      gap: 6px;
     }
     
     .inline-insert-btn {
-      transform: scale(0);  
-      background: #f8fafc; border: 1px dashed var(--border); color: var(--text-muted);
-      border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
-      z-index: 2; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      background: #f1f5f9;
+      border: none; 
+      color: var(--text-muted);
+      border-radius: 6px;
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05); 
+      cursor: pointer;
     }
+    
+    .inline-insert-btn:hover {
+      background: #e2e8f0; 
+      color: var(--accent); 
+      transform: translateY(-2px);
+    }
+    
+    .yt-btn:hover { color: var(--danger) !important; }
 
      
     @media (min-width: 769px) {
-      .inline-insert-zone:hover {
-        height: 48px; margin: 12px 0; opacity: 1;
-      }
-      .inline-insert-zone:hover::before { opacity: 0.2; }
-      .inline-insert-zone:hover .inline-insert-btn { transform: scale(1); }
-      .inline-insert-zone:hover .inline-insert-btn:hover { 
-        transform: scale(1.1); background: var(--accent-soft); color: var(--accent); border-color: var(--accent); 
+      .markdown-body p:hover .inline-insert-zone,
+      .markdown-body li:hover .inline-insert-zone,
+      .inline-insert-zone:hover { 
+        opacity: 1 !important; 
+        visibility: visible !important;  
+        pointer-events: auto !important;  
       }
     }
 
+     
+    @media (max-width: 768px) {
+      .inline-insert-zone.is-centered { 
+        opacity: 1 !important; 
+        visibility: visible !important;
+        pointer-events: auto !important; 
+      }
+    }
+    
      
     .mobile-menu-btn { display: none; background: transparent; border: none; color: var(--text); cursor: pointer; padding: 4px; border-radius: 4px; transition: background 0.2s; }
 
@@ -329,10 +353,8 @@
       .tab-btn.active { background: var(--accent-soft); color: var(--accent); }
 
        
-      .inline-insert-zone { opacity: 0; height: 2px; margin: 0; }
-      .inline-insert-zone.is-centered {
-        height: 48px; margin: 12px 0; opacity: 1;
-      }
+      .inline-insert-zone { opacity: 0; height: 0px; margin: 0; }
+      .inline-insert-zone.is-centered { opacity: 1; }
       .inline-insert-zone.is-centered::before { opacity: 0.1; }
       .inline-insert-zone.is-centered .inline-insert-btn {
         transform: scale(1); background: #f8fafc; border-color: var(--border); color: var(--border);
@@ -616,12 +638,21 @@
 
   
   <div id="tab-history" class="tab-content">
-    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px;">
       <div>
         <h3 style="font-size: 18px; font-weight: 700;">日誌</h3>
       </div>
       <button onclick="loadHistoryLogs(true)" class="action-btn-sm"><i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> 重整</button>
     </div>
+
+    
+    <div style="display:flex; gap:12px; margin-bottom: 16px; flex-wrap: wrap; background: #fff; padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border);">
+      <div style="display: flex; align-items: center; gap: 8px; color: var(--text-muted);">
+        <i data-lucide="search" style="width: 18px; height: 18px;"></i>
+      </div>
+      <input type="text" id="historySearch" class="login-input" placeholder="輸入關鍵字搜尋 ID、內容、總結或標題..." style="flex:1; margin-bottom:0; border: none; outline: none; background: transparent; padding: 0; height: 32px;" onkeyup="triggerHistorySearch()">
+    </div>
+
     <div id="historyContainer" style="display: flex; flex-direction: column; gap: 16px;">
       <div style="text-align: center; color: var(--text-muted); padding: 40px 0;">載入中...</div>
     </div>
@@ -1934,8 +1965,27 @@
 
     if (isHistoryRendered && !forceRefresh && document.querySelector('#historyContainer .history-card')) return; 
 
-    if (!globalLogsCache || globalLogsCache.length === 0) {
-      container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px;">無紀錄</div>';
+    
+    const searchKeyword = document.getElementById('historySearch') ? document.getElementById('historySearch').value.toLowerCase().trim() : '';
+    
+    let filteredLogs = globalLogsCache || [];
+    if (searchKeyword) {
+      filteredLogs = filteredLogs.filter(item => {
+        
+        const target = (
+          (item.logId || "") + " " + 
+          (item.timestamp || "") + " " + 
+          (item.summary || "") + " " + 
+          (item.content || "") + " " + 
+          (item.status || "") + " " + 
+          (item.articleTitle || "")
+        ).toLowerCase();
+        return target.includes(searchKeyword);
+      });
+    }
+
+    if (filteredLogs.length === 0) {
+      container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:40px 0; border:1px solid var(--border); border-radius:4px;">' + (searchKeyword ? '沒有找到符合關鍵字的紀錄' : '無紀錄') + '</div>';
       isHistoryRendered = true;
       return;
     }
@@ -1944,7 +1994,8 @@
     window.blobBuffers = {};
 
     let listHtml = '';
-    const itemsToRender = globalLogsCache.slice(0, currentHistoryRenderCount);
+    
+    const itemsToRender = filteredLogs.slice(0, currentHistoryRenderCount);
 
     for(let i=0; i<itemsToRender.length; i++) {
       const item = itemsToRender[i];
@@ -1999,11 +2050,12 @@
       
     }
 
-    if (globalLogsCache.length > currentHistoryRenderCount) {
+    
+    if (filteredLogs.length > currentHistoryRenderCount) {
       listHtml += `
         <div style="text-align: center; margin-top: 24px;">
           <button onclick="currentHistoryRenderCount += 10; isHistoryRendered = false; loadHistoryLogs();" class="action-btn-sm" style="border-radius: 20px; padding: 10px 24px;">
-            <i data-lucide="chevron-down" style="width:14px; height:14px;"></i> 載入更多 (${globalLogsCache.length - currentHistoryRenderCount})
+            <i data-lucide="chevron-down" style="width:14px; height:14px;"></i> 載入更多 (${filteredLogs.length - currentHistoryRenderCount})
           </button>
         </div>
       `;
@@ -2014,7 +2066,14 @@
     isHistoryRendered = true;
   }
 
-  // 🌟 將 SVG 生成器引入前端，解決 ReferenceError 載入卡住的問題
+  // 🌟 新增：觸發日誌搜尋的函式
+  window.triggerHistorySearch = function() {
+    currentHistoryRenderCount = 10; 
+    isHistoryRendered = false; 
+    loadHistoryLogs(false); 
+  };
+
+  
   function getFrontendSocialIconSvg(type) {
     const style = 'width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
     
@@ -2298,13 +2357,18 @@
     const profile = window.currentAuthorProfile || {}; 
 
     let insertIndex = 0;
+    
+    const imgIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>';
+    const ytIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg>';
+
     let mdWithButtons = fullMd.replace(/([。！？.!?][”」]?)\n+/g, function(match, p1) {
       let idx = insertIndex++;
-      return `${p1}\n\n<div class="inline-insert-zone" title="插入" onclick="triggerInlineUpload(${idx})"><div class="inline-insert-btn"><i data-lucide="image-plus" style="width:14px;height:14px;"></i></div></div>\n\n`;
+      
+      return `${p1}<span class="inline-insert-zone"><span class="inline-insert-actions"><span class="inline-insert-btn" title="插入圖片" onclick="triggerInlineUpload(${idx})">${imgIconSvg}</span><span class="inline-insert-btn yt-btn" title="插入 YouTube" onclick="triggerYoutubeInsert(${idx})" style="color:var(--danger);">${ytIconSvg}</span></span></span>\n\n`;
     });
 
     let finalIdx = insertIndex;
-    mdWithButtons += `\n\n<div class="inline-insert-zone" title="插入" onclick="triggerInlineUpload(${finalIdx})"><div class="inline-insert-btn"><i data-lucide="image-plus" style="width:14px;height:14px;"></i></div></div>`;
+    mdWithButtons += `<span class="inline-insert-zone"><span class="inline-insert-actions"><span class="inline-insert-btn" title="插入圖片" onclick="triggerInlineUpload(${finalIdx})">${imgIconSvg}</span><span class="inline-insert-btn yt-btn" title="插入 YouTube" onclick="triggerYoutubeInsert(${finalIdx})" style="color:var(--danger);">${ytIconSvg}</span></span></span>`;
 
     const titleMatch = mdWithButtons.match(/^#\s+(.+)\n/);
     const displayTitle = titleMatch ? titleMatch[1] : document.getElementById('finalArticleTitle').value;
@@ -2369,7 +2433,7 @@
     
     const observerOptions = {
       root: null,
-      rootMargin: '-35% 0px -35% 0px',
+      rootMargin: '-45% 0px -45% 0px',
       threshold: 0
     };
     
@@ -2444,6 +2508,44 @@
 
       event.target.value = '';
     });
+  };
+
+  
+  window.triggerYoutubeInsert = function(index) {
+    const url = prompt("請貼上 YouTube 影片網址 (支援一般影片或 Shorts)：");
+    if (!url) return; 
+
+    
+    const ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))((\w|-){11})/);
+    if (!ytMatch) {
+      alert("僅支援 YouTube 影音網址，請確認連結是否正確！");
+      return;
+    }
+
+    const ytId = ytMatch[1];
+    
+    const iframeHtml = `<div style="background: #000; border-radius: 8px; overflow: hidden; margin: 24px 0; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.05);"><iframe src="https://www.youtube.com/embed/${ytId}" frameborder="0" allowfullscreen style="width: 100%; aspect-ratio: 16/9; display: block;"></iframe></div>`;
+
+    let counter = 0;
+    let replaced = false;
+    
+    window.currentSelectedFullMd = window.currentSelectedFullMd.replace(/([。！？.!?][”」]?)\n+/g, function(match, p1) {
+      if (counter === index) {
+        counter++;
+        replaced = true;
+        return `${p1}\n\n${iframeHtml}\n\n`;
+      }
+      counter++;
+      return match;
+    });
+
+    if (!replaced && index === counter) {
+      window.currentSelectedFullMd += `\n\n${iframeHtml}\n\n`;
+    }
+
+    saveCurrentStepData('full');
+    showToast("已插入 YouTube 影片");
+    renderBlogPreview(window.currentSelectedFullMd);
   };
 
   window.handleCoverUpload = function(event) {
