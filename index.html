@@ -257,39 +257,22 @@
       align-items: center !important;
       vertical-align: middle !important;
       margin-left: 8px !important; 
-      opacity: 0 !important;  
+      opacity: 0 !important; 
       visibility: hidden !important;  
-      pointer-events: none !important; 
-      transition: opacity 0.2s ease, visibility 0.2s ease !important;
+      pointer-events: none !important;  
+      transition: all 0.2s ease !important;
       z-index: 10;
     }
     
-    .inline-insert-actions {
-      display: inline-flex;
-      gap: 6px;
-    }
+    .inline-insert-actions { display: inline-flex; gap: 6px; }
     
     .inline-insert-btn {
-      background: #f1f5f9;
-      border: none; 
-      color: var(--text-muted);
-      border-radius: 6px;
-      width: 28px;
-      height: 28px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05); 
-      cursor: pointer;
+      background: #f1f5f9; border: none; color: var(--text-muted);
+      border-radius: 6px; width: 28px; height: 28px;
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: all 0.2s ease; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); 
     }
-    
-    .inline-insert-btn:hover {
-      background: #e2e8f0; 
-      color: var(--accent); 
-      transform: translateY(-2px);
-    }
-    
+    .inline-insert-btn:hover { background: #e2e8f0; color: var(--accent); transform: translateY(-2px); }
     .yt-btn:hover { color: var(--danger) !important; }
 
      
@@ -298,8 +281,8 @@
       .markdown-body li:hover .inline-insert-zone,
       .inline-insert-zone:hover { 
         opacity: 1 !important; 
-        visibility: visible !important;  
-        pointer-events: auto !important;  
+        visibility: visible !important; 
+        pointer-events: auto !important; 
       }
     }
 
@@ -307,11 +290,11 @@
     @media (max-width: 768px) {
       .inline-insert-zone.is-centered { 
         opacity: 1 !important; 
-        visibility: visible !important;
+        visibility: visible !important; 
         pointer-events: auto !important; 
       }
     }
-    
+
      
     .mobile-menu-btn { display: none; background: transparent; border: none; color: var(--text); cursor: pointer; padding: 4px; border-radius: 4px; transition: background 0.2s; }
 
@@ -2425,11 +2408,9 @@
     }
 
     
-    
     if (window.insertZoneObserver) {
       window.insertZoneObserver.disconnect();
     }
-    
     
     const observerOptions = {
       root: null,
@@ -2438,17 +2419,21 @@
     };
     
     window.insertZoneObserver = new IntersectionObserver((entries) => {
+      
+      if (window.innerWidth > 768) {
+        entries.forEach(entry => entry.target.classList.remove('is-centered'));
+        return;
+      }
+      
+      
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          
           entry.target.classList.add('is-centered');
         } else {
-          
           entry.target.classList.remove('is-centered');
         }
       });
     }, observerOptions);
-    
     
     const insertZones = document.querySelectorAll('.inline-insert-zone');
     insertZones.forEach(zone => window.insertZoneObserver.observe(zone));
